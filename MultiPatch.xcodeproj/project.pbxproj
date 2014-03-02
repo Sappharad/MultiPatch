@@ -1,0 +1,494 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
+		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
+		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
+		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		9E0351C30E9D8B570043AC3E /* PatchController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9E0351C10E9D8B570043AC3E /* PatchController.mm */; };
+		9E17AB9F120F9E9800BA4827 /* CreationController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9E17AB9E120F9E9800BA4827 /* CreationController.mm */; };
+		9E1EE3BF11FE75E90081FDC2 /* uips.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E1EE3BE11FE75E90081FDC2 /* uips.c */; };
+		9E28E08611E2BE330002DE08 /* libppf.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9E28E08011E2BE330002DE08 /* libppf.cc */; };
+		9E28E08811E2BE330002DE08 /* ppf.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9E28E08411E2BE330002DE08 /* ppf.cc */; };
+		9E28E08D11E2BF5E0002DE08 /* PPFAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9E28E08C11E2BF5E0002DE08 /* PPFAdapter.mm */; };
+		9E81270D1676CD5E008F2A5D /* BPSAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9E81270C1676CD5E008F2A5D /* BPSAdapter.mm */; };
+		9E8884DD167579E3008AFDC1 /* stream in Resources */ = {isa = PBXBuildFile; fileRef = 9E8884DC167579E3008AFDC1 /* stream */; };
+		9E8884E216757BAA008AFDC1 /* libups.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9E8884E016757BAA008AFDC1 /* libups.cpp */; };
+		9EAEB1D511E1767B006CF92A /* bandages.icns in Resources */ = {isa = PBXBuildFile; fileRef = 9EAEB1D411E1767B006CF92A /* bandages.icns */; };
+		9ED6066E126D30DC004782CA /* bsdiff.c in Sources */ = {isa = PBXBuildFile; fileRef = 9ED6066C126D30DC004782CA /* bsdiff.c */; };
+		9ED6066F126D30DC004782CA /* bspatch.c in Sources */ = {isa = PBXBuildFile; fileRef = 9ED6066D126D30DC004782CA /* bspatch.c */; };
+		9ED60672126D370C004782CA /* BSdiffAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED60671126D370C004782CA /* BSdiffAdapter.m */; };
+		9EEA30F111E041B8005B6996 /* xdelta3.c in Sources */ = {isa = PBXBuildFile; fileRef = 9EEA30EF11E041B8005B6996 /* xdelta3.c */; };
+		9EFA6CE611E153B500CBE19A /* XDeltaAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFA6CE511E153B500CBE19A /* XDeltaAdapter.m */; };
+		9EFA6D2E11E161D000CBE19A /* IPSAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFA6D2D11E161D000CBE19A /* IPSAdapter.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+		1DDD58150DA1D0A300B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		32CA4F630368D1EE00C91783 /* MultiPatch_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiPatch_Prefix.pch; sourceTree = "<group>"; };
+		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9E0351C10E9D8B570043AC3E /* PatchController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PatchController.mm; sourceTree = "<group>"; };
+		9E0351C20E9D8B570043AC3E /* PatchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PatchController.h; sourceTree = "<group>"; };
+		9E17AB9D120F9E9800BA4827 /* CreationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreationController.h; sourceTree = "<group>"; };
+		9E17AB9E120F9E9800BA4827 /* CreationController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CreationController.mm; sourceTree = "<group>"; };
+		9E1EE3BE11FE75E90081FDC2 /* uips.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uips.c; path = uips/uips.c; sourceTree = "<group>"; };
+		9E28E08011E2BE330002DE08 /* libppf.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = libppf.cc; path = libppf/libppf.cc; sourceTree = "<group>"; };
+		9E28E08111E2BE330002DE08 /* libppf.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = libppf.hh; path = libppf/libppf.hh; sourceTree = "<group>"; };
+		9E28E08411E2BE330002DE08 /* ppf.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ppf.cc; path = libppf/ppf.cc; sourceTree = "<group>"; };
+		9E28E08511E2BE330002DE08 /* ppf.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ppf.hh; path = libppf/ppf.hh; sourceTree = "<group>"; };
+		9E28E08B11E2BF5E0002DE08 /* PPFAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPFAdapter.h; sourceTree = "<group>"; };
+		9E28E08C11E2BF5E0002DE08 /* PPFAdapter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PPFAdapter.mm; sourceTree = "<group>"; };
+		9E81270B1676CD5E008F2A5D /* BPSAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BPSAdapter.h; path = bps/BPSAdapter.h; sourceTree = "<group>"; };
+		9E81270C1676CD5E008F2A5D /* BPSAdapter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = BPSAdapter.mm; path = bps/BPSAdapter.mm; sourceTree = "<group>"; };
+		9E8884D3167565A9008AFDC1 /* delta.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = delta.hpp; path = nall/bps/delta.hpp; sourceTree = "<group>"; };
+		9E8884D4167565A9008AFDC1 /* linear.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = linear.hpp; path = nall/bps/linear.hpp; sourceTree = "<group>"; };
+		9E8884D5167565A9008AFDC1 /* metadata.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = metadata.hpp; path = nall/bps/metadata.hpp; sourceTree = "<group>"; };
+		9E8884D6167565A9008AFDC1 /* multi.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = multi.hpp; path = nall/bps/multi.hpp; sourceTree = "<group>"; };
+		9E8884D7167565A9008AFDC1 /* patch.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = patch.hpp; path = nall/bps/patch.hpp; sourceTree = "<group>"; };
+		9E8884D81675724F008AFDC1 /* stdint.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = stdint.hpp; path = nall/stdint.hpp; sourceTree = "<group>"; };
+		9E8884DC167579E3008AFDC1 /* stream */ = {isa = PBXFileReference; lastKnownFileType = folder; name = stream; path = nall/stream; sourceTree = "<group>"; };
+		9E8884E016757BAA008AFDC1 /* libups.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = libups.cpp; path = libups/libups.cpp; sourceTree = "<group>"; };
+		9E8884E116757BAA008AFDC1 /* libups.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = libups.hpp; path = libups/libups.hpp; sourceTree = "<group>"; };
+		9EAEB1D411E1767B006CF92A /* bandages.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = bandages.icns; sourceTree = "<group>"; };
+		9ED6066C126D30DC004782CA /* bsdiff.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = bsdiff.c; path = bsdiff/bsdiff.c; sourceTree = "<group>"; };
+		9ED6066D126D30DC004782CA /* bspatch.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = bspatch.c; path = bsdiff/bspatch.c; sourceTree = "<group>"; };
+		9ED60670126D370C004782CA /* BSdiffAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BSdiffAdapter.h; path = bsdiff/BSdiffAdapter.h; sourceTree = "<group>"; };
+		9ED60671126D370C004782CA /* BSdiffAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BSdiffAdapter.m; path = bsdiff/BSdiffAdapter.m; sourceTree = "<group>"; };
+		9EEA30B411E03F75005B6996 /* MultiPatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MultiPatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9EEA30EF11E041B8005B6996 /* xdelta3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = xdelta3.c; path = xdelta/xdelta3.c; sourceTree = "<group>"; };
+		9EEA30F011E041B8005B6996 /* xdelta3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = xdelta3.h; path = xdelta/xdelta3.h; sourceTree = "<group>"; };
+		9EEA311611E0473E005B6996 /* xdelta3-main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "xdelta3-main.h"; path = "xdelta/xdelta3-main.h"; sourceTree = "<group>"; };
+		9EEA312111E04776005B6996 /* xdelta3-decode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "xdelta3-decode.h"; path = "xdelta/xdelta3-decode.h"; sourceTree = "<group>"; };
+		9EEA312711E04795005B6996 /* xdelta3-hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "xdelta3-hash.h"; path = "xdelta/xdelta3-hash.h"; sourceTree = "<group>"; };
+		9EEA313F11E04933005B6996 /* xdelta3-cfgs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "xdelta3-cfgs.h"; path = "xdelta/xdelta3-cfgs.h"; sourceTree = "<group>"; };
+		9EEA314011E04933005B6996 /* xdelta3-djw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "xdelta3-djw.h"; path = "xdelta/xdelta3-djw.h"; sourceTree = "<group>"; };
+		9EEA314111E04933005B6996 /* xdelta3-fgk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "xdelta3-fgk.h"; path = "xdelta/xdelta3-fgk.h"; sourceTree = "<group>"; };
+		9EEA314211E04933005B6996 /* xdelta3-list.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "xdelta3-list.h"; path = "xdelta/xdelta3-list.h"; sourceTree = "<group>"; };
+		9EEA314311E04933005B6996 /* xdelta3-merge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "xdelta3-merge.h"; path = "xdelta/xdelta3-merge.h"; sourceTree = "<group>"; };
+		9EEA314411E04933005B6996 /* xdelta3-python.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "xdelta3-python.h"; path = "xdelta/xdelta3-python.h"; sourceTree = "<group>"; };
+		9EEA314511E04933005B6996 /* xdelta3-second.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "xdelta3-second.h"; path = "xdelta/xdelta3-second.h"; sourceTree = "<group>"; };
+		9EEA314611E04933005B6996 /* xdelta3-test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "xdelta3-test.h"; path = "xdelta/xdelta3-test.h"; sourceTree = "<group>"; };
+		9EFA6CE411E153B500CBE19A /* XDeltaAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XDeltaAdapter.h; sourceTree = "<group>"; };
+		9EFA6CE511E153B500CBE19A /* XDeltaAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XDeltaAdapter.m; sourceTree = "<group>"; };
+		9EFA6D2C11E161D000CBE19A /* IPSAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPSAdapter.h; sourceTree = "<group>"; };
+		9EFA6D2D11E161D000CBE19A /* IPSAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IPSAdapter.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D11072E0486CEB800E47090 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
+				13E42FB307B3F0F600E4EEF1 /* CoreData.framework */,
+				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* Mother3UPS */ = {
+			isa = PBXGroup;
+			children = (
+				9E81270A1676CD3C008F2A5D /* bps */,
+				9E8884DF16757BA0008AFDC1 /* libups */,
+				9E8884D01675650F008AFDC1 /* nall */,
+				9ED6066B126D30BB004782CA /* bsdiff */,
+				9E28E07F11E2BE1C0002DE08 /* libppf */,
+				9EAEB1D411E1767B006CF92A /* bandages.icns */,
+				9E1EE3BD11FE75A40081FDC2 /* uips */,
+				9EEA30EE11E0418A005B6996 /* xdelta */,
+				29B97315FDCFA39411CA2CEA /* Other Sources */,
+				29B97317FDCFA39411CA2CEA /* Resources */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				9E0351C10E9D8B570043AC3E /* PatchController.mm */,
+				9E0351C20E9D8B570043AC3E /* PatchController.h */,
+				9EEA30B511E03F75005B6996 /* Products */,
+				9E17AB9D120F9E9800BA4827 /* CreationController.h */,
+				9E17AB9E120F9E9800BA4827 /* CreationController.mm */,
+			);
+			name = Mother3UPS;
+			sourceTree = "<group>";
+		};
+		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				32CA4F630368D1EE00C91783 /* MultiPatch_Prefix.pch */,
+				29B97316FDCFA39411CA2CEA /* main.m */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8D1107310486CEB800E47090 /* Info.plist */,
+				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
+				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
+				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9E1EE3BD11FE75A40081FDC2 /* uips */ = {
+			isa = PBXGroup;
+			children = (
+				9E1EE3BE11FE75E90081FDC2 /* uips.c */,
+				9EFA6D2C11E161D000CBE19A /* IPSAdapter.h */,
+				9EFA6D2D11E161D000CBE19A /* IPSAdapter.m */,
+			);
+			name = uips;
+			sourceTree = "<group>";
+		};
+		9E28E07F11E2BE1C0002DE08 /* libppf */ = {
+			isa = PBXGroup;
+			children = (
+				9E28E08011E2BE330002DE08 /* libppf.cc */,
+				9E28E08111E2BE330002DE08 /* libppf.hh */,
+				9E28E08411E2BE330002DE08 /* ppf.cc */,
+				9E28E08511E2BE330002DE08 /* ppf.hh */,
+				9E28E08B11E2BF5E0002DE08 /* PPFAdapter.h */,
+				9E28E08C11E2BF5E0002DE08 /* PPFAdapter.mm */,
+			);
+			name = libppf;
+			sourceTree = "<group>";
+		};
+		9E81270A1676CD3C008F2A5D /* bps */ = {
+			isa = PBXGroup;
+			children = (
+				9E81270B1676CD5E008F2A5D /* BPSAdapter.h */,
+				9E81270C1676CD5E008F2A5D /* BPSAdapter.mm */,
+			);
+			name = bps;
+			sourceTree = "<group>";
+		};
+		9E8884D01675650F008AFDC1 /* nall */ = {
+			isa = PBXGroup;
+			children = (
+				9E8884DC167579E3008AFDC1 /* stream */,
+				9E8884D81675724F008AFDC1 /* stdint.hpp */,
+				9E8884D216756599008AFDC1 /* bps */,
+			);
+			name = nall;
+			sourceTree = "<group>";
+		};
+		9E8884D216756599008AFDC1 /* bps */ = {
+			isa = PBXGroup;
+			children = (
+				9E8884D3167565A9008AFDC1 /* delta.hpp */,
+				9E8884D4167565A9008AFDC1 /* linear.hpp */,
+				9E8884D5167565A9008AFDC1 /* metadata.hpp */,
+				9E8884D6167565A9008AFDC1 /* multi.hpp */,
+				9E8884D7167565A9008AFDC1 /* patch.hpp */,
+			);
+			name = bps;
+			sourceTree = "<group>";
+		};
+		9E8884DF16757BA0008AFDC1 /* libups */ = {
+			isa = PBXGroup;
+			children = (
+				9E8884E016757BAA008AFDC1 /* libups.cpp */,
+				9E8884E116757BAA008AFDC1 /* libups.hpp */,
+			);
+			name = libups;
+			sourceTree = "<group>";
+		};
+		9ED6066B126D30BB004782CA /* bsdiff */ = {
+			isa = PBXGroup;
+			children = (
+				9ED60670126D370C004782CA /* BSdiffAdapter.h */,
+				9ED60671126D370C004782CA /* BSdiffAdapter.m */,
+				9ED6066C126D30DC004782CA /* bsdiff.c */,
+				9ED6066D126D30DC004782CA /* bspatch.c */,
+			);
+			name = bsdiff;
+			sourceTree = "<group>";
+		};
+		9EEA30B511E03F75005B6996 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9EEA30B411E03F75005B6996 /* MultiPatch.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9EEA30EE11E0418A005B6996 /* xdelta */ = {
+			isa = PBXGroup;
+			children = (
+				9EEA313F11E04933005B6996 /* xdelta3-cfgs.h */,
+				9EEA314011E04933005B6996 /* xdelta3-djw.h */,
+				9EEA314111E04933005B6996 /* xdelta3-fgk.h */,
+				9EEA314211E04933005B6996 /* xdelta3-list.h */,
+				9EEA314311E04933005B6996 /* xdelta3-merge.h */,
+				9EEA314411E04933005B6996 /* xdelta3-python.h */,
+				9EEA314511E04933005B6996 /* xdelta3-second.h */,
+				9EEA314611E04933005B6996 /* xdelta3-test.h */,
+				9EEA312711E04795005B6996 /* xdelta3-hash.h */,
+				9EEA312111E04776005B6996 /* xdelta3-decode.h */,
+				9EEA311611E0473E005B6996 /* xdelta3-main.h */,
+				9EEA30EF11E041B8005B6996 /* xdelta3.c */,
+				9EEA30F011E041B8005B6996 /* xdelta3.h */,
+				9EFA6CE411E153B500CBE19A /* XDeltaAdapter.h */,
+				9EFA6CE511E153B500CBE19A /* XDeltaAdapter.m */,
+			);
+			name = xdelta;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8D1107260486CEB800E47090 /* MultiPatcher */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "MultiPatcher" */;
+			buildPhases = (
+				8D1107290486CEB800E47090 /* Resources */,
+				8D11072C0486CEB800E47090 /* Sources */,
+				8D11072E0486CEB800E47090 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MultiPatcher;
+			productInstallPath = "$(HOME)/Applications";
+			productName = Mother3UPS;
+			productReference = 9EEA30B411E03F75005B6996 /* MultiPatch.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "MultiPatch" */;
+			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 29B97314FDCFA39411CA2CEA /* Mother3UPS */;
+			productRefGroup = 9EEA30B511E03F75005B6996 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8D1107260486CEB800E47090 /* MultiPatcher */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D1107290486CEB800E47090 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
+				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
+				9EAEB1D511E1767B006CF92A /* bandages.icns in Resources */,
+				9E8884DD167579E3008AFDC1 /* stream in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D11072C0486CEB800E47090 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072D0486CEB800E47090 /* main.m in Sources */,
+				9E0351C30E9D8B570043AC3E /* PatchController.mm in Sources */,
+				9EEA30F111E041B8005B6996 /* xdelta3.c in Sources */,
+				9EFA6CE611E153B500CBE19A /* XDeltaAdapter.m in Sources */,
+				9EFA6D2E11E161D000CBE19A /* IPSAdapter.m in Sources */,
+				9E28E08611E2BE330002DE08 /* libppf.cc in Sources */,
+				9E28E08811E2BE330002DE08 /* ppf.cc in Sources */,
+				9E28E08D11E2BF5E0002DE08 /* PPFAdapter.mm in Sources */,
+				9E1EE3BF11FE75E90081FDC2 /* uips.c in Sources */,
+				9E17AB9F120F9E9800BA4827 /* CreationController.mm in Sources */,
+				9ED6066E126D30DC004782CA /* bsdiff.c in Sources */,
+				9ED6066F126D30DC004782CA /* bspatch.c in Sources */,
+				9ED60672126D370C004782CA /* BSdiffAdapter.m in Sources */,
+				9E8884E216757BAA008AFDC1 /* libups.cpp in Sources */,
+				9E81270D1676CD5E008F2A5D /* BPSAdapter.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		089C165CFE840E0CC02AAC07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				089C165DFE840E0CC02AAC07 /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		1DDD58140DA1D0A300B32029 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1DDD58150DA1D0A300B32029 /* English */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		C01FCF4B08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = MultiPatch_Prefix.pch;
+				GCC_VERSION = "";
+				HEADER_SEARCH_PATHS = "";
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_NAME = MultiPatch;
+				SDKROOT = macosx10.7;
+			};
+			name = Debug;
+		};
+		C01FCF4C08A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = MultiPatch_Prefix.pch;
+				GCC_VERSION = "";
+				HEADER_SEARCH_PATHS = "";
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_NAME = MultiPatch;
+				SDKROOT = macosx10.7;
+			};
+			name = Release;
+		};
+		C01FCF4F08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_THREADSAFE_STATICS = YES;
+				GCC_USE_INDIRECT_FUNCTION_CALLS = NO;
+				GCC_VERSION = "";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_MASTER_OBJECT_FILE = NO;
+				MACH_O_TYPE = mh_execute;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CFLAGS = "-fnested-functions";
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
+				OTHER_LDFLAGS = (
+					"-l",
+					bz2,
+				);
+				PREBINDING = NO;
+				SDKROOT = macosx10.4;
+			};
+			name = Debug;
+		};
+		C01FCF5008A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_VERSION = "";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = (
+					"-l",
+					bz2,
+				);
+				PREBINDING = NO;
+				SDKROOT = macosx10.4;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "MultiPatcher" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4B08A954540054247B /* Debug */,
+				C01FCF4C08A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "MultiPatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4F08A954540054247B /* Debug */,
+				C01FCF5008A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}

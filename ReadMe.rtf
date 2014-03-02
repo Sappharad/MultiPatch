@@ -1,0 +1,141 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
+\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 HelveticaNeue;\f1\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww11020\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\fs36 \cf0 \uldb \ulc0 Multi Patch 1.4
+\f1\fs24 \ulnone \
+\
+
+\f0 \ul Overview\ulnone \
+Multi Patch is a patch utility for Mac OS X. If you downloaded this, you probably already know that. Multi Patch is free software made up of several open source projects under varying licenses. See the license and source code sections below for more details.\
+\
+\ul System Requirements\ulnone \
+1. Any system running Mac OS X 10.7 or greater.\
+2. Enough hard drive space to save a copy of the files you're planning to patch.\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\b \cf0 Note:
+\b0  This version of MultiPatch is not signed for Mac OS X 10.8's Gatekeeper feature. If you are using the default security settings and OS X prevents the application from running, you will need to right-click the MultiPatch application and select "Open" the first time you try to run it. This will allow you to manually acknowledge that you are willing to allow the application to run.\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\cf0 \ul Instructions\ulnone \
+1. Run the application.\
+2. Select a patch file.\
+3. Select the file you want to patch.\
+4. Choose where to save the patched file.\
+5. Click Apply Patch.\
+If nothing goes wrong, the patch will be applied and you'll get a message telling you that patching is complete. Otherwise you'll get an error that may explain what went wrong.\
+\
+\ul Supported formats\ulnone \
+Supported patch formats are automatically detected based on the file extension of the patch. At this time, please ensure the patches you wish to use have the proper extension.\
+IPS: .ips\
+UPS: .ups\
+PPF: .ppf\
+XDelta: .delta; .dat\
+BSDiff: .bdf; .bsdiff\
+BPS: .bps\
+\
+\ul Creating Patches\ulnone \
+MultiPatch can also create patches in all supported patching formats except PPF. Click the "Create Patch" button in the corner of the window to switch to patch creation mode. Usage for that is similar to applying a patch. The format of the patch to create is selected from a drop-down in the save dialog.\
+\
+BPS Patch creation offers two different options, Linear and Delta. Linear BPS patches are larger, but can be created very quickly and require very little memory to create. Delta BPS patches are usually smaller than Linear patches, but take longer and require more memory to create. The time and memory required to create a BPS delta patch depends on the size of the original and modified files.\
+\
+\ul License\ulnone \
+Multi Patch is built using open source code taken from various sources. The code for each patching algorithm used falls under different licenses, and any changes made will need to adhere to the specific license for that code. The Multi Patch application itself is released under the GPL in an effort to be compatible with the licenses of the patching libraries contained within. The licenses employed by each patching library used are listed below:\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\b \cf0 UPS uses LibUPS by byuu.
+\b0 \
+- Public domain, with one exception. See source code for details.\
+
+\b BPS based on beat by byuu.
+\b0 \
+- Released under the GPLv3.\
+
+\b IPS uses UIPS by Neil Corlett.
+\b0 \
+- Released under the GPL.\
+
+\b PPF uses LibPPF by Daniel Ekstr'm.
+\b0 \
+- Released under the GPL.\
+
+\b XDelta uses XDelta3 by Josh MacDonald and others.
+\b0 \
+- Released under the GPL.\
+
+\b BSDiff uses BSDiff by Colin Percival\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\b0 \cf0 - Released under custom license. See source code for details.\
+\
+\ul Source Code\ulnone \
+The latest source code to Multi Patch is available directly from the Subversion repository:\
+svn://svn.sappharad.com/multipatch/trunk/\
+\
+If you have changes that you'd like to contribute to the application, please contact me to request an account with write access to the repository.\
+\
+\ul Version History\
+\ulnone 1.4 - December 11th 2012\
+- Added support for applying and creating BPS patches.\
+- Better handling of filenames with foreign characters and accents.\
+- Mac OS X 10.7 or later is now required, due to the BPS reference implementation which is written in C++11. The compilers included with Xcode do not offer support for C++11 against versions of OS X prior to 10.7.\
+\
+1.3 - October 18th 2010\
+- Added support for BSdiff patching and patch creation. BSdiff patch creation requires a lot of memory, and creating patches for files over 60MB or so will require more memory than a 32-bit application allows. Since Mac OS X 10.5 is required for 64-bit Universal binaries, I have provided two versions of this release: A 32-bit build for Mac OS X 10.4 and a 64-bit build for 10.5 or later. Since Apple is discontinuing support for OS X 10.4 in XCode 4, this will probably be the last release that I offer with support for it.\ul \
+\
+\ulnone 1.2 - October 6th 2010\
+- Added more explanation to a couple of the patching errors, so it's more clear to the user when they picked the wrong file.\
+\
+1.1 - September 8th 2010\
+- Switched to Neil Corlett's UIPS code for IPS support.\
+- Added patch creation window. Can create IPS, UPS, and XDelta patches.\
+- Fixed UPS patching, two of the arguments were flipped.\
+- Compiled against latest XDelta release, 3.0z\ul \
+\ulnone \
+1.0 - July 7th 2010\
+- Initial release. Supports applying IPS, UPS, PPF and Xdelta patches.\
+\
+\ul Credits and Special Thanks\ulnone \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\b \cf0 Main Application\ul \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\b0 \cf0 \ulnone Paul Kratt\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\b \cf0 UPS and BPS patchers
+\b0 \
+byuu\
+\
+
+\b IPS patcher
+\b0 \
+Neil Corlett\
+\
+
+\b PPF patcher
+\b0 \
+Daniel Ekstr'm\
+\
+
+\b XDelta
+\b0 \
+Josh MacDonald\
+\
+
+\b BSDiff
+\b0 \
+Colin Percival\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\cf0 \ul Contact\ulnone \
+I can be contacted via e-mail at the following address:\
+sappharad @ sappharad [.com]\
+(Omit brackets and spaces)\
+}
