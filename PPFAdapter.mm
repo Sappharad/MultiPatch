@@ -51,10 +51,9 @@
 	
 	if(![input isEqualToString:output]){
 		NSFileManager* fileMan = [NSFileManager defaultManager];
-		if(![fileMan copyPath:input toPath:output handler:nil])
+        NSError* error;
+        if(![fileMan copyItemAtPath:input toPath:output error:&error])
 		{
-			//Note: copyPath:ToPath is deprecated in 10.5
-			//Use if(![fileMan copyItemAtPath:input toPath:output error:NULL]) in 10.5
 			return @"Unable to open original file or write to output file.";
 		}
 	}

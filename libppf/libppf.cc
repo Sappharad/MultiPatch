@@ -122,11 +122,14 @@ namespace lppf {
          // Read and add chunk data. If chunkSize is 0, the first byte is the
          // data and the second is number of repetitions. This is only valid
          // for PPFv1 patches
-         if (chunkSize == 0)
-            if (version == 1)
-               return ERROR_PPF_FORMAT;
-            else if (version == 3)
-               chunkSize = 2;
+          if (chunkSize == 0){
+              if (version == 1){
+                  return ERROR_PPF_FORMAT;
+              }
+              else if (version == 3){
+                  chunkSize = 2;
+              }
+          }
 
          if ((signed)fread(buf, 1, chunkSize, file) != chunkSize)
             return ERROR_PPF_READ;

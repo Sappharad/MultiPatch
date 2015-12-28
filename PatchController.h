@@ -1,4 +1,5 @@
 #import <Cocoa/Cocoa.h>
+#include "mbFlipWindow.h"
 
 typedef enum PatchTypes{
 	UNKNOWNPAT, UPSPAT, XDELTAPAT, IPSPAT, PPFPAT, BSDIFFPAT, BPSPAT, BPSDELTA
@@ -23,10 +24,9 @@ typedef enum PatchTypes{
 - (IBAction)btnBrowse:(id)sender;
 - (IBAction)btnSelectPatch:(id)sender;
 - (IBAction)btnSelectOutput:(id)sender;
-- (void)openPanelDidEnd:(NSOpenPanel*)panel returnCode:(int)returnCode contextInfo:(void*)contextInfo; //Called automatically
-- (void)selPatchPanelEnd:(NSOpenPanel*)panel returnCode:(int)returnCode contextInfo:(void*)contextInfo;
-- (void)selOutputPanelEnd:(NSSavePanel*)panel returnCode:(int)returnCode contextInfo:(void*)contextInfo;
 + (PatchFormat)detectPatchFormat:(NSString*)patchPath;
 - (NSString*)ApplyPatch:(NSString*)patchPath :(NSString*)sourceFile :(NSString*)destFile;
 - (IBAction)btnCreatePatch:(id)sender;
++ (mbFlipWindow*)flipper;
+
 @end

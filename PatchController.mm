@@ -7,6 +7,14 @@
 #include "BPSAdapter.h"
 
 @implementation PatchController
+static mbFlipWindow* _flipper;
+
+-(id)init{
+    if(self=[super init]){
+        _flipper = [mbFlipWindow new];
+    }
+    return self;
+}
 
 - (IBAction)btnApply:(id)sender {
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -46,27 +54,52 @@
 
 - (IBAction)btnBrowse:(id)sender {
     NSOpenPanel *fbox = [NSOpenPanel openPanel];
-	[fbox beginSheetForDirectory:nil file:nil modalForWindow:wndPatcher modalDelegate:self 
-                  didEndSelector:@selector(openPanelDidEnd: returnCode: contextInfo:) contextInfo:nil];
-	//Delegate is who handles the window code.
-}
-
-- (void)openPanelDidEnd:(NSOpenPanel *)panel returnCode:(int)returnCode  contextInfo:(void  *)contextInfo{
-	if(returnCode == NSOKButton){
-		NSString* selfile = [[panel filenames] objectAtIndex:0];
-		[txtRomPath setStringValue:selfile];
-		if(romFormat != nil){
-			[romFormat release];
-		}
-		romFormat = [selfile pathExtension];
-		[romFormat retain];
-	}
+    [fbox beginSheetModalForWindow:wndPatcher completionHandler:^(NSInteger result) {
+        if(result == NSOKButton){
+            NSString* selfile = [[[fbox URLs] objectAtIndex:0] path];
+            [txtRomPath setStringValue:selfile];
+            if(romFormat != nil){
+                [romFormat release];
+            }
+            romFormat = [selfile pathExtension];
+            [romFormat retain];
+        }
+    }];
 }
 
 - (IBAction)btnSelectPatch:(id)sender{
 	NSOpenPanel *fbox = [NSOpenPanel openPanel];
-	[fbox beginSheetForDirectory:nil file:nil modalForWindow:wndPatcher modalDelegate:self 
-                  didEndSelector:@selector(selPatchPanelEnd: returnCode: contextInfo:) contextInfo:nil];
+    [fbox beginSheetModalForWindow:wndPatcher completionHandler:^(NSInteger result) {
+        if(result == NSOKButton){
+            NSString* selfile = [[[fbox URLs] objectAtIndex:0] path];
+            [txtPatchPath setStringValue:selfile];
+            currentFormat = [PatchController detectPatchFormat:selfile];
+            [btnApply setEnabled:currentFormat!=UNKNOWNPAT];
+            switch (currentFormat) {
+                case UPSPAT:
+                    [lblPatchFormat setStringValue:@"UPS"];
+                    break;
+                case XDELTAPAT:
+                    [lblPatchFormat setStringValue:@"XDelta"];
+                    break;
+                case IPSPAT:
+                    [lblPatchFormat setStringValue:@"IPS"];
+                    break;
+                case PPFPAT:
+                    [lblPatchFormat setStringValue:@"PPF"];
+                    break;
+                case BSDIFFPAT:
+                    [lblPatchFormat setStringValue:@"BSDiff"];
+                    break;
+                case BPSPAT:
+                    [lblPatchFormat setStringValue:@"BPS"];
+                    break;
+                default:
+                    [lblPatchFormat setStringValue:@"Not supported"];
+                    break;
+            }
+        }
+    }];
 }
 
 - (IBAction)btnSelectOutput:(id)sender{
@@ -74,47 +107,12 @@
 	if(romFormat != nil && [romFormat length]>0){
 		[fbox setAllowedFileTypes:[NSArray arrayWithObject:romFormat]];
 	}
-	[fbox beginSheetForDirectory:nil file:nil modalForWindow:wndPatcher modalDelegate:self 
-                  didEndSelector:@selector(selOutputPanelEnd: returnCode: contextInfo:) contextInfo:nil];
-}
-
-- (void)selPatchPanelEnd:(NSOpenPanel*)panel returnCode:(int)returnCode contextInfo:(void*)contextInfo{
-	if(returnCode == NSOKButton){
-		NSString* selfile = [[panel filenames] objectAtIndex:0];
-		[txtPatchPath setStringValue:selfile];
-		currentFormat = [PatchController detectPatchFormat:selfile];
-		[btnApply setEnabled:currentFormat!=UNKNOWNPAT];
-		switch (currentFormat) {
-			case UPSPAT:
-				[lblPatchFormat setStringValue:@"UPS"];
-				break;
-			case XDELTAPAT:
-				[lblPatchFormat setStringValue:@"XDelta"];
-				break;
-			case IPSPAT:
-				[lblPatchFormat setStringValue:@"IPS"];
-				break;
-			case PPFPAT:
-				[lblPatchFormat setStringValue:@"PPF"];
-				break;
-            case BSDIFFPAT:
-                [lblPatchFormat setStringValue:@"BSDiff"];
-                break;
-            case BPSPAT:
-                [lblPatchFormat setStringValue:@"BPS"];
-                break;
-			default:
-				[lblPatchFormat setStringValue:@"Not supported"];
-				break;
-		}
-	}
-}
-
-- (void)selOutputPanelEnd:(NSSavePanel*)panel returnCode:(int)returnCode contextInfo:(void*)contextInfo{
-	if(returnCode == NSOKButton){
-		NSString* selfile = [panel filename];
-		[txtOutputPath setStringValue:selfile];
-	}
+    [fbox beginSheetModalForWindow:wndPatcher completionHandler:^(NSInteger result) {
+        if(result == NSOKButton){
+            NSString* selfile = [[fbox URL] path];
+            [txtOutputPath setStringValue:selfile];
+        }
+    }];
 }
 
 + (PatchFormat)detectPatchFormat:(NSString*)patchPath{
@@ -170,9 +168,12 @@
 }
 
 - (IBAction)btnCreatePatch:(id)sender {
-    [wndCreator setFrameOrigin:[wndPatcher frame].origin];
-    [wndCreator makeKeyAndOrderFront:sender];
-    [wndPatcher orderOut:sender];
+    _flipper.flipRight = YES;
+    [_flipper flip:wndPatcher to:wndCreator];
+}
+
++ (mbFlipWindow*)flipper{
+    return _flipper;
 }
 
 @end

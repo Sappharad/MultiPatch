@@ -15,28 +15,22 @@
 
 - (IBAction)btnPickOrig:(id)sender {
     NSOpenPanel *fbox = [NSOpenPanel openPanel];
-	[fbox beginSheetForDirectory:nil file:nil modalForWindow:wndCreatePatch modalDelegate:self 
-                  didEndSelector:@selector(pickOrgPanelDidEnd: returnCode: contextInfo:) contextInfo:nil];
-}
-
-- (void)pickOrgPanelDidEnd:(NSOpenPanel *)panel returnCode:(int)returnCode  contextInfo:(void  *)contextInfo{
-	if(returnCode == NSOKButton){
-		NSString* selfile = [[panel filenames] objectAtIndex:0];
-		[txtOrigFile setStringValue:selfile];
-	}
+    [fbox beginSheetModalForWindow:wndCreatePatch completionHandler:^(NSInteger result) {
+        if(result == NSOKButton){
+            NSString* selfile = [[[fbox URLs] objectAtIndex:0] path];
+            [txtOrigFile setStringValue:selfile];
+        }
+    }];
 }
 
 - (IBAction)btnPickModified:(id)sender{
     NSOpenPanel *fbox = [NSOpenPanel openPanel];
-	[fbox beginSheetForDirectory:nil file:nil modalForWindow:wndCreatePatch modalDelegate:self 
-                  didEndSelector:@selector(pickModPanelDidEnd: returnCode: contextInfo:) contextInfo:nil];
-}
-
-- (void)pickModPanelDidEnd:(NSOpenPanel *)panel returnCode:(int)returnCode  contextInfo:(void  *)contextInfo{
-	if(returnCode == NSOKButton){
-		NSString* selfile = [[panel filenames] objectAtIndex:0];
-		[txtModFile setStringValue:selfile];
-	}
+    [fbox beginSheetModalForWindow:wndCreatePatch completionHandler:^(NSInteger result) {
+        if(result == NSOKButton){
+            NSString* selfile = [[[fbox URLs] objectAtIndex:0] path];
+            [txtModFile setStringValue:selfile];
+        }
+    }];
 }
 
 - (IBAction)btnPickOutput:(id)sender{
@@ -51,13 +45,14 @@
     [ddFormats addItemWithTitle:@"Linear BPS Patch (*.bps)"];
     [ddFormats addItemWithTitle:@"Delta BPS Patch (*.bps)"];
     [fbox setAccessoryView:vwFormatPicker];
-	[fbox beginSheetForDirectory:nil file:nil modalForWindow:wndCreatePatch modalDelegate:self 
-                  didEndSelector:@selector(selOutputPanelEnd: returnCode: contextInfo:) contextInfo:nil];
+    [fbox beginSheetModalForWindow:wndCreatePatch completionHandler:^(NSInteger result) {
+        [self selOutputPanelEnd:fbox returnCode:result];
+    }];
 }
 
-- (void)selOutputPanelEnd:(NSSavePanel*)panel returnCode:(int)returnCode contextInfo:(void*)contextInfo{
+- (void)selOutputPanelEnd:(NSSavePanel*)panel returnCode:(int)returnCode{
 	if(returnCode == NSOKButton){
-		NSString* selfile = [panel filename];
+		NSString* selfile = [[panel URL] path];
         bool bps_delta = false;
         if([[ddFormats titleOfSelectedItem] hasPrefix:@"UPS"] && ![selfile hasSuffix:@".ups"]){
             selfile = [selfile stringByAppendingString:@".ups"];
@@ -146,13 +141,12 @@
 	else{
 		NSRunAlertPanel(@"Input file(s) not found",@"The input files must be selected and should exist.",@"Okay",nil,nil);	
 	}
-
 }
 
 - (IBAction)btnApplyMode:(id)sender {
-    [wndApplyPatch setFrameOrigin:[wndCreatePatch frame].origin];
-    [wndApplyPatch makeKeyAndOrderFront:self];
-    [wndCreatePatch orderOut:self];
+    mbFlipWindow* flipper = [PatchController flipper];
+    flipper.flipRight = NO;
+    [flipper flip:wndCreatePatch to:wndApplyPatch];
 }
 
 - (NSString*)CreatePatch:(NSString*)origFile :(NSString*)modFile :(NSString*)createFile{
