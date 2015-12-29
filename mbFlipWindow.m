@@ -13,6 +13,18 @@ NSRect RectFromViewToView(NSRect aRect, NSView *fromView, NSView *toView);
 - (CAAnimation *) animationWithDuration:(CGFloat)time flip:(BOOL)bFlip right:(BOOL)rightFlip;
 @end
 
+@interface OutsideWindow : NSWindow
+@end
+
+@implementation OutsideWindow
+-(NSRect)constrainFrameRect:(NSRect)frameRect toScreen:(NSScreen *)screen{
+    //Allow the flipping animation window to go wherever it flipping wants to.
+    //If the user flips a window close to the side of the screen, we don't want the animation
+    //to jump somewhere else because the animation window got pushed back into screen bounds.
+    return frameRect;
+}
+@end
+
 @implementation mbFlipWindow
 
 @synthesize flipRight;
@@ -29,9 +41,9 @@ NSRect RectFromViewToView(NSRect aRect, NSView *fromView, NSView *toView);
 }
 
 // this method create the window for animation with the image the window
-- (NSWindow *) windowForAnimation:(NSRect)aFrame {
+- (NSWindow*) windowForAnimation:(NSRect)aFrame {
     
-    NSWindow *wnd =  [[NSWindow alloc] initWithContentRect:aFrame
+    OutsideWindow* wnd =  [[OutsideWindow alloc] initWithContentRect:aFrame
                                                  styleMask:NSBorderlessWindowMask
                                                    backing:NSBackingStoreBuffered
                                                      defer:NO];
@@ -137,8 +149,8 @@ NSRect RectFromViewToView(NSRect aRect, NSView *fromView, NSView *toView) {
     NSView *targetView = [targetWindow.contentView superview];
     
     // create window for animation
-    CGFloat maxWidth  = MAX(NSWidth(activeWindow.frame), NSWidth(targetWindow.frame)) + 500;
-    CGFloat maxHeight = MAX(NSHeight(activeWindow.frame), NSHeight(targetWindow.frame)) + 500;
+    CGFloat maxWidth  = MAX(NSWidth(activeWindow.frame), NSWidth(targetWindow.frame)) + 250;
+    CGFloat maxHeight = MAX(NSHeight(activeWindow.frame), NSHeight(targetWindow.frame)) + 250;
     
     CGRect animationFrame = CGRectMake(NSMidX(activeWindow.frame) - (maxWidth / 2),
                                        NSMidY(activeWindow.frame) - (maxHeight / 2),
