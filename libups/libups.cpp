@@ -42,7 +42,7 @@ bool UPS::create(const char *x, const char *y, const char *z) {
       }
 
       x = i < sizex ? xread() : 0x00;
-      y = y < sizey ? yread() : 0x00;
+      y = i < sizey ? yread() : 0x00;
       i++;
       zwrite(x ^ y);
       if(x == y) break;
