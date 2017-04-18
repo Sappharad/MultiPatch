@@ -4,17 +4,16 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "PatchController.h"
+#import "MPPatchWindow.h"
 
-@interface CreationController : NSObject {
-    IBOutlet NSTextField *txtOrigFile;
-    IBOutlet NSTextField *txtModFile;
+@interface MPCreationWindow : NSWindow {
+    IBOutlet MPFileTextField *txtOrigFile;
+    IBOutlet MPFileTextField *txtModFile;
     IBOutlet NSTextField *txtPatchFile;
     IBOutlet NSTextFieldCell *lblPatchFormat;
     IBOutlet NSButton *btnCreatePatch;
     PatchFormat currentFormat;
     IBOutlet NSWindow *wndApplyPatch;
-    IBOutlet NSWindow *wndCreatePatch;
     IBOutlet NSPanel *pnlPatching;
     IBOutlet NSTextField *lblStatus;
     IBOutlet NSProgressIndicator *barProgress;

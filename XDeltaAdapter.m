@@ -46,12 +46,13 @@
 
 int code (int encode, FILE* InFile, FILE* SrcFile, FILE* OutFile, int BufSize)
 {
-    int r, ret;
+    int ret;
+    size_t r;
     xd3_stream stream;
     xd3_config config;
     xd3_source source;
     void* Input_Buf;
-    int Input_Buf_Read;
+    usize_t Input_Buf_Read;
     
     if (BufSize < XD3_ALLOCSIZE)
         BufSize = XD3_ALLOCSIZE;
@@ -71,8 +72,8 @@ int code (int encode, FILE* InFile, FILE* SrcFile, FILE* OutFile, int BufSize)
         /* Load 1st block of stream. */
         r = fseek(SrcFile, 0, SEEK_SET);
         if (r)
-            return r;
-        source.onblk = fread((void*)source.curblk, 1, source.blksize, SrcFile);
+            return (int)r;
+        source.onblk = (usize_t)fread((void*)source.curblk, 1, source.blksize, SrcFile);
         source.curblkno = 0;
         /* Set the stream. */
         xd3_set_source(&stream, &source);
@@ -83,7 +84,7 @@ int code (int encode, FILE* InFile, FILE* SrcFile, FILE* OutFile, int BufSize)
     fseek(InFile, 0, SEEK_SET);
     do
     {
-        Input_Buf_Read = fread(Input_Buf, 1, BufSize, InFile);
+        Input_Buf_Read = (usize_t)fread(Input_Buf, 1, BufSize, InFile);
         if (Input_Buf_Read < BufSize)
         {
             xd3_set_flags(&stream, XD3_FLUSH | stream.flags);
@@ -109,7 +110,7 @@ int code (int encode, FILE* InFile, FILE* SrcFile, FILE* OutFile, int BufSize)
                 fprintf (stderr,"XD3_OUTPUT\n");
                 r = fwrite(stream.next_out, 1, stream.avail_out, OutFile);
                 if (r != (int)stream.avail_out)
-                    return r;
+                    return (int)r;
                 xd3_consume_output(&stream);
                 goto process;
             }
@@ -121,9 +122,8 @@ int code (int encode, FILE* InFile, FILE* SrcFile, FILE* OutFile, int BufSize)
                 {
                     r = fseek(SrcFile, source.blksize * source.getblkno, SEEK_SET);
                     if (r)
-                        return r;
-                    source.onblk = fread((void*)source.curblk, 1,
-                                         source.blksize, SrcFile);
+                        return (int)r;
+                    source.onblk = (usize_t)fread((void*)source.curblk, 1, source.blksize, SrcFile);
                     source.curblkno = source.getblkno;
                 }
                 goto process;

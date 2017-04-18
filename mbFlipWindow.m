@@ -4,7 +4,7 @@
 #import "mbFlipWindow.h"
 #import <QuartzCore/QuartzCore.h>
 
-@interface mbFlipWindow () //hiden methods
+@interface mbFlipWindow () <CAAnimationDelegate> //hiden methods
 - (NSWindow *) windowForAnimation:(NSRect)aFrame;
 - (CALayer *) layerFromView :(NSView*)view;
 NSRect RectToScreen(NSRect aRect, NSView *aView);

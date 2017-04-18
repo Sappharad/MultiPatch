@@ -1,27 +1,14 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9531"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12118"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication"/>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
-        <customObject id="466" userLabel="PatchController" customClass="PatchController">
-            <connections>
-                <outlet property="barProgress" destination="487" id="489"/>
-                <outlet property="btnApply" destination="464" id="511"/>
-                <outlet property="lblPatchFormat" destination="506" id="508"/>
-                <outlet property="lblStatus" destination="485" id="584"/>
-                <outlet property="pnlPatching" destination="483" id="488"/>
-                <outlet property="txtOutputPath" destination="500" id="510"/>
-                <outlet property="txtPatchPath" destination="492" id="496"/>
-                <outlet property="txtRomPath" destination="454" id="473"/>
-                <outlet property="wndCreator" destination="512" id="575"/>
-                <outlet property="wndPatcher" destination="371" id="477"/>
-            </connections>
-        </customObject>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <menu title="AMainMenu" systemMenu="main" id="29" userLabel="MainMenu">
             <items>
                 <menuItem title="MultiPatch" id="56">
@@ -76,11 +63,7 @@
                 <menuItem title="File" id="83">
                     <menu key="submenu" title="File" id="81">
                         <items>
-                            <menuItem title="New" enabled="NO" keyEquivalent="n" id="82" userLabel="9">
-                                <connections>
-                                    <action selector="newDocument:" target="-1" id="373"/>
-                                </connections>
-                            </menuItem>
+                            <menuItem title="New" enabled="NO" keyEquivalent="n" id="82" userLabel="9"/>
                             <menuItem title="Open…" enabled="NO" keyEquivalent="o" id="72">
                                 <connections>
                                     <action selector="openDocument:" target="-1" id="374"/>
@@ -100,42 +83,21 @@
                             <menuItem isSeparatorItem="YES" id="79" userLabel="7">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Close" enabled="NO" keyEquivalent="w" id="73" userLabel="1">
-                                <connections>
-                                    <action selector="performClose:" target="-1" id="193"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Save" enabled="NO" keyEquivalent="s" id="75" userLabel="3">
-                                <connections>
-                                    <action selector="saveDocument:" target="-1" id="362"/>
-                                </connections>
-                            </menuItem>
+                            <menuItem title="Close" enabled="NO" keyEquivalent="w" id="73" userLabel="1"/>
+                            <menuItem title="Save" enabled="NO" keyEquivalent="s" id="75" userLabel="3"/>
                             <menuItem title="Save As…" enabled="NO" keyEquivalent="S" id="80" userLabel="8">
                                 <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
-                                <connections>
-                                    <action selector="saveDocumentAs:" target="-1" id="363"/>
-                                </connections>
                             </menuItem>
                             <menuItem title="Revert to Saved" enabled="NO" id="112" userLabel="10">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="revertDocumentToSaved:" target="-1" id="364"/>
-                                </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="74" userLabel="2">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
                             <menuItem title="Page Setup..." enabled="NO" keyEquivalent="P" id="77" userLabel="5">
                                 <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
-                                <connections>
-                                    <action selector="runPageLayout:" target="-1" id="87"/>
-                                </connections>
                             </menuItem>
-                            <menuItem title="Print…" enabled="NO" keyEquivalent="p" id="78" userLabel="6">
-                                <connections>
-                                    <action selector="print:" target="-1" id="86"/>
-                                </connections>
-                            </menuItem>
+                            <menuItem title="Print…" enabled="NO" keyEquivalent="p" id="78" userLabel="6"/>
                         </items>
                     </menu>
                 </menuItem>
@@ -503,7 +465,7 @@
                 </menuItem>
             </items>
         </menu>
-        <window title="MultiPatch File Patcher" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" showsToolbarButton="NO" animationBehavior="default" id="371">
+        <window title="MultiPatch File Patcher" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" showsToolbarButton="NO" animationBehavior="default" id="371" customClass="MPPatchWindow">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" texturedBackground="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="335" y="518" width="451" height="232"/>
@@ -512,7 +474,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="451" height="232"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <textField verticalHuggingPriority="750" id="452">
+                    <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="452">
                         <rect key="frame" x="17" y="145" width="446" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Location of file to patch:" id="453">
@@ -521,7 +483,7 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField verticalHuggingPriority="750" id="454">
+                    <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="454" customClass="MPFileTextField">
                         <rect key="frame" x="20" y="120" width="318" height="22"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="455">
@@ -785,7 +747,7 @@
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
-                            <action selector="btnBrowse:" target="466" id="475"/>
+                            <action selector="btnSelectPatch:" target="371" id="J54-Ja-rcf"/>
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" id="464">
@@ -796,10 +758,10 @@
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
-                            <action selector="btnApply:" target="466" id="476"/>
+                            <action selector="btnApply:" target="371" id="Yp9-rS-sCr"/>
                         </connections>
                     </button>
-                    <textField verticalHuggingPriority="750" id="490">
+                    <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="490">
                         <rect key="frame" x="17" y="195" width="169" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Location of patch file:" id="491">
@@ -808,7 +770,7 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField verticalHuggingPriority="750" id="492">
+                    <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="492" customClass="MPFileTextField">
                         <rect key="frame" x="20" y="170" width="318" height="22"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="493">
@@ -825,10 +787,10 @@
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
-                            <action selector="btnSelectPatch:" target="466" id="497"/>
+                            <action selector="btnBrowse:" target="371" id="NhV-CH-2DF"/>
                         </connections>
                     </button>
-                    <textField verticalHuggingPriority="750" id="498">
+                    <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="498">
                         <rect key="frame" x="17" y="95" width="133" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Save patched file as:" id="499">
@@ -837,7 +799,7 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField verticalHuggingPriority="750" id="500">
+                    <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="500">
                         <rect key="frame" x="20" y="70" width="318" height="22"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="501">
@@ -854,10 +816,10 @@
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
-                            <action selector="btnSelectOutput:" target="466" id="509"/>
+                            <action selector="btnSelectOutput:" target="371" id="ix4-Cm-hDx"/>
                         </connections>
                     </button>
-                    <textField verticalHuggingPriority="750" id="504">
+                    <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="504">
                         <rect key="frame" x="17" y="45" width="91" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Patch Format:" id="505">
@@ -866,7 +828,7 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField verticalHuggingPriority="750" id="506">
+                    <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="506">
                         <rect key="frame" x="112" y="45" width="167" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Unknown" id="507">
@@ -883,12 +845,24 @@
                             <font key="font" metaFont="cellTitle"/>
                         </buttonCell>
                         <connections>
-                            <action selector="btnCreatePatch:" target="466" id="574"/>
+                            <action selector="btnCreatePatch:" target="371" id="gol-vV-eNl"/>
                         </connections>
                     </button>
                 </subviews>
             </view>
             <contentBorderThickness minY="0.0"/>
+            <connections>
+                <outlet property="barProgress" destination="487" id="EcX-Yj-mKi"/>
+                <outlet property="btnApply" destination="464" id="FlJ-h0-MJQ"/>
+                <outlet property="lblPatchFormat" destination="506" id="9pU-Mq-r9A"/>
+                <outlet property="lblStatus" destination="485" id="K9M-LY-j0t"/>
+                <outlet property="pnlPatching" destination="483" id="es0-Xr-kow"/>
+                <outlet property="txtOutputPath" destination="500" id="c17-50-J1x"/>
+                <outlet property="txtPatchPath" destination="492" id="F5x-Eo-ABf"/>
+                <outlet property="txtRomPath" destination="454" id="S6C-TJ-zF9"/>
+                <outlet property="wndCreator" destination="512" id="CDX-5l-xdN"/>
+            </connections>
+            <point key="canvasLocation" x="1" y="-142"/>
         </window>
         <customObject id="420" customClass="NSFontManager"/>
         <window title="Now patching..." allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" oneShot="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="483" customClass="NSPanel">
@@ -900,7 +874,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="280" height="97"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <textField verticalHuggingPriority="750" id="485">
+                    <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="485">
                         <rect key="frame" x="17" y="60" width="246" height="17"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Patching in progress..." id="486">
@@ -916,7 +890,7 @@
                 </subviews>
             </view>
         </window>
-        <window title="MultiPatch: Create Patch" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="512">
+        <window title="MultiPatch: Create Patch" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="512" customClass="MPCreationWindow">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" texturedBackground="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="232" width="450" height="232"/>
@@ -925,7 +899,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="450" height="232"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <textField verticalHuggingPriority="750" id="514">
+                    <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="514">
                         <rect key="frame" x="17" y="145" width="446" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Location of modified file:" id="537">
@@ -934,7 +908,7 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField verticalHuggingPriority="750" id="515">
+                    <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="515" customClass="MPFileTextField">
                         <rect key="frame" x="20" y="120" width="318" height="22"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="536">
@@ -1198,7 +1172,7 @@
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
-                            <action selector="btnPickModified:" target="542" id="545"/>
+                            <action selector="btnPickModified:" target="512" id="3UF-Gs-wVE"/>
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" id="517">
@@ -1209,10 +1183,10 @@
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
-                            <action selector="btnCreatePatch:" target="542" id="547"/>
+                            <action selector="btnCreatePatch:" target="512" id="3aV-nI-4Pf"/>
                         </connections>
                     </button>
-                    <textField verticalHuggingPriority="750" id="518">
+                    <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="518">
                         <rect key="frame" x="17" y="195" width="169" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Location of original file:" id="533">
@@ -1221,7 +1195,7 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField verticalHuggingPriority="750" id="519">
+                    <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="519" customClass="MPFileTextField">
                         <rect key="frame" x="20" y="170" width="318" height="22"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="532">
@@ -1238,10 +1212,10 @@
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
-                            <action selector="btnPickOrig:" target="542" id="544"/>
+                            <action selector="btnPickOrig:" target="512" id="N0X-jV-ECW"/>
                         </connections>
                     </button>
-                    <textField verticalHuggingPriority="750" id="521">
+                    <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="521">
                         <rect key="frame" x="17" y="95" width="133" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Save patch file as:" id="530">
@@ -1250,7 +1224,7 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField verticalHuggingPriority="750" id="522">
+                    <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="522">
                         <rect key="frame" x="20" y="70" width="318" height="22"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="529">
@@ -1267,10 +1241,10 @@
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
-                            <action selector="btnPickOutput:" target="542" id="546"/>
+                            <action selector="btnPickOutput:" target="512" id="1XZ-W1-QAf"/>
                         </connections>
                     </button>
-                    <textField verticalHuggingPriority="750" id="524">
+                    <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="524">
                         <rect key="frame" x="17" y="45" width="91" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Patch Format:" id="527">
@@ -1279,7 +1253,7 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField verticalHuggingPriority="750" id="525">
+                    <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="525">
                         <rect key="frame" x="112" y="45" width="167" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Unknown" id="526">
@@ -1296,30 +1270,27 @@
                             <font key="font" metaFont="cellTitle"/>
                         </buttonCell>
                         <connections>
-                            <action selector="btnApplyMode:" target="542" id="579"/>
+                            <action selector="btnApplyMode:" target="512" id="s1a-FF-JE7"/>
                         </connections>
                     </button>
                 </subviews>
             </view>
             <contentBorderThickness minY="0.0"/>
-        </window>
-        <customObject id="542" customClass="CreationController">
             <connections>
-                <outlet property="barProgress" destination="487" id="583"/>
-                <outlet property="btnCreatePatch" destination="517" id="552"/>
-                <outlet property="ddFormats" destination="586" id="593"/>
-                <outlet property="lblPatchFormat" destination="526" id="551"/>
-                <outlet property="lblStatus" destination="485" id="582"/>
-                <outlet property="pnlPatching" destination="483" id="581"/>
-                <outlet property="txtModFile" destination="515" id="549"/>
-                <outlet property="txtOrigFile" destination="519" id="548"/>
-                <outlet property="txtPatchFile" destination="522" id="550"/>
-                <outlet property="vwFormatPicker" destination="585" id="592"/>
-                <outlet property="wndApplyPatch" destination="371" id="580"/>
-                <outlet property="wndApplyWindow" destination="371" id="576"/>
-                <outlet property="wndCreatePatch" destination="512" id="577"/>
+                <outlet property="barProgress" destination="487" id="Zoy-2h-fIo"/>
+                <outlet property="btnCreatePatch" destination="517" id="gbL-qH-p7b"/>
+                <outlet property="ddFormats" destination="586" id="bdb-nZ-3h9"/>
+                <outlet property="lblPatchFormat" destination="526" id="vCl-HW-D0e"/>
+                <outlet property="lblStatus" destination="485" id="EKs-Dx-s8w"/>
+                <outlet property="pnlPatching" destination="483" id="bz7-KA-YUG"/>
+                <outlet property="txtModFile" destination="515" id="d7u-ib-BbT"/>
+                <outlet property="txtOrigFile" destination="519" id="mOH-7g-8Rb"/>
+                <outlet property="txtPatchFile" destination="522" id="9Lx-QU-eXY"/>
+                <outlet property="vwFormatPicker" destination="585" id="PI7-A1-s3R"/>
+                <outlet property="wndApplyPatch" destination="371" id="b21-OP-pvA"/>
             </connections>
-        </customObject>
+            <point key="canvasLocation" x="1" y="181"/>
+        </window>
         <customView id="585">
             <rect key="frame" x="0.0" y="0.0" width="329" height="35"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -1329,7 +1300,7 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="push" title="Pick a format" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="591" id="587">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="system"/>
+                        <font key="font" metaFont="menu"/>
                         <menu key="menu" title="OtherViews" id="588">
                             <items>
                                 <menuItem title="Format 1 here" id="590"/>
@@ -1338,7 +1309,7 @@
                         </menu>
                     </popUpButtonCell>
                 </popUpButton>
-                <textField verticalHuggingPriority="750" id="594">
+                <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="594">
                     <rect key="frame" x="17" y="10" width="89" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Patch format:" id="595">

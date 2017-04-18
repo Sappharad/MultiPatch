@@ -1,4 +1,4 @@
-#import "PatchController.h"
+#import "MPPatchWindow.h"
 #include "libups.hpp"
 #include "XDeltaAdapter.h"
 #include "IPSAdapter.h"
@@ -6,14 +6,44 @@
 #include "BSdiffAdapter.h"
 #include "BPSAdapter.h"
 
-@implementation PatchController
+@implementation MPPatchWindow
 static mbFlipWindow* _flipper;
 
--(id)init{
-    if(self=[super init]){
-        _flipper = [mbFlipWindow new];
-    }
-    return self;
+-(void)awakeFromNib{
+    [super awakeFromNib];
+    _flipper = [mbFlipWindow new];
+}
+
+-(void)close{
+    [super close];
+    [[NSApplication sharedApplication] terminate:nil];
+}
+
+-(void)makeKeyAndOrderFront:(id)sender{
+    [super makeKeyAndOrderFront:sender]; //This one gets called when mbFlipWindow flips back to this window
+    [self onOrderFront];
+}
+
+-(void)orderFront:(id)sender{
+    [super orderFront:sender]; //This one gets called when the app starts
+    [self onOrderFront];
+}
+
+-(void)onOrderFront{
+    txtRomPath.acceptFileDrop = ^BOOL(NSURL * target) {
+        [self setTargetFile:target];
+        return YES;
+    };
+    txtPatchPath.acceptFileDrop = ^BOOL(NSURL * target) {
+        [self setPatchFile:target];
+        return YES;
+    };
+}
+
+-(void)orderOut:(id)sender{
+    [super orderOut:sender];
+    txtRomPath.acceptFileDrop = nil;
+    txtPatchPath.acceptFileDrop = nil;
 }
 
 - (IBAction)btnApply:(id)sender {
@@ -21,12 +51,11 @@ static mbFlipWindow* _flipper;
 	NSString *romPath = [txtRomPath stringValue];
 	NSString *outputPath = [txtOutputPath stringValue];
 	NSString *patchPath = [txtPatchPath stringValue];
-	//NSRange lastSlash = [patchPath rangeOfString:@"/" options:NSBackwardsSearch];
 	
 	if([fileManager fileExistsAtPath:patchPath]){
 		if([romPath length] > 0 && [outputPath length] > 0 && [patchPath length] > 0){
 			[lblStatus setStringValue:@"Now patching..."];
-            [NSApp beginSheet:pnlPatching modalForWindow:wndPatcher modalDelegate:nil didEndSelector:nil contextInfo:nil]; //Make a sheet
+            [NSApp beginSheet:pnlPatching modalForWindow:self modalDelegate:nil didEndSelector:nil contextInfo:nil]; //Make a sheet
 			[barProgress setUsesThreadedAnimation:YES]; //Make sure it animates.
 			[barProgress startAnimation:self];
 			NSString* errMsg = [self ApplyPatch:patchPath :romPath :outputPath];
@@ -52,52 +81,60 @@ static mbFlipWindow* _flipper;
 	}
 }
 
+-(void)setTargetFile:(NSURL*)target{
+    NSString* selfile = [target path];
+    [txtRomPath setStringValue:selfile];
+    if(romFormat != nil){
+        [romFormat release];
+    }
+    romFormat = [selfile pathExtension];
+    [romFormat retain];
+}
+
 - (IBAction)btnBrowse:(id)sender {
     NSOpenPanel *fbox = [NSOpenPanel openPanel];
-    [fbox beginSheetModalForWindow:wndPatcher completionHandler:^(NSInteger result) {
+    [fbox beginSheetModalForWindow:self completionHandler:^(NSInteger result) {
         if(result == NSOKButton){
-            NSString* selfile = [[[fbox URLs] objectAtIndex:0] path];
-            [txtRomPath setStringValue:selfile];
-            if(romFormat != nil){
-                [romFormat release];
-            }
-            romFormat = [selfile pathExtension];
-            [romFormat retain];
+            [self setTargetFile:[[fbox URLs] objectAtIndex:0]];
         }
     }];
 }
 
+-(void)setPatchFile:(NSURL*)patch{
+    NSString* selfile = [patch path];
+    [txtPatchPath setStringValue:selfile];
+    currentFormat = [MPPatchWindow detectPatchFormat:selfile];
+    [btnApply setEnabled:currentFormat!=UNKNOWNPAT];
+    switch (currentFormat) {
+        case UPSPAT:
+            [lblPatchFormat setStringValue:@"UPS"];
+            break;
+        case XDELTAPAT:
+            [lblPatchFormat setStringValue:@"XDelta"];
+            break;
+        case IPSPAT:
+            [lblPatchFormat setStringValue:@"IPS"];
+            break;
+        case PPFPAT:
+            [lblPatchFormat setStringValue:@"PPF"];
+            break;
+        case BSDIFFPAT:
+            [lblPatchFormat setStringValue:@"BSDiff"];
+            break;
+        case BPSPAT:
+            [lblPatchFormat setStringValue:@"BPS"];
+            break;
+        default:
+            [lblPatchFormat setStringValue:@"Not supported"];
+            break;
+    }
+}
+
 - (IBAction)btnSelectPatch:(id)sender{
 	NSOpenPanel *fbox = [NSOpenPanel openPanel];
-    [fbox beginSheetModalForWindow:wndPatcher completionHandler:^(NSInteger result) {
+    [fbox beginSheetModalForWindow:self completionHandler:^(NSInteger result) {
         if(result == NSOKButton){
-            NSString* selfile = [[[fbox URLs] objectAtIndex:0] path];
-            [txtPatchPath setStringValue:selfile];
-            currentFormat = [PatchController detectPatchFormat:selfile];
-            [btnApply setEnabled:currentFormat!=UNKNOWNPAT];
-            switch (currentFormat) {
-                case UPSPAT:
-                    [lblPatchFormat setStringValue:@"UPS"];
-                    break;
-                case XDELTAPAT:
-                    [lblPatchFormat setStringValue:@"XDelta"];
-                    break;
-                case IPSPAT:
-                    [lblPatchFormat setStringValue:@"IPS"];
-                    break;
-                case PPFPAT:
-                    [lblPatchFormat setStringValue:@"PPF"];
-                    break;
-                case BSDIFFPAT:
-                    [lblPatchFormat setStringValue:@"BSDiff"];
-                    break;
-                case BPSPAT:
-                    [lblPatchFormat setStringValue:@"BPS"];
-                    break;
-                default:
-                    [lblPatchFormat setStringValue:@"Not supported"];
-                    break;
-            }
+            [self setPatchFile:[[fbox URLs] objectAtIndex:0]];
         }
     }];
 }
@@ -107,7 +144,7 @@ static mbFlipWindow* _flipper;
 	if(romFormat != nil && [romFormat length]>0){
 		[fbox setAllowedFileTypes:[NSArray arrayWithObject:romFormat]];
 	}
-    [fbox beginSheetModalForWindow:wndPatcher completionHandler:^(NSInteger result) {
+    [fbox beginSheetModalForWindow:self completionHandler:^(NSInteger result) {
         if(result == NSOKButton){
             NSString* selfile = [[fbox URL] path];
             [txtOutputPath setStringValue:selfile];
@@ -118,22 +155,23 @@ static mbFlipWindow* _flipper;
 + (PatchFormat)detectPatchFormat:(NSString*)patchPath{
 	//I'm just going to look at the file extensions for now.
 	//In the future, I might wish to actually look at the contents of the file.
-	if([patchPath hasSuffix:@".ups"]){
+    NSString* lowerPath = [patchPath lowercaseString];
+	if([lowerPath hasSuffix:@".ups"]){
 		return UPSPAT;
 	}
-	else if([patchPath hasSuffix:@".ips"]){
+	else if([lowerPath hasSuffix:@".ips"]){
 		return IPSPAT;
 	}
-	else if([patchPath hasSuffix:@".ppf"]){
+	else if([lowerPath hasSuffix:@".ppf"]){
 		return PPFPAT;
 	}
-	else if([patchPath hasSuffix:@".dat"] || [patchPath hasSuffix:@"delta"]){
+	else if([lowerPath hasSuffix:@".dat"] || [lowerPath hasSuffix:@"delta"]){
 		return XDELTAPAT;
 	}
-    else if([patchPath hasSuffix:@".bdf"] || [patchPath hasSuffix:@".bsdiff"]){
+    else if([lowerPath hasSuffix:@".bdf"] || [lowerPath hasSuffix:@".bsdiff"]){
         return BSDIFFPAT;
     }
-    else if([patchPath hasSuffix:@".bps"]){
+    else if([lowerPath hasSuffix:@".bps"]){
         return BPSPAT;
     }
 	return UNKNOWNPAT;
@@ -169,7 +207,7 @@ static mbFlipWindow* _flipper;
 
 - (IBAction)btnCreatePatch:(id)sender {
     _flipper.flipRight = YES;
-    [_flipper flip:wndPatcher to:wndCreator];
+    [_flipper flip:self to:wndCreator];
 }
 
 + (mbFlipWindow*)flipper{

@@ -3,7 +3,7 @@
 //  MultiPatch
 //
 
-#import "CreationController.h"
+#import "MPCreationWindow.h"
 #include "libups.hpp"
 #include "XDeltaAdapter.h"
 #include "IPSAdapter.h"
@@ -11,24 +11,55 @@
 #include "BSdiffAdapter.h"
 #include "BPSAdapter.h"
 
-@implementation CreationController
+@implementation MPCreationWindow
+
+-(void)close{
+    [super close];
+    [[NSApplication sharedApplication] terminate:nil];
+}
+
+-(void)makeKeyAndOrderFront:(id)sender{
+    [super makeKeyAndOrderFront:sender];
+    txtOrigFile.acceptFileDrop = ^BOOL(NSURL * target) {
+        [self setOriginalFile:target];
+        return YES;
+    };
+    txtModFile.acceptFileDrop = ^BOOL(NSURL * target) {
+        [self setModifiedFile:target];
+        return YES;
+    };
+}
+
+-(void)orderOut:(id)sender{
+    [super orderOut:sender]; //This is what you do when you order a pizza
+    txtOrigFile.acceptFileDrop = nil;
+    txtModFile.acceptFileDrop = nil;
+}
+
+-(void)setOriginalFile:(NSURL*)original{
+    NSString* selfile = [original path];
+    [txtOrigFile setStringValue:selfile];
+}
 
 - (IBAction)btnPickOrig:(id)sender {
     NSOpenPanel *fbox = [NSOpenPanel openPanel];
-    [fbox beginSheetModalForWindow:wndCreatePatch completionHandler:^(NSInteger result) {
+    [fbox beginSheetModalForWindow:self completionHandler:^(NSInteger result) {
         if(result == NSOKButton){
-            NSString* selfile = [[[fbox URLs] objectAtIndex:0] path];
-            [txtOrigFile setStringValue:selfile];
+            [self setOriginalFile:[[fbox URLs] objectAtIndex:0]];
         }
     }];
 }
 
+-(void)setModifiedFile:(NSURL*)modified{
+    NSString* selfile = [modified path];
+    [txtModFile setStringValue:selfile];
+}
+
 - (IBAction)btnPickModified:(id)sender{
     NSOpenPanel *fbox = [NSOpenPanel openPanel];
-    [fbox beginSheetModalForWindow:wndCreatePatch completionHandler:^(NSInteger result) {
+    [fbox beginSheetModalForWindow:self completionHandler:^(NSInteger result) {
         if(result == NSOKButton){
-            NSString* selfile = [[[fbox URLs] objectAtIndex:0] path];
-            [txtModFile setStringValue:selfile];
+            [self setModifiedFile:[[fbox URLs] objectAtIndex:0]];
         }
     }];
 }
@@ -45,12 +76,12 @@
     [ddFormats addItemWithTitle:@"Linear BPS Patch (*.bps)"];
     [ddFormats addItemWithTitle:@"Delta BPS Patch (*.bps)"];
     [fbox setAccessoryView:vwFormatPicker];
-    [fbox beginSheetModalForWindow:wndCreatePatch completionHandler:^(NSInteger result) {
+    [fbox beginSheetModalForWindow:self completionHandler:^(NSInteger result) {
         [self selOutputPanelEnd:fbox returnCode:result];
     }];
 }
 
-- (void)selOutputPanelEnd:(NSSavePanel*)panel returnCode:(int)returnCode{
+- (void)selOutputPanelEnd:(NSSavePanel*)panel returnCode:(long)returnCode{
 	if(returnCode == NSOKButton){
 		NSString* selfile = [[panel URL] path];
         bool bps_delta = false;
@@ -74,7 +105,7 @@
             selfile = [selfile stringByAppendingString:@".bdf"];
         }
         [txtPatchFile setStringValue:selfile];
-        currentFormat = [PatchController detectPatchFormat:selfile];
+        currentFormat = [MPPatchWindow detectPatchFormat:selfile];
         if(currentFormat == UPSPAT){
             [lblPatchFormat setStringValue:@"UPS Patch"];
         }
@@ -116,7 +147,7 @@
 	if([fileManager fileExistsAtPath:origPath] && [fileManager fileExistsAtPath:modPath]){
 		if([origPath length] > 0 && [modPath length] > 0 && [patchPath length] > 0){
 			[lblStatus setStringValue:@"Now creating patch..."];
-			[NSApp beginSheet:pnlPatching modalForWindow:wndCreatePatch modalDelegate:nil didEndSelector:nil contextInfo:nil];
+			[NSApp beginSheet:pnlPatching modalForWindow:self modalDelegate:nil didEndSelector:nil contextInfo:nil];
             //Make a sheet
             [barProgress setUsesThreadedAnimation:YES]; //Make sure it animates.
 			[barProgress startAnimation:self];
@@ -144,9 +175,9 @@
 }
 
 - (IBAction)btnApplyMode:(id)sender {
-    mbFlipWindow* flipper = [PatchController flipper];
+    mbFlipWindow* flipper = [MPPatchWindow flipper];
     flipper.flipRight = NO;
-    [flipper flip:wndCreatePatch to:wndApplyPatch];
+    [flipper flip:self to:wndApplyPatch];
 }
 
 - (NSString*)CreatePatch:(NSString*)origFile :(NSString*)modFile :(NSString*)createFile{

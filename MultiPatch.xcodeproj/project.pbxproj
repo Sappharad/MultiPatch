@@ -11,8 +11,8 @@
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
-		9E0351C30E9D8B570043AC3E /* PatchController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9E0351C10E9D8B570043AC3E /* PatchController.mm */; };
-		9E17AB9F120F9E9800BA4827 /* CreationController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9E17AB9E120F9E9800BA4827 /* CreationController.mm */; };
+		9E0351C30E9D8B570043AC3E /* MPPatchWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9E0351C10E9D8B570043AC3E /* MPPatchWindow.mm */; };
+		9E17AB9F120F9E9800BA4827 /* MPCreationWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9E17AB9E120F9E9800BA4827 /* MPCreationWindow.mm */; };
 		9E1EE3BF11FE75E90081FDC2 /* uips.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E1EE3BE11FE75E90081FDC2 /* uips.c */; };
 		9E2701CC1C31C59000F50B1F /* mbFlipWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2701CB1C31C59000F50B1F /* mbFlipWindow.m */; };
 		9E2701CE1C31C64200F50B1F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E2701CD1C31C64200F50B1F /* QuartzCore.framework */; };
@@ -23,6 +23,7 @@
 		9E8884DD167579E3008AFDC1 /* stream in Resources */ = {isa = PBXBuildFile; fileRef = 9E8884DC167579E3008AFDC1 /* stream */; };
 		9E8884E216757BAA008AFDC1 /* libups.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9E8884E016757BAA008AFDC1 /* libups.cpp */; };
 		9EAEB1D511E1767B006CF92A /* bandages.icns in Resources */ = {isa = PBXBuildFile; fileRef = 9EAEB1D411E1767B006CF92A /* bandages.icns */; };
+		9EBBF6CA1EA06D2C00EF26A3 /* MPFileTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBBF6C91EA06D2C00EF26A3 /* MPFileTextField.m */; };
 		9ED6066E126D30DC004782CA /* bsdiff.c in Sources */ = {isa = PBXBuildFile; fileRef = 9ED6066C126D30DC004782CA /* bsdiff.c */; };
 		9ED6066F126D30DC004782CA /* bspatch.c in Sources */ = {isa = PBXBuildFile; fileRef = 9ED6066D126D30DC004782CA /* bspatch.c */; };
 		9ED60672126D370C004782CA /* BSdiffAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED60671126D370C004782CA /* BSdiffAdapter.m */; };
@@ -41,10 +42,10 @@
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32CA4F630368D1EE00C91783 /* MultiPatch_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiPatch_Prefix.pch; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9E0351C10E9D8B570043AC3E /* PatchController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PatchController.mm; sourceTree = "<group>"; };
-		9E0351C20E9D8B570043AC3E /* PatchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PatchController.h; sourceTree = "<group>"; };
-		9E17AB9D120F9E9800BA4827 /* CreationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreationController.h; sourceTree = "<group>"; };
-		9E17AB9E120F9E9800BA4827 /* CreationController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CreationController.mm; sourceTree = "<group>"; };
+		9E0351C10E9D8B570043AC3E /* MPPatchWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MPPatchWindow.mm; sourceTree = "<group>"; };
+		9E0351C20E9D8B570043AC3E /* MPPatchWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPPatchWindow.h; sourceTree = "<group>"; };
+		9E17AB9D120F9E9800BA4827 /* MPCreationWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPCreationWindow.h; sourceTree = "<group>"; };
+		9E17AB9E120F9E9800BA4827 /* MPCreationWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MPCreationWindow.mm; sourceTree = "<group>"; };
 		9E1EE3BE11FE75E90081FDC2 /* uips.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uips.c; path = uips/uips.c; sourceTree = "<group>"; };
 		9E2701C81C31C16B00F50B1F /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		9E2701CA1C31C59000F50B1F /* mbFlipWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mbFlipWindow.h; sourceTree = "<group>"; };
@@ -68,6 +69,8 @@
 		9E8884E016757BAA008AFDC1 /* libups.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = libups.cpp; path = libups/libups.cpp; sourceTree = "<group>"; };
 		9E8884E116757BAA008AFDC1 /* libups.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = libups.hpp; path = libups/libups.hpp; sourceTree = "<group>"; };
 		9EAEB1D411E1767B006CF92A /* bandages.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = bandages.icns; sourceTree = "<group>"; };
+		9EBBF6C81EA06D2C00EF26A3 /* MPFileTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPFileTextField.h; sourceTree = "<group>"; };
+		9EBBF6C91EA06D2C00EF26A3 /* MPFileTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPFileTextField.m; sourceTree = "<group>"; };
 		9ED6066C126D30DC004782CA /* bsdiff.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = bsdiff.c; path = bsdiff/bsdiff.c; sourceTree = "<group>"; };
 		9ED6066D126D30DC004782CA /* bspatch.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = bspatch.c; path = bsdiff/bspatch.c; sourceTree = "<group>"; };
 		9ED60670126D370C004782CA /* BSdiffAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BSdiffAdapter.h; path = bsdiff/BSdiffAdapter.h; sourceTree = "<group>"; };
@@ -131,17 +134,18 @@
 				9E8884D01675650F008AFDC1 /* nall */,
 				9ED6066B126D30BB004782CA /* bsdiff */,
 				9E28E07F11E2BE1C0002DE08 /* libppf */,
-				9EAEB1D411E1767B006CF92A /* bandages.icns */,
 				9E1EE3BD11FE75A40081FDC2 /* uips */,
 				9EEA30EE11E0418A005B6996 /* xdelta */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
-				9E0351C20E9D8B570043AC3E /* PatchController.h */,
-				9E0351C10E9D8B570043AC3E /* PatchController.mm */,
-				9E17AB9D120F9E9800BA4827 /* CreationController.h */,
-				9E17AB9E120F9E9800BA4827 /* CreationController.mm */,
+				9E0351C20E9D8B570043AC3E /* MPPatchWindow.h */,
+				9E0351C10E9D8B570043AC3E /* MPPatchWindow.mm */,
+				9E17AB9D120F9E9800BA4827 /* MPCreationWindow.h */,
+				9E17AB9E120F9E9800BA4827 /* MPCreationWindow.mm */,
 				9E2701CA1C31C59000F50B1F /* mbFlipWindow.h */,
 				9E2701CB1C31C59000F50B1F /* mbFlipWindow.m */,
+				9EBBF6C81EA06D2C00EF26A3 /* MPFileTextField.h */,
+				9EBBF6C91EA06D2C00EF26A3 /* MPFileTextField.m */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				9EEA30B511E03F75005B6996 /* Products */,
 			);
@@ -160,6 +164,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				9EAEB1D411E1767B006CF92A /* bandages.icns */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
@@ -309,7 +314,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 0830;
 				TargetAttributes = {
 					8D1107260486CEB800E47090 = {
 						DevelopmentTeam = 436AD92E6J;
@@ -353,7 +358,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D11072D0486CEB800E47090 /* main.m in Sources */,
-				9E0351C30E9D8B570043AC3E /* PatchController.mm in Sources */,
+				9E0351C30E9D8B570043AC3E /* MPPatchWindow.mm in Sources */,
 				9EEA30F111E041B8005B6996 /* xdelta3.c in Sources */,
 				9EFA6CE611E153B500CBE19A /* XDeltaAdapter.m in Sources */,
 				9EFA6D2E11E161D000CBE19A /* IPSAdapter.m in Sources */,
@@ -361,12 +366,13 @@
 				9E28E08811E2BE330002DE08 /* ppf.cc in Sources */,
 				9E28E08D11E2BF5E0002DE08 /* PPFAdapter.mm in Sources */,
 				9E1EE3BF11FE75E90081FDC2 /* uips.c in Sources */,
-				9E17AB9F120F9E9800BA4827 /* CreationController.mm in Sources */,
+				9E17AB9F120F9E9800BA4827 /* MPCreationWindow.mm in Sources */,
 				9ED6066E126D30DC004782CA /* bsdiff.c in Sources */,
 				9E2701CC1C31C59000F50B1F /* mbFlipWindow.m in Sources */,
 				9ED6066F126D30DC004782CA /* bspatch.c in Sources */,
 				9ED60672126D370C004782CA /* BSdiffAdapter.m in Sources */,
 				9E8884E216757BAA008AFDC1 /* libups.cpp in Sources */,
+				9EBBF6CA1EA06D2C00EF26A3 /* MPFileTextField.m in Sources */,
 				9E81270D1676CD5E008F2A5D /* BPSAdapter.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -452,14 +458,29 @@
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_THREADSAFE_STATICS = YES;
 				GCC_USE_INDIRECT_FUNCTION_CALLS = NO;
 				GCC_VERSION = "";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_MASTER_OBJECT_FILE = NO;
 				MACH_O_TYPE = mh_execute;
@@ -479,9 +500,24 @@
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_VERSION = "";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = NO;

@@ -1,16 +1,16 @@
 #import <Cocoa/Cocoa.h>
 #include "mbFlipWindow.h"
+#include "MPFileTextField.h"
 
 typedef enum PatchTypes{
 	UNKNOWNPAT, UPSPAT, XDELTAPAT, IPSPAT, PPFPAT, BSDIFFPAT, BPSPAT, BPSDELTA
 } PatchFormat;
 
-@interface PatchController : NSObject{
-    IBOutlet id txtPatchPath;
-    IBOutlet id txtRomPath;
-	IBOutlet id txtOutputPath;
+@interface MPPatchWindow : NSWindow{
+    IBOutlet MPFileTextField *txtPatchPath;
+    IBOutlet MPFileTextField *txtRomPath;
+	IBOutlet NSTextField *txtOutputPath;
 	IBOutlet id lblPatchFormat;
-    IBOutlet id wndPatcher;
     IBOutlet NSWindow *wndCreator;
 	IBOutlet id pnlPatching;
 	IBOutlet id	barProgress;
