@@ -81,25 +81,6 @@ static mbFlipWindow* _flipper;
 	}
 }
 
--(void)setTargetFile:(NSURL*)target{
-    NSString* selfile = [target path];
-    [txtRomPath setStringValue:selfile];
-    if(romFormat != nil){
-        [romFormat release];
-    }
-    romFormat = [selfile pathExtension];
-    [romFormat retain];
-}
-
-- (IBAction)btnBrowse:(id)sender {
-    NSOpenPanel *fbox = [NSOpenPanel openPanel];
-    [fbox beginSheetModalForWindow:self completionHandler:^(NSInteger result) {
-        if(result == NSOKButton){
-            [self setTargetFile:[[fbox URLs] objectAtIndex:0]];
-        }
-    }];
-}
-
 -(void)setPatchFile:(NSURL*)patch{
     NSString* selfile = [patch path];
     [txtPatchPath setStringValue:selfile];
@@ -135,6 +116,25 @@ static mbFlipWindow* _flipper;
     [fbox beginSheetModalForWindow:self completionHandler:^(NSInteger result) {
         if(result == NSOKButton){
             [self setPatchFile:[[fbox URLs] objectAtIndex:0]];
+        }
+    }];
+}
+
+-(void)setTargetFile:(NSURL*)target{
+    NSString* selfile = [target path];
+    [txtRomPath setStringValue:selfile];
+    if(romFormat != nil){
+        [romFormat release];
+    }
+    romFormat = [selfile pathExtension];
+    [romFormat retain];
+}
+
+- (IBAction)btnSelectOriginal:(id)sender {
+    NSOpenPanel *fbox = [NSOpenPanel openPanel];
+    [fbox beginSheetModalForWindow:self completionHandler:^(NSInteger result) {
+        if(result == NSOKButton){
+            [self setTargetFile:[[fbox URLs] objectAtIndex:0]];
         }
     }];
 }

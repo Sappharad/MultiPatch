@@ -21,8 +21,8 @@ typedef enum PatchTypes{
 }
 
 - (IBAction)btnApply:(id)sender;
-- (IBAction)btnBrowse:(id)sender;
 - (IBAction)btnSelectPatch:(id)sender;
+- (IBAction)btnSelectOriginal:(id)sender;
 - (IBAction)btnSelectOutput:(id)sender;
 + (PatchFormat)detectPatchFormat:(NSString*)patchPath;
 - (NSString*)ApplyPatch:(NSString*)patchPath :(NSString*)sourceFile :(NSString*)destFile;
