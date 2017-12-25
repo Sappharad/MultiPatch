@@ -64,7 +64,7 @@ static mbFlipWindow* _flipper;
 			[pnlPatching orderOut:self]; //Lets hide the sheet.
 			
 			if(errMsg == nil){
-				NSRunAlertPanel(@"Finished!",@"The file was patched sucessfully.",@"Okay",nil,nil);
+				NSRunAlertPanel(@"Finished!",@"The file was patched successfully.",@"Okay",nil,nil);
 			}
 			else{
 				NSRunAlertPanel(@"Patching failed", errMsg, @"Okay", nil, nil);
