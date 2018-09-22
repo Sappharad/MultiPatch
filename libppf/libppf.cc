@@ -181,7 +181,7 @@ namespace lppf {
          fclose(file);
 
       // Open the given file
-      if ((file = fopen(filename.c_str(), "wb")) == NULL)
+      if ((file = fopen(filename.c_str(), "r+b")) == NULL)
          return ERROR_ISO_OPEN;
 
       // Go through patch chunks one by one
