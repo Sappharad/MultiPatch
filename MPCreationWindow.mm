@@ -4,12 +4,12 @@
 //
 
 #import "MPCreationWindow.h"
-#include "libups.hpp"
-#include "XDeltaAdapter.h"
-#include "IPSAdapter.h"
-#include "PPFAdapter.h"
-#include "BSdiffAdapter.h"
-#include "BPSAdapter.h"
+#import "XDeltaAdapter.h"
+#import "IPSAdapter.h"
+#import "PPFAdapter.h"
+#import "BSdiffAdapter.h"
+#import "BPSAdapter.h"
+#import "UPSAdapter.h"
 
 @implementation MPCreationWindow
 
@@ -183,12 +183,7 @@
 - (NSString*)CreatePatch:(NSString*)origFile :(NSString*)modFile :(NSString*)createFile{
     NSString* retval = nil;
 	if(currentFormat == UPSPAT){
-		UPS ups; //UPS Patcher
-		bool result = ups.create([origFile cStringUsingEncoding:[NSString defaultCStringEncoding]], [modFile cStringUsingEncoding:[NSString defaultCStringEncoding]], [createFile cStringUsingEncoding:[NSString defaultCStringEncoding]]);
-		if(result == false){
-			retval = [NSString stringWithCString:ups.error encoding:NSASCIIStringEncoding];
-			[retval retain];
-		}
+		retval = [UPSAdapter CreatePatch:origFile withMod:modFile andCreate:createFile];
 	}
 	else if(currentFormat == IPSPAT){
 		retval = [IPSAdapter CreatePatch:origFile withMod:modFile andCreate:createFile];

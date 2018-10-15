@@ -1,10 +1,10 @@
 #import "MPPatchWindow.h"
-#include "libups.hpp"
-#include "XDeltaAdapter.h"
-#include "IPSAdapter.h"
-#include "PPFAdapter.h"
-#include "BSdiffAdapter.h"
-#include "BPSAdapter.h"
+#import "XDeltaAdapter.h"
+#import "IPSAdapter.h"
+#import "PPFAdapter.h"
+#import "BSdiffAdapter.h"
+#import "BPSAdapter.h"
+#import "UPSAdapter.h"
 
 @implementation MPPatchWindow
 static mbFlipWindow* _flipper;
@@ -180,12 +180,7 @@ static mbFlipWindow* _flipper;
 - (NSString*)ApplyPatch:(NSString*)patchPath :(NSString*)sourceFile :(NSString*)destFile{
 	NSString* retval = nil;
 	if(currentFormat == UPSPAT){
-		UPS ups; //UPS Patcher
-		bool result = ups.apply([sourceFile cStringUsingEncoding:[NSString defaultCStringEncoding]], [destFile cStringUsingEncoding:[NSString defaultCStringEncoding]], [patchPath cStringUsingEncoding:[NSString defaultCStringEncoding]]);
-		if(result == false){
-			retval = [NSString stringWithCString:ups.error encoding:NSASCIIStringEncoding];
-			[retval retain];
-		}
+		retval = [UPSAdapter ApplyPatch:patchPath toFile:sourceFile andCreate:destFile];
 	}
 	else if(currentFormat == IPSPAT){
 		retval = [IPSAdapter ApplyPatch:patchPath toFile:sourceFile andCreate:destFile];
