@@ -8,40 +8,40 @@
 
 @implementation PPFAdapter
 
-+(NSString*)errorMsg:(int)error{
++(MPPatchResult*)errorMsg:(int)error{
 	switch (error) {
 		case 0x01:
-			return @"Selected patch file is NOT a PPF file!";
+            return [MPPatchResult newMessage:@"Selected patch file is NOT a PPF file!" isWarning:NO];
 		case 0x02:
-			return @"PPF version not supported or unknown.";
+            return [MPPatchResult newMessage:@"PPF version not supported or unknown." isWarning:NO];
 		case 0x03:
-			return @"PPF file not found!";
+            return [MPPatchResult newMessage:@"PPF file not found!" isWarning:NO];
 		case 0x04:
-			return @"Error opening PPF file.";
+            return [MPPatchResult newMessage:@"Error opening PPF file." isWarning:NO];
 		case 0x05:
-			return @"Error closing PPF file.";
+			return [MPPatchResult newMessage:@"Error closing PPF file." isWarning:NO];
 		case 0x06:
-			return @"Error reading from PPF file.";
+			return [MPPatchResult newMessage:@"Error reading from PPF file." isWarning:NO];
 		case 0x07:
-			return @"PPF file hasn't been loaded";
+			return [MPPatchResult newMessage:@"PPF file hasn't been loaded" isWarning:NO];
 		case 0x08:
-			return @"No undo data available";
+			return [MPPatchResult newMessage:@"No undo data available" isWarning:NO];
 		case 0x11:
-			return @"Input file not found.";
+			return [MPPatchResult newMessage:@"Input file not found." isWarning:NO];
 		case 0x12:
-			return @"Error opening file.";
+			return [MPPatchResult newMessage:@"Error opening file." isWarning:NO];
 		case 0x13:
-			return @"Error closing output file.";
+			return [MPPatchResult newMessage:@"Error closing output file. Patching may have finished, but this is not certain." isWarning:YES];
 		case 0x14:
-			return @"Error reading from input!";
+			return [MPPatchResult newMessage:@"Error reading from input!" isWarning:NO];
 		case 0x15:
-			return @"Error writing to output file!";
+			return [MPPatchResult newMessage:@"Error writing to output file!" isWarning:NO];
 		default:
-			return @"Unknown error code!";
+            return [MPPatchResult newMessage:@"Unknown error code!" isWarning:NO];
 	}
 }
 
-+(NSString*)ApplyPatch:(NSString*)patch toFile:(NSString*)input andCreate:(NSString*)output{
++(MPPatchResult*)ApplyPatch:(NSString*)patch toFile:(NSString*)input andCreate:(NSString*)output{
 	lppf::LibPPF ppf;
 	int error;
 	
@@ -54,7 +54,7 @@
         NSError* error;
         if(![fileMan copyItemAtPath:input toPath:output error:&error])
 		{
-			return @"Unable to open original file or write to output file.";
+            return [MPPatchResult newMessage:@"Unable to open original file or write to output file." isWarning:NO];
 		}
 	}
 	
@@ -65,7 +65,7 @@
 	return nil; //Success!
 }
 
-+(NSString*)CreatePatch:(NSString*)orig withMod:(NSString*)modify andCreate:(NSString*)output{
-    return @"Oops, PPF creation not supported."; //Success! :-(
++(MPPatchResult*)CreatePatch:(NSString*)orig withMod:(NSString*)modify andCreate:(NSString*)output{
+    return [MPPatchResult newMessage:@"Oops, PPF creation not supported." isWarning:NO]; //Success! :-(
 }
 @end

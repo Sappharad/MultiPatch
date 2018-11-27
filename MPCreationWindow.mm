@@ -10,6 +10,7 @@
 #import "BSdiffAdapter.h"
 #import "BPSAdapter.h"
 #import "UPSAdapter.h"
+#import "MPPatchResult.h"
 
 @implementation MPCreationWindow
 
@@ -151,7 +152,7 @@
             //Make a sheet
             [barProgress setUsesThreadedAnimation:YES]; //Make sure it animates.
 			[barProgress startAnimation:self];
-			NSString* errMsg = [self CreatePatch:origPath :modPath :patchPath];
+			MPPatchResult* errMsg = [self CreatePatch:origPath :modPath :patchPath];
 			[barProgress stopAnimation:self];
 			[NSApp endSheet:pnlPatching]; //Tell the sheet we're done.
 			[pnlPatching orderOut:self]; //Lets hide the sheet.
@@ -159,8 +160,13 @@
 			if(errMsg == nil){
 				NSRunAlertPanel(@"Finished!",@"The patch was created sucessfully!",@"Okay",nil,nil);
 			}
+            else if(errMsg.IsWarning){
+                NSRunAlertPanel(@"Patch creation finished with warning.", errMsg.Message, @"Okay", nil, nil);
+                [errMsg release];
+                errMsg = nil;
+            }
 			else{
-				NSRunAlertPanel(@"Patch creation failed.", errMsg, @"Okay", nil, nil);
+				NSRunAlertPanel(@"Patch creation failed.", errMsg.Message, @"Okay", nil, nil);
 				[errMsg release];
 				errMsg = nil;
 			}
@@ -180,8 +186,8 @@
     [flipper flip:self to:wndApplyPatch];
 }
 
-- (NSString*)CreatePatch:(NSString*)origFile :(NSString*)modFile :(NSString*)createFile{
-    NSString* retval = nil;
+- (MPPatchResult*)CreatePatch:(NSString*)origFile :(NSString*)modFile :(NSString*)createFile{
+    MPPatchResult* retval = nil;
 	if(currentFormat == UPSPAT){
 		retval = [UPSAdapter CreatePatch:origFile withMod:modFile andCreate:createFile];
 	}

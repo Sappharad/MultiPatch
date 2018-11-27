@@ -7,7 +7,7 @@
 #include "xdelta3.h"
 
 @implementation XDeltaAdapter
-+(NSString*)ApplyPatch:(NSString*)patch toFile:(NSString*)input andCreate:(NSString*)output{
++(MPPatchResult*)ApplyPatch:(NSString*)patch toFile:(NSString*)input andCreate:(NSString*)output{
 	FILE*  InFile = fopen([patch cStringUsingEncoding:[NSString defaultCStringEncoding]], "rb");
 	FILE*  SrcFile = fopen([input cStringUsingEncoding:[NSString defaultCStringEncoding]], "rb");
 	FILE* OutFile = fopen([output cStringUsingEncoding:[NSString defaultCStringEncoding]], "wb");
@@ -19,15 +19,15 @@
 	
 	if (r != 0) {
         if(r == -17712){
-            return @"Invalid input. This typically means that the file you selected to patch is not the file your patch is intended for.";
+            return [MPPatchResult newMessage:@"Invalid input. This typically means that the file you selected to patch is not the file your patch is intended for." isWarning:NO];
         }
-		return [NSString stringWithFormat:@"Decode error: %d",r];
+		return [MPPatchResult newMessage:[NSString stringWithFormat:@"Decode error: %d",r] isWarning:NO];
 	}
 	
 	return nil;
 }
 
-+(NSString*)CreatePatch:(NSString*)orig withMod:(NSString*)modify andCreate:(NSString*)output{
++(MPPatchResult*)CreatePatch:(NSString*)orig withMod:(NSString*)modify andCreate:(NSString*)output{
     FILE* oldFile = fopen([orig cStringUsingEncoding:[NSString defaultCStringEncoding]], "rb");
 	FILE* newFile = fopen([modify cStringUsingEncoding:[NSString defaultCStringEncoding]], "rb");
 	FILE* deltaFile = fopen([output cStringUsingEncoding:[NSString defaultCStringEncoding]], "wb");
@@ -38,7 +38,7 @@
 	fclose(newFile);
 	
 	if (r != 0) {
-		return [NSString stringWithFormat:@"Encode error: %d",r];
+        return [MPPatchResult newMessage:[NSString stringWithFormat:@"Encode error: %d",r] isWarning:NO];
 	}
 	
 	return nil;

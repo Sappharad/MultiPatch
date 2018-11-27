@@ -5,6 +5,7 @@
 #import "BSdiffAdapter.h"
 #import "BPSAdapter.h"
 #import "UPSAdapter.h"
+#import "MPPatchResult.h"
 
 @implementation MPPatchWindow
 static mbFlipWindow* _flipper;
@@ -58,16 +59,21 @@ static mbFlipWindow* _flipper;
             [NSApp beginSheet:pnlPatching modalForWindow:self modalDelegate:nil didEndSelector:nil contextInfo:nil]; //Make a sheet
 			[barProgress setUsesThreadedAnimation:YES]; //Make sure it animates.
 			[barProgress startAnimation:self];
-			NSString* errMsg = [self ApplyPatch:patchPath :romPath :outputPath];
+			MPPatchResult* errMsg = [self ApplyPatch:patchPath :romPath :outputPath];
 			[barProgress stopAnimation:self];
 			[NSApp endSheet:pnlPatching]; //Tell the sheet we're done.
 			[pnlPatching orderOut:self]; //Lets hide the sheet.
 			
 			if(errMsg == nil){
-				NSRunAlertPanel(@"Finished!",@"The file was patched successfully.",@"Okay",nil,nil);
+                NSRunAlertPanel(@"Finished!", @"The file was patched successfully.", @"Okay", nil, nil);
 			}
-			else{
-				NSRunAlertPanel(@"Patching failed", errMsg, @"Okay", nil, nil);
+            else if(errMsg.IsWarning){
+                NSRunAlertPanel(@"Patching finished with warning", errMsg.Message, @"Okay", nil, nil);
+                [errMsg release];
+                errMsg = nil;
+            }
+            else{
+				NSRunAlertPanel(@"Patching failed", errMsg.Message, @"Okay", nil, nil);
 				[errMsg release];
 				errMsg = nil;
 			}
@@ -77,7 +83,7 @@ static mbFlipWindow* _flipper;
 		}
 	}
 	else{
-		NSRunAlertPanel(@"Patch not found",@"The patch file selected does not exist.\nWhy did you do that?",@"Okay",nil,nil);	
+		NSRunAlertPanel(@"Patch not found", @"The patch file selected does not exist anymore.\nWhy did you do that?", @"Okay", nil, nil);
 	}
 }
 
@@ -177,8 +183,8 @@ static mbFlipWindow* _flipper;
 	return UNKNOWNPAT;
 }
 
-- (NSString*)ApplyPatch:(NSString*)patchPath :(NSString*)sourceFile :(NSString*)destFile{
-	NSString* retval = nil;
+- (MPPatchResult*)ApplyPatch:(NSString*)patchPath :(NSString*)sourceFile :(NSString*)destFile{
+	MPPatchResult* retval = nil;
 	if(currentFormat == UPSPAT){
 		retval = [UPSAdapter ApplyPatch:patchPath toFile:sourceFile andCreate:destFile];
 	}

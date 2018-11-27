@@ -4,9 +4,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MPPatchResult.h"
 
 @interface BPSAdapter : NSObject
-+ (NSString*)ApplyPatch:(NSString*)patch toFile:(NSString*)input andCreate:(NSString*)output;
-+ (NSString*)CreatePatchLinear:(NSString*)orig withMod:(NSString*)modify andCreate:(NSString*)output;
-+ (NSString*)CreatePatchDelta:(NSString*)orig withMod:(NSString*)modify andCreate:(NSString*)output;
++ (MPPatchResult*)ApplyPatch:(NSString*)patch toFile:(NSString*)input andCreate:(NSString*)output;
++ (MPPatchResult*)CreatePatchLinear:(NSString*)orig withMod:(NSString*)modify andCreate:(NSString*)output;
++ (MPPatchResult*)CreatePatchDelta:(NSString*)orig withMod:(NSString*)modify andCreate:(NSString*)output;
 @end

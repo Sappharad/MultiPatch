@@ -25,5 +25,4 @@
 - (IBAction)btnPickOutput:(id)sender;
 - (IBAction)btnCreatePatch:(id)sender;
 - (IBAction)btnApplyMode:(id)sender;
-- (NSString*)CreatePatch:(NSString*)origFile :(NSString*)modFile :(NSString*)createFile;
 @end
