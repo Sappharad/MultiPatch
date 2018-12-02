@@ -4,6 +4,7 @@
 //
 
 #import "XDeltaAdapter.h"
+#import "MultiPatchController.h"
 #include "xdelta3.h"
 
 @implementation XDeltaAdapter
@@ -23,6 +24,9 @@
         }
 		return [MPPatchResult newMessage:[NSString stringWithFormat:@"Decode error: %d",r] isWarning:NO];
 	}
+    if(MultiPatchController.IgnoreXDeltaChecksum){
+        return [MPPatchResult newMessage:@"Patching was completed. Remember that you ignored the checksum so the output file might not work if the input was bad." isWarning:YES];
+    }
 	
 	return nil;
 }
@@ -60,7 +64,13 @@ int code (int encode, FILE* InFile, FILE* SrcFile, FILE* OutFile, int BufSize)
     memset (&stream, 0, sizeof (stream));
     memset (&source, 0, sizeof (source));
     
-    xd3_init_config(&config, XD3_ADLER32);
+    if(MultiPatchController.IgnoreXDeltaChecksum){
+        //We still want to generate a checksum either way, but this disables checking it for the apply operation.
+        xd3_init_config(&config, XD3_ADLER32 | XD3_ADLER32_NOVER);
+    }
+    else{
+        xd3_init_config(&config, XD3_ADLER32);
+    }
     config.winsize = BufSize;
     xd3_config_stream(&stream, &config);
     

@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14313.18"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="NSApplication"/>
+        <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
+            <connections>
+                <outlet property="delegate" destination="YZc-tI-itv" id="2XX-l9-mOT"/>
+            </connections>
+        </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <menu title="AMainMenu" systemMenu="main" id="29" userLabel="MainMenu">
@@ -23,7 +27,11 @@
                             <menuItem isSeparatorItem="YES" id="236">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Preferences…" enabled="NO" keyEquivalent="," id="129" userLabel="121"/>
+                            <menuItem title="Preferences…" keyEquivalent="," id="129" userLabel="121">
+                                <connections>
+                                    <action selector="showPreferences:" target="YZc-tI-itv" id="iUv-mG-J6o"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="143">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
@@ -464,6 +472,7 @@
                     </menu>
                 </menuItem>
             </items>
+            <point key="canvasLocation" x="-547" y="266"/>
         </menu>
         <window title="MultiPatch File Patcher" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" titlebarAppearsTransparent="YES" id="371" customClass="MPPatchWindow">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" texturedBackground="YES"/>
@@ -1321,5 +1330,55 @@
             </subviews>
             <point key="canvasLocation" x="118" y="386"/>
         </customView>
+        <window title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" titlebarAppearsTransparent="YES" id="7EN-Ub-ktQ">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="222" y="728" width="430" height="160"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
+            <view key="contentView" id="evA-cF-bDT">
+                <rect key="frame" x="0.0" y="0.0" width="430" height="160"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <box title="XDelta options" id="6QY-ph-EOJ">
+                        <rect key="frame" x="17" y="57" width="396" height="103"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                        <view key="contentView" id="bCl-u1-cUa">
+                            <rect key="frame" x="3" y="3" width="390" height="85"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <button autoresizesSubviews="NO" verticalHuggingPriority="750" id="hWV-L9-MJW">
+                                    <rect key="frame" x="7" y="60" width="365" height="18"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                    <buttonCell key="cell" type="check" title="Ignore checksum, allowing the wrong file to be patched" bezelStyle="regularSquare" imagePosition="left" inset="2" id="iGg-gt-eu8">
+                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="chkIgnoreXdeltaChecks:" target="YZc-tI-itv" id="7zV-23-D8f"/>
+                                    </connections>
+                                </button>
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="4Jy-QL-oZf">
+                                    <rect key="frame" x="18" y="12" width="354" height="42"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
+                                    <textFieldCell key="cell" alignment="center" id="d6J-6B-CSV">
+                                        <font key="font" metaFont="system" size="11"/>
+                                        <string key="title">Note that the option above is not saved and will be disabled again the next time you run MultiPatch. You should only enable it if you understand what it does and want to try anyway.</string>
+                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                            </subviews>
+                        </view>
+                    </box>
+                </subviews>
+            </view>
+            <point key="canvasLocation" x="-547" y="114"/>
+        </window>
+        <customObject id="YZc-tI-itv" customClass="MultiPatchController">
+            <connections>
+                <outlet property="chkIgnoreXDelta" destination="hWV-L9-MJW" id="ZdY-wa-ive"/>
+                <outlet property="wndPreferences" destination="7EN-Ub-ktQ" id="lbi-ks-JTH"/>
+            </connections>
+        </customObject>
     </objects>
 </document>
