@@ -5,6 +5,7 @@
 #import "BSdiffAdapter.h"
 #import "BPSAdapter.h"
 #import "UPSAdapter.h"
+#import "RUPAdapter.h"
 #import "MPPatchResult.h"
 
 @implementation MPPatchWindow
@@ -111,6 +112,9 @@ static mbFlipWindow* _flipper;
         case BPSPAT:
             [lblPatchFormat setStringValue:@"BPS"];
             break;
+        case RUPPAT:
+            [lblPatchFormat setStringValue:@"Ninja (RUP)"];
+            break;
         default:
             [lblPatchFormat setStringValue:@"Not supported"];
             break;
@@ -180,6 +184,9 @@ static mbFlipWindow* _flipper;
     else if([lowerPath hasSuffix:@".bps"]){
         return BPSPAT;
     }
+    else if([lowerPath hasSuffix:@".rup"]){
+        return RUPPAT;
+    }
 	return UNKNOWNPAT;
 }
 
@@ -202,6 +209,9 @@ static mbFlipWindow* _flipper;
     }
     else if(currentFormat == BPSPAT){
         retval = [BPSAdapter ApplyPatch:patchPath toFile:sourceFile andCreate:destFile];
+    }
+    else if(currentFormat == RUPPAT){
+        retval = [RUPAdapter ApplyPatch:patchPath toFile:sourceFile andCreate:destFile];
     }
 	return retval;
 }

@@ -69,13 +69,15 @@
     NSSavePanel *fbox = [NSSavePanel savePanel];
 	[fbox setExtensionHidden:NO];
     [ddFormats removeAllItems];
-    [ddFormats addItemWithTitle:@"UPS Patch (*.ups)"];
+    //Put Delta BPS on top because it's the preferred format.
+    [ddFormats addItemWithTitle:@"Delta BPS Patch (*.bps)"];
+    [ddFormats addItemWithTitle:@"Linear BPS Patch (*.bps)"];
+    //[ddFormats addItemWithTitle:@"UPS Patch (*.ups)"];
+    //FLIPS does not create UPS. It's deprecated anyway, so use BPS instead
     [ddFormats addItemWithTitle:@"IPS Patch (*.ips)"];
     //[ddFormats addItemWithTitle:@"PPF Patch (*.ppf)"]; //No PPF creation in LibPPF. :-(
     [ddFormats addItemWithTitle:@"XDelta Patch (*.delta)"];
     [ddFormats addItemWithTitle:@"BSDiff Patch (*.bdf)"];
-    [ddFormats addItemWithTitle:@"Linear BPS Patch (*.bps)"];
-    [ddFormats addItemWithTitle:@"Delta BPS Patch (*.bps)"];
     [fbox setAccessoryView:vwFormatPicker];
     [fbox beginSheetModalForWindow:self completionHandler:^(NSInteger result) {
         [self selOutputPanelEnd:fbox returnCode:result];
@@ -107,12 +109,12 @@
         }
         [txtPatchFile setStringValue:selfile];
         currentFormat = [MPPatchWindow detectPatchFormat:selfile];
-        if(currentFormat == UPSPAT){
-            [lblPatchFormat setStringValue:@"UPS Patch"];
-        }
-        else if(currentFormat == IPSPAT){
+        if(currentFormat == IPSPAT){
             [lblPatchFormat setStringValue:@"IPS Patch"];
         }
+        /*else if(currentFormat == UPSPAT){
+            [lblPatchFormat setStringValue:@"UPS Patch"];
+        }*/
         else if(currentFormat == XDELTAPAT){
             [lblPatchFormat setStringValue:@"XDelta Patch"];
         }

@@ -3,7 +3,7 @@
 #include "MPFileTextField.h"
 
 typedef enum PatchTypes{
-	UNKNOWNPAT, UPSPAT, XDELTAPAT, IPSPAT, PPFPAT, BSDIFFPAT, BPSPAT, BPSDELTA
+	UNKNOWNPAT, UPSPAT, XDELTAPAT, IPSPAT, PPFPAT, BSDIFFPAT, BPSPAT, BPSDELTA, RUPPAT
 } PatchFormat;
 
 @interface MPPatchWindow : NSWindow{

@@ -1,0 +1,435 @@
+//
+//  librup.c
+//  MultiPatcher
+//
+//  Created by Paul Kratt on 12/1/18.
+//
+
+#include "librup.h"
+#include <string.h>
+#include <stdbool.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include "md5.h"
+
+struct romPlusHeader{
+    char* romData;
+    long romDataSize;
+    char* headerData;
+    long headerDataSize;
+};
+
+long punpack(char* buffer, unsigned char length);
+struct romPlusHeader nes_read(char* infile);
+bool md5Equals(unsigned char* m1, unsigned char* m2);
+
+int rup2_apply (const char* rup_file, const char* targetPath){
+    char buffer[4096];
+    bool revert = false;
+    long ssize = 0, msize = 0;
+    char* overflow = NULL, *header = NULL, *name = NULL;
+    long overflowSize = 0, headerSize = 0;
+    unsigned char smd5[16], mmd5[16], targetMD5[16];
+    
+    FILE* rup = fopen(rup_file, "rb");
+    FILE* fo = NULL;
+    int r = fseek(rup, 0, SEEK_SET);
+    if(r){
+        if(rup){
+            fclose(rup);
+            rup = NULL;
+        }
+        return RUP_UNREADABLE_FILE;
+    }
+    fread(buffer, 1, 6, rup);
+    buffer[6] = 0;
+    if(strncmp(buffer, "NINJA2", 6) != 0){
+        fclose(rup);
+        return RUP_WRONG_FORMAT;
+    }
+    
+    //Skip over patch information block. Not needed to apply patch.
+    fseek(rup, 2048, SEEK_SET);
+    fread(buffer, 1, 1, rup);
+    
+    char controlCode = buffer[0];
+    while(controlCode != 0){
+        if(controlCode == 1){
+            if(fo != NULL){
+                // Append the original source data if reverting a shrunken modified file
+                if(overflow != NULL){
+                    if(ssize > msize && revert){
+                        fseek(fo, msize, SEEK_SET);
+                    }
+                    else{
+                        //PHP reference code had SEEK_SET && !revert, but SEEK_SET is 0 so that doesn't make sense.
+                        fseek(fo, ssize, SEEK_SET);
+                    }
+                    fwrite(overflow, 1, overflowSize, fo);
+                    free(overflow);
+                    overflow = NULL;
+                }
+                // Truncate the file if creating a shrunken modified file
+                if(ssize > msize && !revert){
+                    ftruncate(fileno(fo), msize);
+                }
+                else if(ssize < msize && revert){
+                    ftruncate(fileno(fo), ssize);
+                }
+                // Restore the header if necessary.
+                // The original PHP code was missing a check for UINF here, so I will inherit this bug.
+                if(header != NULL){
+                    fseek(fo, 0, SEEK_END);
+                    long tfsize = ftell(fo);
+                    fseek(fo, 0, SEEK_SET);
+                    char* tempFile = malloc(tfsize);
+                    fread(tempFile, 1, tfsize, fo);
+                    fseek(fo, 0, SEEK_SET);
+                    fwrite(header, 1, headerSize, fo);
+                    fwrite(tempFile, 1, tfsize, fo);
+                    free(tempFile);
+                    free(header);
+                    header = NULL;
+                }
+                fclose(fo);
+                fo = NULL;
+                // If ninja.src exists, we're working on a temp file. Overwrite the original.
+                if(access("ninja.src", F_OK) != -1){
+                    unsigned long pathLen = strlen(targetPath) + strlen(name) + 1;
+                    char* targetName = malloc(pathLen);
+                    strcpy(targetName, targetPath);
+                    targetName = strcat(targetName, name);
+                    remove(targetName);
+                    rename("ninja.src", targetName);
+                }
+                name = NULL;
+                revert = false;
+                ssize = 0;
+                msize = 0;
+            }
+            //Read file properties
+            fread(buffer, 1, 1, rup);
+            unsigned char temp = buffer[0];
+            if(temp > 0){
+                fread(buffer, 1, temp, rup);
+                name = malloc(temp+2);
+                name[0] = '/';
+                strncpy(name+1, buffer, temp);
+            }
+            else{
+                //Empty string
+                name = malloc(1);
+                name[0] = 0;
+            }
+            fread(buffer, 1, 1, rup);
+            int type = buffer[0];
+            fread(buffer, 1, 1, rup);
+            temp = buffer[0];
+            fread(buffer, 1, temp, rup);
+            ssize = punpack(buffer, temp);
+            fread(buffer, 1, 1, rup);
+            temp = buffer[0];
+            fread(buffer, 1, temp, rup);
+            msize = punpack(buffer, temp);
+            fread(smd5, 1, 16, rup);
+            fread(mmd5, 1, 16, rup);
+            //Patching target name
+            size_t currentFNlen = strlen(targetPath) + strlen(name) + 1;
+            char* currentFileName = malloc(currentFNlen);
+            strcpy(currentFileName, targetPath);
+            currentFileName = strcat(currentFileName, name);
+            
+            //Perform conversion if needed depending on file type
+            switch(type){
+                case 1: //NES
+                {
+                    struct romPlusHeader rph = nes_read(currentFileName);
+                    header = rph.headerData;
+                    headerSize = rph.headerDataSize;
+                    fo = fopen("ninja.src", "wb");
+                    fwrite(rph.romData, 1, rph.romDataSize, fo);
+                    fclose(fo);
+                    fo = NULL;
+                    free(rph.romData);
+                    break;
+                }
+                case 3: //SuperNES
+                    break;
+                case 4: //N64
+                    break;
+                case 5: //Gameboy
+                    break;
+                case 6: //Sega Master System
+                    break;
+                case 7: //Sega Genesis / MegaDrive
+                    break;
+                case 8: //PC Engine / TurboGrafix 16
+                    break;
+                case 9: //Atari Lynx
+                    break;
+            }
+            
+            MD5_CTX myMd5er;
+            MD5_Init(&myMd5er);
+            if(access("ninja.src", F_OK) != -1){
+                fo = fopen("ninja.src", "rb");
+                long amountRead = 0;
+                do{
+                    amountRead = fread(buffer, 1, 4096, fo);
+                    if(amountRead > 0){
+                        MD5_Update(&myMd5er, buffer, amountRead);
+                    }
+                } while(amountRead > 0);
+                fclose(fo);
+                fo = NULL;
+            }
+            else{
+                fo = fopen(currentFileName, "rb");
+                long amountRead = 0;
+                do{
+                    amountRead = fread(buffer, 1, 4096, fo);
+                    if(amountRead > 0){
+                        MD5_Update(&myMd5er, buffer, amountRead);
+                    }
+                } while(amountRead > 0);
+                fclose(fo);
+                fo = NULL;
+            }
+            MD5_Final(&targetMD5[0], &myMd5er);
+            if(md5Equals(&targetMD5[0], &smd5[0])){
+                revert = false;
+            }
+            else if(md5Equals(&targetMD5[0], &mmd5[0])){
+                revert = true;
+                //Reverting to pre-patched file.
+            }
+            else{
+                fclose(rup);
+                rup = NULL;
+                return RUP_MD5_MISMATCH; //Bad input file, can't patch
+            }
+            if(access("ninja.src", F_OK) != -1){
+                fo = fopen("ninja.src", "r+b");
+            }
+            else{
+                fo = fopen(currentFileName, "r+b");
+            }
+            if(currentFileName){
+                free(currentFileName);
+                currentFileName = NULL;
+            }
+        }
+        else if(controlCode == 'M' || controlCode == 'A'){
+            // Read the source overflow to a our file properties
+            // or... (Code in PHP version is identical for these two codes)
+            // Append end of modified file
+            unsigned char temp = fgetc(rup);
+            fread(buffer, 1, temp, rup);
+            overflowSize = punpack(buffer, temp);
+            overflow = malloc(overflowSize);
+            fread(overflow, 1, overflowSize, rup);
+            for(long i = 0; i < overflowSize; i++){
+                overflow[i] ^= 0xFF;
+            }
+        }
+        else if(controlCode == 2){
+            // Get the offset and seek it
+            unsigned char temp = fgetc(rup);
+            fread(buffer, 1, temp, rup);
+            unsigned long offset = punpack(buffer, temp);
+            fseek(fo, offset, SEEK_SET);
+            
+            // Get the patch length
+            temp = fgetc(rup);
+            fread(buffer, 1, temp, rup);
+            unsigned long patchlen = punpack(buffer, temp);
+            
+            // Get the patch
+            char* thisPatch = malloc(patchlen);
+            char* sourceBytes = malloc(patchlen);
+            fread(thisPatch, 1, patchlen, rup);
+            fread(sourceBytes, 1, patchlen, fo);
+            for(unsigned long i = 0; i<patchlen; i++){
+                thisPatch[i] = sourceBytes[i] ^ thisPatch[i];
+            }
+            // Insert the patched bytes
+            fseek(fo, offset, SEEK_SET);
+            fwrite(thisPatch, 1, patchlen, fo);
+            
+            free(thisPatch);
+            free(sourceBytes);
+        }
+        else{
+            if(fo){
+                fclose(fo);
+                fo = NULL;
+            }
+            if(rup){
+                fclose(rup);
+                rup = NULL;
+            }
+            return RUP_BAD_PATCH; //Bad control code
+        }
+        if(fread(buffer, 1, 1, rup) == 0){
+            controlCode = 0; //No bytes read, execute bail condition.
+        }
+        else{
+            controlCode = buffer[0];
+        }
+    }
+    //End of patch file, but it's not over yet!
+    
+    // Append the original source data if reverting a shrunken modified file
+    if(overflow){
+        if(ssize > msize && revert){
+            fseek(fo, msize, SEEK_SET);
+        }
+        else{
+            //PHP reference code had SEEK_SET && !revert, but SEEK_SET is 0 so that doesn't make sense.
+            fseek(fo, ssize, SEEK_SET);
+        }
+        fwrite(overflow, 1, overflowSize, fo);
+        free(overflow);
+        overflow = NULL;
+    }
+    // Truncate the file if creating a shrunken modified file
+    if(ssize > msize && !revert){
+        ftruncate(fileno(fo), msize);
+    }
+    else if(ssize < msize && revert){
+        ftruncate(fileno(fo), ssize);
+    }
+    // Restore the header if necessary
+    if(header && strncmp(header, "UNIF", 4) == 0){
+        //If we made it here, fo is most certainly ninja.src so I'm not going to check that
+        //TODO: the rebuild_unif function
+    }
+    else if(header){
+        fseek(fo, 0, SEEK_END);
+        long tfsize = ftell(fo);
+        fseek(fo, 0, SEEK_SET);
+        char* tempFile = malloc(tfsize);
+        fread(tempFile, 1, tfsize, fo);
+        fseek(fo, 0, SEEK_SET);
+        fwrite(header, 1, headerSize, fo);
+        fwrite(tempFile, 1, tfsize, fo);
+        free(tempFile);
+        free(header);
+        header = NULL;
+    }
+    if(fo){
+        fclose(fo);
+        fo = NULL;
+    }
+    if(access("ninja.src", F_OK) != -1){
+        unsigned long pathLen = strlen(targetPath) + strlen(name) + 1;
+        char* targetName = malloc(pathLen);
+        strcpy(targetName, targetPath);
+        targetName = strcat(targetName, name);
+        remove(targetName);
+        rename("ninja.src", targetName);
+    }
+    if(rup){
+        fclose(rup);
+        rup = NULL;
+    }
+    if(name){
+        free(name);
+        name = NULL;
+    }
+    return 0;
+}
+
+bool md5Equals(unsigned char* m1, unsigned char* m2){
+    for(int i=0; i<16; i++){
+        if(m1[i] != m2[i]){
+            return false;
+        }
+    }
+    return true;
+}
+
+long punpack(char* buffer, unsigned char length){
+    long retval = 0;
+    for(int i = length-1; i>=0; i--){
+        retval = retval << 8;
+        retval += ((unsigned char)buffer[i]);
+    }
+    return retval;
+}
+
+struct romPlusHeader nes_read(char* infile){
+    struct romPlusHeader retval;
+    long romSize;
+    FILE* fd = fopen(infile, "rb");
+    unsigned char localBuffer[32];
+    fread(localBuffer, 1, 10, fd);
+    fseek(fd, 0, SEEK_END);
+    romSize = ftell(fd);
+    fseek(fd, 0, SEEK_SET);
+    
+    // Check for an iNES header.
+    if(localBuffer[0] == 'N' && localBuffer[1] == 'E' && localBuffer[2] == 'S'){
+        retval.headerDataSize = 0x10;
+        retval.headerData = malloc(retval.headerDataSize);
+        fread(retval.headerData, 1, retval.headerDataSize, fd);
+        retval.romDataSize = romSize - 0x10;
+        retval.romData = malloc(retval.romDataSize);
+        fread(retval.romData, 1, retval.romDataSize, fd);
+    }
+    // Check for a Far Front East header.
+    else if(localBuffer[8]==0xAA && localBuffer[9]==0xBB){
+        retval.headerDataSize = 0x200;
+        retval.headerData = malloc(retval.headerDataSize);
+        fread(retval.headerData, 1, retval.headerDataSize, fd);
+        retval.romDataSize = romSize - 0x200;
+        retval.romData = malloc(retval.romDataSize);
+        fread(retval.romData, 1, retval.romDataSize, fd);
+    }
+    // Check for a UNIF format ROM
+    else if(localBuffer[0] == 'U' && localBuffer[1] == 'N' && localBuffer[2] == 'I' && localBuffer[3] == 'F'){
+        retval.headerDataSize = 4;
+        retval.headerData = malloc(retval.headerDataSize);
+        strncpy(retval.headerData, "UNIF", 4);
+        retval.romData = malloc(romSize);
+        retval.romDataSize = 0;
+        fseek(fd, 0x20, SEEK_SET);
+        long srcLoc = 0x20;
+        fread(localBuffer, 1, 4, fd);
+        srcLoc += 4;
+        while(srcLoc < romSize){
+            if((strncmp("PRG", (char*)localBuffer, 3) == 0 ||
+                strncmp("CHR", (char*)localBuffer, 3) == 0) &&
+               ((localBuffer[3] >= '0' && localBuffer[3] <= '9') ||
+                (localBuffer[3] >= 'A' && localBuffer[3] <= 'F')))
+            {
+                fread(localBuffer, 1, 4, fd);
+                srcLoc += 4;
+                long size = punpack((char*)localBuffer, 4);
+                fread(retval.romData+retval.romDataSize, 1, size, fd);
+                retval.romDataSize += size;
+                srcLoc += size;
+            }
+            else{
+                fread(localBuffer, 1, 4, fd);
+                srcLoc += 4;
+                long size = punpack((char*)localBuffer, 4);
+                fseek(fd, size, SEEK_CUR);
+                srcLoc += size;
+            }
+            if(srcLoc < romSize){
+                fread(localBuffer, 1, 4, fd);
+                srcLoc += 4;
+            }
+        }
+    }
+    else{
+        //FAILED!!!
+        retval.headerData = NULL;
+        retval.romData = NULL;
+        retval.headerDataSize = 0;
+        retval.romDataSize = 0;
+    }
+    fclose(fd);
+    return retval;
+}

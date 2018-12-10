@@ -12,6 +12,7 @@
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		9E0351C30E9D8B570043AC3E /* MPPatchWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9E0351C10E9D8B570043AC3E /* MPPatchWindow.mm */; };
+		9E16BDCF21B39633007FBC85 /* librup.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E16BDCE21B39633007FBC85 /* librup.c */; };
 		9E17AB9F120F9E9800BA4827 /* MPCreationWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9E17AB9E120F9E9800BA4827 /* MPCreationWindow.mm */; };
 		9E2701CC1C31C59000F50B1F /* mbFlipWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2701CB1C31C59000F50B1F /* mbFlipWindow.m */; };
 		9E2701CE1C31C64200F50B1F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E2701CD1C31C64200F50B1F /* QuartzCore.framework */; };
@@ -30,6 +31,7 @@
 		9E2F9DB32174253A00EBD217 /* libbps-suf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9E2F9D332174253A00EBD217 /* libbps-suf.cpp */; };
 		9E2F9E0F2174253A00EBD217 /* libbps.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9E2F9DA32174253A00EBD217 /* libbps.cpp */; };
 		9E2F9E1221742EC900EBD217 /* flips-support.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9E2F9E1121742EC900EBD217 /* flips-support.cpp */; };
+		9E344FCA21BDF59E009AA80A /* RUPAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E344FC921BDF59E009AA80A /* RUPAdapter.m */; };
 		9EAEB1D511E1767B006CF92A /* bandages.icns in Resources */ = {isa = PBXBuildFile; fileRef = 9EAEB1D411E1767B006CF92A /* bandages.icns */; };
 		9EBBF6CA1EA06D2C00EF26A3 /* MPFileTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBBF6C91EA06D2C00EF26A3 /* MPFileTextField.m */; };
 		9ED6066E126D30DC004782CA /* bsdiff.c in Sources */ = {isa = PBXBuildFile; fileRef = 9ED6066C126D30DC004782CA /* bsdiff.c */; };
@@ -38,6 +40,7 @@
 		9EDB5E2921ACE75A0028764B /* MPPatchResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EDB5E2821ACE75A0028764B /* MPPatchResult.m */; };
 		9EEA30F111E041B8005B6996 /* xdelta3.c in Sources */ = {isa = PBXBuildFile; fileRef = 9EEA30EF11E041B8005B6996 /* xdelta3.c */; };
 		9EFA6CE611E153B500CBE19A /* XDeltaAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFA6CE511E153B500CBE19A /* XDeltaAdapter.m */; };
+		9EFBC84C21B8DEB60005DCA6 /* md5.c in Sources */ = {isa = PBXBuildFile; fileRef = 9EFBC84A21B8DEB60005DCA6 /* md5.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +55,8 @@
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9E0351C10E9D8B570043AC3E /* MPPatchWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MPPatchWindow.mm; sourceTree = "<group>"; };
 		9E0351C20E9D8B570043AC3E /* MPPatchWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPPatchWindow.h; sourceTree = "<group>"; };
+		9E16BDCD21B39633007FBC85 /* librup.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = librup.h; sourceTree = "<group>"; };
+		9E16BDCE21B39633007FBC85 /* librup.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = librup.c; sourceTree = "<group>"; };
 		9E17AB9D120F9E9800BA4827 /* MPCreationWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPCreationWindow.h; sourceTree = "<group>"; };
 		9E17AB9E120F9E9800BA4827 /* MPCreationWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MPCreationWindow.mm; sourceTree = "<group>"; };
 		9E2701C81C31C16B00F50B1F /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
@@ -154,6 +159,8 @@
 		9E2F9DA32174253A00EBD217 /* libbps.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = libbps.cpp; sourceTree = "<group>"; };
 		9E2F9DA42174253A00EBD217 /* flips-cli.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "flips-cli.cpp"; sourceTree = "<group>"; };
 		9E2F9E1121742EC900EBD217 /* flips-support.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "flips-support.cpp"; sourceTree = "<group>"; };
+		9E344FC821BDF59E009AA80A /* RUPAdapter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RUPAdapter.h; sourceTree = "<group>"; };
+		9E344FC921BDF59E009AA80A /* RUPAdapter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RUPAdapter.m; sourceTree = "<group>"; };
 		9EAEB1D411E1767B006CF92A /* bandages.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = bandages.icns; sourceTree = "<group>"; };
 		9EBBF6C81EA06D2C00EF26A3 /* MPFileTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPFileTextField.h; sourceTree = "<group>"; };
 		9EBBF6C91EA06D2C00EF26A3 /* MPFileTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPFileTextField.m; sourceTree = "<group>"; };
@@ -179,6 +186,8 @@
 		9EEA314611E04933005B6996 /* xdelta3-test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "xdelta3-test.h"; path = "xdelta/xdelta3-test.h"; sourceTree = "<group>"; };
 		9EFA6CE411E153B500CBE19A /* XDeltaAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XDeltaAdapter.h; sourceTree = "<group>"; };
 		9EFA6CE511E153B500CBE19A /* XDeltaAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XDeltaAdapter.m; sourceTree = "<group>"; };
+		9EFBC84A21B8DEB60005DCA6 /* md5.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = md5.c; sourceTree = "<group>"; };
+		9EFBC84B21B8DEB60005DCA6 /* md5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = md5.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -215,6 +224,7 @@
 		29B97314FDCFA39411CA2CEA /* Mother3UPS */ = {
 			isa = PBXGroup;
 			children = (
+				9E16BDCC21B3938E007FBC85 /* librup */,
 				9E2F9D212174253A00EBD217 /* flips */,
 				9E2F9D1521740CB200EBD217 /* adapters */,
 				9ED6066B126D30BB004782CA /* bsdiff */,
@@ -271,6 +281,17 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		9E16BDCC21B3938E007FBC85 /* librup */ = {
+			isa = PBXGroup;
+			children = (
+				9EFBC84B21B8DEB60005DCA6 /* md5.h */,
+				9EFBC84A21B8DEB60005DCA6 /* md5.c */,
+				9E16BDCD21B39633007FBC85 /* librup.h */,
+				9E16BDCE21B39633007FBC85 /* librup.c */,
+			);
+			path = librup;
+			sourceTree = "<group>";
+		};
 		9E28E07F11E2BE1C0002DE08 /* libppf */ = {
 			isa = PBXGroup;
 			children = (
@@ -294,6 +315,8 @@
 				9E2F9D1C21740D9F00EBD217 /* UPSAdapter.h */,
 				9E2F9D1D21740D9F00EBD217 /* UPSAdapter.mm */,
 				9E2F9E1121742EC900EBD217 /* flips-support.cpp */,
+				9E344FC821BDF59E009AA80A /* RUPAdapter.h */,
+				9E344FC921BDF59E009AA80A /* RUPAdapter.m */,
 			);
 			path = adapters;
 			sourceTree = "<group>";
@@ -544,6 +567,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9EFBC84C21B8DEB60005DCA6 /* md5.c in Sources */,
 				9E2F9D1E21740D9F00EBD217 /* UPSAdapter.mm in Sources */,
 				8D11072D0486CEB800E47090 /* main.m in Sources */,
 				9E0351C30E9D8B570043AC3E /* MPPatchWindow.mm in Sources */,
@@ -551,6 +575,7 @@
 				9E2C4AE121B3479300D74816 /* MultiPatchController.m in Sources */,
 				9EEA30F111E041B8005B6996 /* xdelta3.c in Sources */,
 				9E2F9DB32174253A00EBD217 /* libbps-suf.cpp in Sources */,
+				9E16BDCF21B39633007FBC85 /* librup.c in Sources */,
 				9E2F9DB02174253A00EBD217 /* divsufsort.c in Sources */,
 				9E2F9DA72174253A00EBD217 /* libups.cpp in Sources */,
 				9E2F9D1B21740D6200EBD217 /* BPSAdapter.mm in Sources */,
@@ -559,6 +584,7 @@
 				9E28E08611E2BE330002DE08 /* libppf.cc in Sources */,
 				9E28E08811E2BE330002DE08 /* ppf.cc in Sources */,
 				9E28E08D11E2BF5E0002DE08 /* PPFAdapter.mm in Sources */,
+				9E344FCA21BDF59E009AA80A /* RUPAdapter.m in Sources */,
 				9E2F9DAD2174253A00EBD217 /* crc32.cpp in Sources */,
 				9E17AB9F120F9E9800BA4827 /* MPCreationWindow.mm in Sources */,
 				9ED6066E126D30DC004782CA /* bsdiff.c in Sources */,
