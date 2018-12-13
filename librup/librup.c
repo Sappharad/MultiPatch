@@ -21,7 +21,9 @@ struct romPlusHeader{
 
 long punpack(char* buffer, unsigned char length);
 struct romPlusHeader nes_read(char* infile);
+struct romPlusHeader sfam_read(char* infile);
 bool md5Equals(unsigned char* m1, unsigned char* m2);
+void rebuild_unif(char* infile, unsigned char* data);
 
 int rup2_apply (const char* rup_file, const char* targetPath){
     char buffer[4096];
@@ -101,6 +103,7 @@ int rup2_apply (const char* rup_file, const char* targetPath){
                     targetName = strcat(targetName, name);
                     remove(targetName);
                     rename("ninja.src", targetName);
+                    free(targetName);
                 }
                 name = NULL;
                 revert = false;
@@ -154,7 +157,17 @@ int rup2_apply (const char* rup_file, const char* targetPath){
                     break;
                 }
                 case 3: //SuperNES
+                {
+                    struct romPlusHeader rph = sfam_read(currentFileName);
+                    header = rph.headerData;
+                    headerSize = rph.headerDataSize;
+                    fo = fopen("ninja.src", "wb");
+                    fwrite(rph.romData, 1, rph.romDataSize, fo);
+                    fclose(fo);
+                    fo = NULL;
+                    free(rph.romData);
                     break;
+                }
                 case 4: //N64
                     break;
                 case 5: //Gameboy
@@ -302,7 +315,24 @@ int rup2_apply (const char* rup_file, const char* targetPath){
     // Restore the header if necessary
     if(header && strncmp(header, "UNIF", 4) == 0){
         //If we made it here, fo is most certainly ninja.src so I'm not going to check that
-        //TODO: the rebuild_unif function
+        unsigned long pathLen = strlen(targetPath) + strlen(name) + 1;
+        char* targetName = malloc(pathLen);
+        strcpy(targetName, targetPath);
+        targetName = strcat(targetName, name);
+        
+        fseek(fo, 0, SEEK_END);
+        long tfsize = ftell(fo);
+        unsigned char* data = malloc(tfsize);
+        fseek(fo, 0, SEEK_SET);
+        fread(data, 1, tfsize, fo);
+        rebuild_unif(targetName, data);
+        free(data);
+        free(targetName);
+        free(header);
+        header = NULL;
+        fclose(fo);
+        fo = NULL;
+        remove("ninja.src"); //Rebuild_unif wrote into the original already.
     }
     else if(header){
         fseek(fo, 0, SEEK_END);
@@ -328,6 +358,7 @@ int rup2_apply (const char* rup_file, const char* targetPath){
         targetName = strcat(targetName, name);
         remove(targetName);
         rename("ninja.src", targetName);
+        free(targetName);
     }
     if(rup){
         fclose(rup);
@@ -433,3 +464,204 @@ struct romPlusHeader nes_read(char* infile){
     fclose(fd);
     return retval;
 }
+
+void rebuild_unif(char* infile, unsigned char* data){
+    FILE* fd = fopen(infile, "r+b");
+    fseek(fd, 0, SEEK_END);
+    long romSize = ftell(fd);
+    fseek(fd, 0x20, SEEK_SET);
+    long dataLoc = 0;
+    long srcLoc = 0x20;
+    unsigned char localBuffer[32];
+    fread(localBuffer, 1, 4, fd);
+    srcLoc += 4;
+    while(srcLoc < romSize){
+        if((strncmp("PRG", (char*)localBuffer, 3) == 0 ||
+            strncmp("CHR", (char*)localBuffer, 3) == 0) &&
+           ((localBuffer[3] >= '0' && localBuffer[3] <= '9') ||
+            (localBuffer[3] >= 'A' && localBuffer[3] <= 'F')))
+        {
+            fread(localBuffer, 1, 4, fd);
+            srcLoc += 4;
+            long size = punpack((char*)localBuffer, 4);
+            fwrite(data + dataLoc, 1, size, fd);
+            dataLoc += size;
+            srcLoc += size;
+        }
+        else{
+            fread(localBuffer, 1, 4, fd);
+            srcLoc += 4;
+            long size = punpack((char*)localBuffer, 4);
+            //Seek ahead by size, because we don't care about this bank
+            fseek(fd, size, SEEK_CUR);
+            srcLoc += size;
+        }
+        if(srcLoc < romSize){
+            fread(localBuffer, 1, 4, fd);
+            srcLoc += 4;
+        }
+    }
+    fclose(fd);
+}
+
+const int SNES_HEADER = 0x200;
+const int KBYTE = 0x400;
+
+struct romPlusHeader sfam_read(char* infile){
+    struct romPlusHeader retval;
+    retval.headerData = NULL;
+    retval.headerDataSize = 0;
+    //Intialize defaults in case of no header
+    long romSize;
+    FILE* fd = fopen(infile, "rb");
+    char* fddump;
+    fseek(fd, 0, SEEK_END);
+    romSize = ftell(fd);
+    fseek(fd, 0, SEEK_SET);
+    fddump = malloc(romSize);
+    fread(fddump, 1, romSize, fd);
+    fclose(fd);
+    
+    // "SUPERUFO"
+    char ufotest[8];
+    memcpy(ufotest, fddump+0x8, 8);
+    // "GAME DOCTOR SF 3"
+    char gd3test[0x10];
+    memcpy(gd3test, fddump, 0x10);
+    
+    if(strncmp((const char*)(fddump+0x1e8), "NSRT", 4) == 0){
+        retval.headerDataSize = SNES_HEADER;
+        retval.headerData = malloc(SNES_HEADER);
+        memcpy(retval.headerData, fddump, SNES_HEADER);
+    }
+    if(romSize % (32 * KBYTE) != 0){
+        //Remove header
+        romSize = romSize - SNES_HEADER;
+        char *tempDump = malloc(romSize);
+        memcpy(tempDump, fddump + SNES_HEADER, romSize);
+        free(fddump);
+        fddump = tempDump;
+    }
+    long inverse = punpack((fddump+0x7fdc), 2);
+    long checksum = punpack((fddump+0x7fde), 2);
+    int romstate = fddump[0x7fd5] % 0x10;
+    
+    if((inverse + checksum) == 0xFFFF && (romstate % 2) == 0){
+        //Type loROM detected
+        retval.romData = fddump;
+        retval.romDataSize = romSize;
+        return retval;
+    }
+    else if(inverse + checksum == 0xFFFF && (romstate % 2) != 0){
+        short chart_20mbit[] = {
+                              1,   3,   5,   7,   9,  11,  13,  15,  17,  19,  21,  23,  25,  27,  29,
+                              31,  33,  35,  37,  39,  41,  43,  45,  47,  49,  51,  53,  55,  57,  59,
+                              61,  63,  65,  67,  69,  71,  73,  75,  77,  79,  64,  66,  68,  70,  72,
+                              74,  76,  78,  32,  34,  36,  38,  40,  42,  44,  46,  48,  50,  52,  54,
+                              56,  58,  60,  62,   0,   2,   4,   6,   8,  10,  12,  14,  16,  18,  20,
+                              22,  24,  26,  28,  30
+        };
+        short chart_24mbit[] = {
+                              1,   3,   5,   7,   9,  11,  13,  15,  17,  19,  21,  23,  25,  27,  29,
+                              31,  33,  35,  37,  39,  41,  43,  45,  47,  49,  51,  53,  55,  57,  59,
+                              61,  63,  65,  67,  69,  71,  73,  75,  77,  79,  81,  83,  85,  87,  89,
+                              91,  93,  95,  64,  66,  68,  70,  72,  74,  76,  78,  80,  82,  84,  86,
+                              88,  90,  92,  94,   0,   2,   4,   6,   8,  10,  12,  14,  16,  18,  20,
+                              22,  24,  26,  28,  30,  32,  34,  36,  38,  40,  42,  44,  46,  48,  50,
+                              52,  54,  56,  58,  60,  62
+        };
+        short chart_48mbit[] = {
+                              129, 131, 133, 135, 137, 139, 141, 143, 145, 147, 149, 151, 153, 155, 157,
+                              159, 161, 163, 165, 167, 169, 171, 173, 175, 177, 179, 181, 183, 185, 187,
+                              189, 191, 128, 130, 132, 134, 136, 138, 140, 142, 144, 146, 148, 150, 152,
+                              154, 156, 158, 160, 162, 164, 166, 168, 170, 172, 174, 176, 178, 180, 182,
+                              184, 186, 188, 190,   1,   3,   5,   7,   9,  11,  13,  15,  17,  19,  21,
+                              23,  25,  27,  29,  31,  33,  35,  37,  39,  41,  43,  45,  47,  49,  51,
+                              53,  55,  57,  59,  61,  63,  65,  67,  69,  71,  73,  75,  77,  79,  81,
+                              83,  85,  87,  89,  91,  93,  95,  97,  99, 101, 103, 105, 107, 109, 111,
+                              113, 115, 117, 119, 121, 123, 125, 127,   0,   2,   4,   6,   8,  10,  12,
+                              14,  16,  18,  20,  22,  24,  26,  28,  30,  32,  34,  36,  38,  40,  42,
+                              44,  46,  48,  50,  52,  54,  56,  58,  60,  62,  64,  66,  68,  70,  72,
+                              74,  76,  78,  80,  82,  84,  86,  88,  90,  92,  94,  96,  98, 100, 102,
+                              104, 106, 108, 110, 112, 114, 116, 118, 120, 122, 124, 126
+        };
+        if(romSize == 512 * KBYTE * 5 && strncmp(ufotest, "SUPERUFO", 8) != 0){
+            char* deinterleave = malloc(romSize);
+            for(int i=0; i<0x50; i++){
+                int chunkSrc =  i * 32 * KBYTE;
+                int chunkDst = chart_20mbit[i]*(i*32*KBYTE);
+                memcpy(deinterleave + chunkDst, fddump + chunkSrc, 32*KBYTE);
+            }
+            free(fddump);
+            retval.romData = deinterleave;
+            retval.romDataSize = romSize;
+            return retval;
+        }
+        else if(romSize == 512 * KBYTE * 6 && strncmp(ufotest, "SUPERUFO", 8) != 0){
+            char* deinterleave = malloc(romSize);
+            for(int i=0; i<0x60; i++){
+                int chunkSrc =  i * 32 * KBYTE;
+                int chunkDst = chart_24mbit[i]*(i*32*KBYTE);
+                memcpy(deinterleave + chunkDst, fddump + chunkSrc, 32*KBYTE);
+            }
+            free(fddump);
+            retval.romData = deinterleave;
+            retval.romDataSize = romSize;
+            return retval;
+        }
+        else if(romSize == 512 * KBYTE * 12 && strncmp(ufotest, "SUPERUFO", 8) != 0){
+            char* deinterleave = malloc(romSize);
+            for(int i=0; i<0xC0; i++){
+                int chunkSrc =  i * 32 * KBYTE;
+                int chunkDst = chart_48mbit[i]*(i*32*KBYTE);
+                memcpy(deinterleave + chunkDst, fddump + chunkSrc, 32*KBYTE);
+            }
+            free(fddump);
+            retval.romData = deinterleave;
+            retval.romDataSize = romSize;
+            return retval;
+        }
+        else{
+            int chunks = (int)(romSize / (32*KBYTE));
+            char* deinterleave = malloc(romSize);
+            for(int i=0; i<chunks/2; i++){
+                int chunkSrc = (i + (chunks/2)) * 32 * KBYTE;
+                int chunkDst =  (i*2) * 32 * KBYTE;
+                memcpy(deinterleave + chunkDst, fddump + chunkSrc, 32*KBYTE);
+                chunkSrc = (i) * 32 * KBYTE;
+                chunkDst =  ((i*2)+1) * 32 * KBYTE;
+                memcpy(deinterleave + chunkDst, fddump + chunkSrc, 32*KBYTE);
+            }
+            free(fddump);
+            retval.romData = deinterleave;
+            retval.romDataSize = romSize;
+            return retval;
+        }
+    }
+    inverse = punpack((fddump+0xffdc), 2);
+    checksum = punpack((fddump+0xffde), 2);
+    romstate = fddump[0xffd5] % 0x10;
+    if(inverse + checksum == 0xFFFF && romstate % 2 != 0){
+        //ROM type HiROM deinterleaved detected
+        retval.romData = fddump;
+        retval.romDataSize = romSize;
+        return retval;
+    }
+    else if(romstate % 2 != 0){
+        //ROM type unknown
+        retval.romData = fddump;
+        retval.romDataSize = romSize;
+        return retval;
+    }
+    //Bad data.
+    return retval;
+}
+
+/*struct romPlusHeader n64_read(char* infile){
+    struct romPlusHeader retval;
+    retval.headerData = NULL;
+    retval.headerDataSize = 0;
+    //No header on N64
+    
+}*/
+
