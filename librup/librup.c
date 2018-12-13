@@ -1,9 +1,8 @@
 //
 //  librup.c
-//  MultiPatcher
-//
 //  Created by Paul Kratt on 12/1/18.
 //
+//  Based on the original PHP implementation of Ninja2 written by Derrick Sobodash in 2006.
 
 #include "librup.h"
 #include <string.h>
@@ -20,8 +19,15 @@ struct romPlusHeader{
 };
 
 long punpack(char* buffer, unsigned char length);
+void smd_deint(char* romData);
 struct romPlusHeader nes_read(char* infile);
 struct romPlusHeader sfam_read(char* infile);
+struct romPlusHeader n64_read(char* infile);
+struct romPlusHeader gb_read(char* infile);
+struct romPlusHeader sms_read(char* infile);
+struct romPlusHeader mega_read(char* infile);
+struct romPlusHeader pce_read(char* infile);
+struct romPlusHeader lynx_read(char* infile);
 bool md5Equals(unsigned char* m1, unsigned char* m2);
 void rebuild_unif(char* infile, unsigned char* data);
 
@@ -169,17 +175,67 @@ int rup2_apply (const char* rup_file, const char* targetPath){
                     break;
                 }
                 case 4: //N64
+                {
+                    struct romPlusHeader rph = n64_read(currentFileName);
+                    fo = fopen("ninja.src", "wb");
+                    fwrite(rph.romData, 1, rph.romDataSize, fo);
+                    fclose(fo);
+                    fo = NULL;
+                    free(rph.romData);
                     break;
+                }
                 case 5: //Gameboy
+                {
+                    struct romPlusHeader rph = gb_read(currentFileName);
+                    fo = fopen("ninja.src", "wb");
+                    fwrite(rph.romData, 1, rph.romDataSize, fo);
+                    fclose(fo);
+                    fo = NULL;
+                    free(rph.romData);
                     break;
+                }
                 case 6: //Sega Master System
+                {
+                    struct romPlusHeader rph = sms_read(currentFileName);
+                    fo = fopen("ninja.src", "wb");
+                    fwrite(rph.romData, 1, rph.romDataSize, fo);
+                    fclose(fo);
+                    fo = NULL;
+                    free(rph.romData);
                     break;
+                }
                 case 7: //Sega Genesis / MegaDrive
+                {
+                    struct romPlusHeader rph = mega_read(currentFileName);
+                    fo = fopen("ninja.src", "wb");
+                    fwrite(rph.romData, 1, rph.romDataSize, fo);
+                    fclose(fo);
+                    fo = NULL;
+                    free(rph.romData);
                     break;
+                }
                 case 8: //PC Engine / TurboGrafix 16
+                {
+                    struct romPlusHeader rph = pce_read(currentFileName);
+                    fo = fopen("ninja.src", "wb");
+                    fwrite(rph.romData, 1, rph.romDataSize, fo);
+                    fclose(fo);
+                    fo = NULL;
+                    free(rph.romData);
                     break;
+                }
                 case 9: //Atari Lynx
+                {
+                    struct romPlusHeader rph = lynx_read(currentFileName);
+                    header = rph.headerData;
+                    headerSize = rph.headerDataSize;
+                    fo = fopen("ninja.src", "wb");
+                    fwrite(rph.romData, 1, rph.romDataSize, fo);
+                    fclose(fo);
+                    fo = NULL;
+                    free(rph.romData);
                     break;
+                }
             }
             
             MD5_CTX myMd5er;
@@ -657,11 +713,196 @@ struct romPlusHeader sfam_read(char* infile){
     return retval;
 }
 
-/*struct romPlusHeader n64_read(char* infile){
+struct romPlusHeader n64_read(char* infile){
     struct romPlusHeader retval;
     retval.headerData = NULL;
     retval.headerDataSize = 0;
     //No header on N64
-    
-}*/
+    long romSize;
+    FILE* fd = fopen(infile, "rb");
+    fseek(fd, 0, SEEK_END);
+    romSize = ftell(fd);
+    fseek(fd, 0, SEEK_SET);
+    unsigned char* romData = malloc(romSize);
+    fread(romData, 1, romSize, fd);
+    fclose(fd);
+    if(romData[0]==0x37 && romData[1]==0x80 && romData[2]==0x40 && romData[3]==0x12){
+        //Interleaved - Well, they call it interleaved but it's really just byte swapped.
+        unsigned char temp;
+        for(int i = 0; i < romSize; i+=2){
+            temp = romData[i];
+            romData[i] = romData[i+1];
+            romData[i+1] = temp;
+        }
+    }
+    retval.romData = (char*)romData;
+    retval.romDataSize = romSize;
+    return retval;
+}
 
+struct romPlusHeader gb_read(char* infile){
+    struct romPlusHeader retval;
+    retval.headerData = NULL;
+    retval.headerDataSize = 0;
+    long romSize;
+    FILE* fd = fopen(infile, "rb");
+    fseek(fd, 0, SEEK_END);
+    romSize = ftell(fd);
+    fseek(fd, 0, SEEK_SET);
+    // Test for an 0x200 SmartCard header
+    if((romSize % 0x4000) != 0){
+        fseek(fd, 0x200, SEEK_SET);
+        romSize -= 0x200;
+    }
+    unsigned char* romData = malloc(romSize);
+    fread(romData, 1, romSize, fd);
+    fclose(fd);
+    retval.romData = (char*)romData;
+    retval.romDataSize = romSize;
+    //Note: omitted file type check because we don't need it for patching since MD5 is checked.
+    return retval;
+}
+
+struct romPlusHeader sms_read(char* infile){
+    struct romPlusHeader retval;
+    retval.headerData = NULL;
+    retval.headerDataSize = 0;
+    long romSize;
+    FILE* fd = fopen(infile, "rb");
+    fseek(fd, 0, SEEK_END);
+    romSize = ftell(fd);
+    fseek(fd, 0x7ff4, SEEK_SET);
+    char sega[4];
+    fread(sega, 1, 4, fd);
+    //Test if the file is in BIN format
+    if(strncmp(sega, "SEGA", 4) != 0){
+        //Not BIN. Check for SMD
+        fseek(fd, 0x8, SEEK_SET);
+        fread(sega, 1, 2, fd);
+        if((unsigned char)(sega[0]) == 0xAA && (unsigned char)(sega[1]) == 0xBB){
+            //This is SMD
+            fseek(fd, 0x200, SEEK_SET);
+            romSize -= 0x200;
+            retval.romDataSize = romSize;
+            retval.romData = malloc(romSize);
+            fread(retval.romData, 1, romSize, fd);
+            fclose(fd);
+            long num_blocks = romSize / (16*KBYTE);
+            for(int i = 0; i < num_blocks; i++){
+                smd_deint(retval.romData+(i*16*KBYTE));
+            }
+            return retval;
+        }
+    }
+    //Not SMD, just read it as binary
+    fseek(fd, 0, SEEK_SET);
+    unsigned char* romData = malloc(romSize);
+    fread(romData, 1, romSize, fd);
+    fclose(fd);
+    retval.romData = (char*)romData;
+    retval.romDataSize = romSize;
+    return retval;
+}
+
+void smd_deint(char* romData){
+    int low = 1;
+    int high = 0;
+    char chunk[16*KBYTE];
+    memcpy(chunk, romData, 16*KBYTE);
+    for(int i = 0; i < 8 * KBYTE; i++){
+        romData[low] = chunk[((8*KBYTE) + i)];
+        romData[high] = chunk[i];
+        low += 2;
+        high += 2;
+    }
+}
+
+struct romPlusHeader mega_read(char* infile){
+    struct romPlusHeader retval;
+    retval.headerData = NULL;
+    retval.headerDataSize = 0;
+    long romSize;
+    FILE* fd = fopen(infile, "rb");
+    fseek(fd, 0, SEEK_END);
+    romSize = ftell(fd);
+    fseek(fd, 0x100, SEEK_SET);
+    char sega[4];
+    fread(sega, 1, 4, fd);
+    //Test if the file is in BIN format
+    if(strncmp(sega, "SEGA", 4) != 0){
+        //Not BIN. Check for SMD
+        fseek(fd, 0x8, SEEK_SET);
+        fread(sega, 1, 2, fd);
+        if((unsigned char)(sega[0]) == 0xAA && (unsigned char)(sega[1]) == 0xBB){
+            //This is SMD
+            fseek(fd, 0x200, SEEK_SET);
+            romSize -= 0x200;
+            retval.romDataSize = romSize;
+            retval.romData = malloc(romSize);
+            fread(retval.romData, 1, romSize, fd);
+            fclose(fd);
+            long num_blocks = romSize / (16*KBYTE);
+            for(int i = 0; i < num_blocks; i++){
+                smd_deint(retval.romData+(i*16*KBYTE));
+            }
+            return retval;
+        }
+    }
+    //Not SMD, just read it as binary
+    fseek(fd, 0, SEEK_SET);
+    unsigned char* romData = malloc(romSize);
+    fread(romData, 1, romSize, fd);
+    fclose(fd);
+    retval.romData = (char*)romData;
+    retval.romDataSize = romSize;
+    return retval;
+}
+
+struct romPlusHeader pce_read(char* infile){
+    struct romPlusHeader retval;
+    retval.headerData = NULL;
+    retval.headerDataSize = 0;
+    long romSize;
+    FILE* fd = fopen(infile, "rb");
+    fseek(fd, 0, SEEK_END);
+    romSize = ftell(fd);
+    fseek(fd, 0, SEEK_SET);
+    // Test for an 0x200 SmartCard header
+    if((romSize % 0x1000) != 0){
+        fseek(fd, 0x200, SEEK_SET);
+        romSize -= 0x200;
+    }
+    unsigned char* romData = malloc(romSize);
+    fread(romData, 1, romSize, fd);
+    fclose(fd);
+    retval.romData = (char*)romData;
+    retval.romDataSize = romSize;
+    return retval;
+}
+
+struct romPlusHeader lynx_read(char* infile){
+    struct romPlusHeader retval;
+    retval.headerData = NULL;
+    retval.headerDataSize = 0;
+    long romSize;
+    FILE* fd = fopen(infile, "rb");
+    fseek(fd, 0, SEEK_END);
+    romSize = ftell(fd);
+    fseek(fd, 0, SEEK_SET);
+    char lynx[4];
+    fread(lynx, 1, 4, fd);
+    fseek(fd, 0, SEEK_SET);
+    //Check for a LYNX header
+    if(strncmp(lynx, "LYNX", 4)==0){
+        retval.headerDataSize = 0x40;
+        retval.headerData = malloc(0x40);
+        fread(retval.headerData, 1, 0x40, fd);
+        romSize -= 0x40;
+    }
+    unsigned char* romData = malloc(romSize);
+    fread(romData, 1, romSize, fd);
+    fclose(fd);
+    retval.romData = (char*)romData;
+    retval.romDataSize = romSize;
+    return retval;
+}

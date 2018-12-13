@@ -1,9 +1,9 @@
 //
 //  librup.h
-//  MultiPatcher
-//
 //  Created by Paul Kratt on 12/1/18.
 //
+//  Based on the original PHP implementation of Ninja2 written by Derrick Sobodash in 2006.
+//  That reference code was licensed as GPL, so I guess this can be too.
 
 #ifndef librup_h
 #define librup_h
