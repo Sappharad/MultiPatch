@@ -1,13 +1,15 @@
-{\rtf1\ansi\ansicpg1252\cocoartf1504\cocoasubrtf820
-\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 HelveticaNeue;\f1\fswiss\fcharset0 Helvetica;}
+{\rtf1\ansi\ansicpg1252\cocoartf1671\cocoasubrtf200
+\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 HelveticaNeue;\f1\fswiss\fcharset0 Helvetica;\f2\fnil\fcharset0 HelveticaNeue-Bold;
+}
 {\colortbl;\red255\green255\blue255;}
 {\*\expandedcolortbl;;}
 \margl1440\margr1440\vieww11020\viewh8400\viewkind0
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\pard\tx720\tx1440\tx2160\tx2250\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 
-\f0\fs36 \cf0 \uldb \ulc0 Multi Patch 1.6.2
+\f0\fs36 \cf0 \uldb \ulc0 Multi Patch 1.7
 \f1\fs24 \ulnone \
-\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
 
 \f0 \ul Overview\ulnone \
 Multi Patch is a patch utility for macOS. If you downloaded this, you probably already know that. Multi Patch is free software made up of several open source projects under varying licenses. See the license and source code sections below for more details.\
@@ -32,55 +34,61 @@ PPF: .ppf\
 XDelta: .delta; .dat\
 BSDiff: .bdf; .bsdiff\
 BPS: .bps\
+Ninja2: .rup\
 \
 \ul Creating Patches\ulnone \
-MultiPatch can also create patches in all supported patching formats except PPF. Click the "Create Patch" button in the corner of the window to switch to patch creation mode. Usage for that is similar to applying a patch. The format of the patch to create is selected from a drop-down in the save dialog.\
+MultiPatch can also create patches in the following formats: IPS, BPS, XDelta, and BSDiff. Click the "Create Patch" button in the corner of the window to switch to patch creation mode. Usage for that is similar to applying a patch. The format of the patch to create is selected from a drop-down in the save dialog.\
 \
 BPS Patch creation offers two different options, Linear and Delta. Linear BPS patches are larger, but can be created very quickly and require very little memory to create. Delta BPS patches are usually smaller than Linear patches, but take longer and require more memory to create. The time and memory required to create a BPS delta patch depends on the size of the original and modified files.\
+\
+Patch creation for the UPS, PPF and Ninja2 formats is not supported. These formats are no longer recommended for new patches because BPS provides smaller patch files that compress more efficiently. For larger files XDelta is a popular choice.\
 \
 \ul License\ulnone \
 Multi Patch is built using open source code taken from various sources. The code for each patching algorithm used falls under different licenses, and any changes made will need to adhere to the specific license for that code. The Multi Patch application itself is released under the GPL in an effort to be compatible with the licenses of the patching libraries contained within. The licenses employed by each patching library used are listed below:\
 \
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 
-\b \cf0 UPS uses LibUPS by byuu.
-\b0 \
-- Public domain, with one exception. See source code for details.\
-
-\b BPS based on beat by byuu.
-\b0 \
+\f2\b \cf0 UPS, BPS and IPS use Floating IPS (FLIPS) by Alcaro.
+\f0\b0 \
 - Released under the GPLv3.\
 
-\b IPS uses UIPS by Neil Corlett.
-\b0 \
+\f2\b PPF uses LibPPF by Daniel Ekstr'm.
+\f0\b0 \
 - Released under the GPL.\
 
-\b PPF uses LibPPF by Daniel Ekstr'm.
-\b0 \
+\f2\b XDelta uses XDelta3 by Josh MacDonald and others.
+\f0\b0 \
 - Released under the GPL.\
 
-\b XDelta uses XDelta3 by Josh MacDonald and others.
-\b0 \
-- Released under the GPL.\
-
-\b BSDiff uses BSDiff by Colin Percival\
+\f2\b BSDiff uses BSDiff by Colin Percival\
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 
-\b0 \cf0 - Released under custom license. See source code for details.\
+\f0\b0 \cf0 - Released under custom license. See source code for details.\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f2\b \cf0 Ninja2 uses LibRUP by Paul Kratt, translated from code by Derrick Sobodash
+\f0\b0 \
+- Released under the GPLv2.\
 \
-\ul Source Code\ulnone \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \ul Source Code\ulnone \
 The latest source code to Multi Patch is available on GitHub:\
 https://github.com/Sappharad/MultiPatch/\
 \
 If you have changes that you'd like to contribute to the application, pull requests are welcome.\
 \
 \ul Version History\
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
-\cf0 \ulnone 1.6.2 - April 23rd 2017\
-- Fixed: The first two Browse buttons in the Apply Patch window were accidentally swapped in 1.6.\ul \ulc0 \
+\ulnone 1.7 - December 14th 2018\
+- Fixed: PPF Patches did not apply correctly most of the time. (This LibPPF bug was originally documented by Ritesh Sood on SourceForge)\
+- Switched IPS, UPS and BPS support to the Floating IPS library. It appears to be the preferred library for creating and applying IPS and BPS patches now, creating the most efficient patches and offering the best patch compatibility.\
+- Added support for applying Ninja 2 .rup patches.\
+- Compatible with system dark mode in macOS 10.14 Mojave.\
+- Added the ability to disable checksum validation when applying XDelta patches. The option is found in the new preferences window. This preference is only valid for your current session and will be turned back off the next time you launch MultiPatch. When you get a checksum error trying to apply an XDelta patch, it means the file you\'92re trying to patch is not the same file that the patch was created for. Enabling this new option allows you to patch anyway, but it\'92s very likely that the patched file will not work.\
 \
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
-\cf0 \ulnone 1.6 - April 17th 2017\
+1.6.2 - April 23rd 2017\
+- Fixed: The first two Browse buttons in the Apply Patch window were accidentally swapped in 1.6.\ul \
+\
+\ulnone 1.6 - April 17th 2017\
 - Fix for bug that can cause invalid UPS patches to be created (Contributed by Ravi Kanodia)\
 - File extension for patch files is no longer case sensitive.\
 - Now supports drag and drop for onto the window for files that you can open.\
@@ -114,43 +122,30 @@ If you have changes that you'd like to contribute to the application, pull reque
 \ul Credits and Special Thanks\ulnone \
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 
-\b \cf0 Main Application\ul \
+\f2\b \cf0 Main Application\ul \
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 
-\b0 \cf0 \ulnone Paul Kratt\
+\f0\b0 \cf0 \ulnone Paul Kratt\
 \
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 
-\b \cf0 UPS Patcher bad patch creation bug fix
-\b0 \
-\pard\pardeftab720\partightenfactor0
-\cf0 Ravi Kanodia\
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
-\cf0 \
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
-
-\b \cf0 UPS and BPS patchers
-\b0 \
-byuu\
+\f2\b \cf0 IPS, UPS and BPS patcher
+\f0\b0 \
+Alcaro\
 \
 
-\b IPS patcher
-\b0 \
-Neil Corlett\
-\
-
-\b PPF patcher
-\b0 \
+\f2\b PPF patcher
+\f0\b0 \
 Daniel Ekstr'm\
 \
 
-\b XDelta
-\b0 \
+\f2\b XDelta
+\f0\b0 \
 Josh MacDonald\
 \
 
-\b BSDiff
-\b0 \
+\f2\b BSDiff
+\f0\b0 \
 Colin Percival\
 \
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
