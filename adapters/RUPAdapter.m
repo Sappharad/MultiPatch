@@ -18,6 +18,8 @@
             return [MPPatchResult newMessage:@"Unable to open original file or write to output file." isWarning:NO];
         }
     }
+    //Need to be in temp directory for creating ninja.src temp files on macOS 10.7. 
+    chdir([NSTemporaryDirectory() cStringUsingEncoding:[NSString defaultCStringEncoding]]);
     
     int result = rup2_apply([patch cStringUsingEncoding:[NSString defaultCStringEncoding]], [output cStringUsingEncoding:[NSString defaultCStringEncoding]]);
     if(result != 0){
