@@ -1,5 +1,5 @@
 # MultiPatch
-Multi Patch is an all-in-one file patching utility for macOS. 
+MultiPatch is an all-in-one file patching utility for macOS. 
 
 ## Supported formats
 Supported patch formats are automatically detected based on the file extension of the patch. At this time, please ensure the patches you wish to use have the proper extension.  
@@ -12,7 +12,7 @@ BPS: .bps
 Ninja2: .rup  
 
 ## License
-Multi Patch is built using open source code taken from various sources. The code for each patching algorithm used falls under different licenses, and any changes made will need to adhere to the specific license for that code. The Multi Patch application itself is released under the GPL in an effort to be compatible with the licenses of the patching libraries contained within. The licenses employed by each patching library used are listed below:
+MultiPatch is built using open source code taken from various sources. The code for each patching algorithm used falls under different licenses, and any changes made will need to adhere to the specific license for that code. The MultiPatch application itself is released under the GPL in an effort to be compatible with the licenses of the patching libraries contained within. The licenses employed by each patching library used are listed below:
 
 **UPS, BPS and IPS use Floating IPS (FLIPS) by Alcaro.**  
 \- Released under the GPLv3.  
