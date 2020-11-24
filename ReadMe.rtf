@@ -1,12 +1,12 @@
-{\rtf1\ansi\ansicpg1252\cocoartf1671\cocoasubrtf500
-\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 HelveticaNeue;\f1\fswiss\fcharset0 Helvetica;\f2\fnil\fcharset0 HelveticaNeue-Bold;
+{\rtf1\ansi\ansicpg1252\cocoartf2576
+\cocoascreenfonts1\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 HelveticaNeue;\f1\fswiss\fcharset0 Helvetica;\f2\fnil\fcharset0 HelveticaNeue-Bold;
 }
 {\colortbl;\red255\green255\blue255;}
 {\*\expandedcolortbl;;}
 \margl1440\margr1440\vieww11020\viewh8400\viewkind0
 \pard\tx720\tx1440\tx2160\tx2250\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 
-\f0\fs36 \cf0 \uldb \ulc0 MultiPatch 1.7
+\f0\fs36 \cf0 \uldb \ulc0 MultiPatch 1.7.1
 \f1\fs24 \ulnone \
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 \cf0 \
@@ -15,7 +15,7 @@
 MultiPatch is a patch utility for macOS. If you downloaded this, you probably already know that. MultiPatch is free software made up of several open source projects under varying licenses. See the license and source code sections below for more details.\
 \
 \ul System Requirements\ulnone \
-1. Any system running macOS 10.7 or greater.\
+1. Any system running macOS 10.9 or greater.\
 2. Enough hard drive space to save a copy of the files you're planning to patch.\
 \
 \ul Instructions\ulnone \
@@ -78,7 +78,14 @@ https://github.com/Sappharad/MultiPatch/\
 If you have changes that you'd like to contribute to the application, pull requests are welcome.\
 \
 \ul Version History\
-\ulnone 1.7 - December 14th 2018\
+\ulnone 1.7.1 - November 24th 2020\
+- Added native support for Apple Silicon Macs.\
+- macOS 10.9 or later is now required due to requirements for supporting newer Macs. Previous versions will remain available for download for older Macs.\
+- Updated Floating IPS code to the latest version, which might have some bug fixes.\
+- Includes text corrections submitted by Eric Newport; some instances of the app name MultiPatch contained a space.\
+- Added command line version as a separate download on the website.\
+\
+1.7 - December 14th 2018\
 - Fixed: PPF Patches did not apply correctly most of the time. (This LibPPF bug was originally documented by Ritesh Sood on SourceForge)\
 - Switched IPS, UPS and BPS support to the Floating IPS library. It appears to be the preferred library for creating and applying IPS and BPS patches now, creating the most efficient patches and offering the best patch compatibility.\
 - Added support for applying Ninja 2 .rup patches.\
@@ -127,8 +134,7 @@ If you have changes that you'd like to contribute to the application, pull reque
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 
 \f0\b0 \cf0 \ulnone Paul Kratt\
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
-\cf0 \
+\
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 
 \f2\b \cf0 Text Corrections

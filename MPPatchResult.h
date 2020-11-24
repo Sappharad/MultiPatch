@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MPPatchResult : NSObject
 +(MPPatchResult*)newMessage:(NSString*)message isWarning:(BOOL)warning;
 @property BOOL IsWarning;
-@property NSString* Message;
+@property (assign) NSString* Message;
 
 @end
 

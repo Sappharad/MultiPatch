@@ -6,6 +6,7 @@
 //
 
 #import "MultiPatchController.h"
+#import "MPSettings.h"
 
 @implementation MultiPatchController
 
@@ -15,7 +16,7 @@
     //User tries patching, program notifies them that their input file is wrong.
     //User goes into preferences and disables the check and applies patch again.
     //User gets a file that might work, but might not, since their input was wrong.
-    _ignoreXDeltaChecksum = NO;
+    MPSettings.IgnoreXDeltaChecksum = NO;
 }
 
 - (IBAction)showPreferences:(id)sender {
@@ -23,14 +24,6 @@
 }
 
 - (IBAction)chkIgnoreXdeltaChecks:(id)sender {
-    MultiPatchController.IgnoreXDeltaChecksum = (_chkIgnoreXDelta.state==NSOnState);
-}
-
-static BOOL _ignoreXDeltaChecksum;
-+(BOOL)IgnoreXDeltaChecksum{
-    return _ignoreXDeltaChecksum;
-}
-+(void)setIgnoreXDeltaChecksum:(BOOL)value{
-    _ignoreXDeltaChecksum = value;
+    MPSettings.IgnoreXDeltaChecksum = (_chkIgnoreXDelta.state==NSOnState);
 }
 @end
