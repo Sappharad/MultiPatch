@@ -108,6 +108,9 @@ int createPatch(NSString* oldPath, NSString* newPath, NSString* output){
     else if([lowerPath hasSuffix:@".bps"]){
         retval = [BPSAdapter CreatePatchDelta:oldPath withMod:newPath andCreate:output];
     }
+    else if([lowerPath hasSuffix:@".ppf"]){
+        retval = [PPFAdapter CreatePatch:oldPath withMod:newPath andCreate:output];
+    }
     else{
         printf("Cannot create patch for unsupported file type: %s\n", [output UTF8String]);
         return 1;

@@ -2,7 +2,7 @@
 MultiPatch is an all-in-one file patching utility for macOS. 
 
 ## Supported formats
-Supported patch formats are automatically detected based on the file extension of the patch. At this time, please ensure the patches you wish to use have the proper extension.  
+Supported patch formats are automatically detected based on the file extension of the patch. Please ensure the patches you wish to use have the proper extension.  
 IPS: .ips  
 UPS: .ups  
 PPF: .ppf  
@@ -16,8 +16,8 @@ MultiPatch is built using open source code taken from various sources. The code 
 
 **UPS, BPS and IPS use Floating IPS (FLIPS) by Alcaro.**  
 \- Released under the GPLv3.  
-**PPF uses LibPPF by Daniel Ekstr'm.**  
-\- Released under the GPL.  
+**PPF uses ApplyPPF and MakePPF by Icarus.**  
+\- Released under a "feel free to use this source" clause.
 **XDelta uses XDelta3 by Josh MacDonald and others.**  
 \- Released under the GPL.  
 **BSDiff uses BSDiff by Colin Percival**  

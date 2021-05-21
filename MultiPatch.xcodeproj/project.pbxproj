@@ -16,9 +16,6 @@
 		9E17AB9F120F9E9800BA4827 /* MPCreationWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9E17AB9E120F9E9800BA4827 /* MPCreationWindow.mm */; };
 		9E2701CC1C31C59000F50B1F /* mbFlipWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2701CB1C31C59000F50B1F /* mbFlipWindow.m */; };
 		9E2701CE1C31C64200F50B1F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E2701CD1C31C64200F50B1F /* QuartzCore.framework */; };
-		9E28E08611E2BE330002DE08 /* libppf.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9E28E08011E2BE330002DE08 /* libppf.cc */; };
-		9E28E08811E2BE330002DE08 /* ppf.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9E28E08411E2BE330002DE08 /* ppf.cc */; };
-		9E28E08D11E2BF5E0002DE08 /* PPFAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9E28E08C11E2BF5E0002DE08 /* PPFAdapter.mm */; };
 		9E2C4AE121B3479300D74816 /* MultiPatchController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2C4AE021B3479300D74816 /* MultiPatchController.m */; };
 		9E2F9D1821740CB200EBD217 /* IPSAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9E2F9D1621740CB200EBD217 /* IPSAdapter.mm */; };
 		9E2F9D1B21740D6200EBD217 /* BPSAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9E2F9D1A21740D6200EBD217 /* BPSAdapter.mm */; };
@@ -32,6 +29,12 @@
 		9E2F9E0F2174253A00EBD217 /* libbps.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9E2F9DA32174253A00EBD217 /* libbps.cpp */; };
 		9E2F9E1221742EC900EBD217 /* flips-support.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9E2F9E1121742EC900EBD217 /* flips-support.cpp */; };
 		9E344FCA21BDF59E009AA80A /* RUPAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E344FC921BDF59E009AA80A /* RUPAdapter.m */; };
+		9E72A22C25E49FD600D48E37 /* makeppf3_linux.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E72A22A25E49FD600D48E37 /* makeppf3_linux.c */; };
+		9E72A22D25E49FD600D48E37 /* makeppf3_linux.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E72A22A25E49FD600D48E37 /* makeppf3_linux.c */; };
+		9E72A22E25E49FD600D48E37 /* applyppf3_linux.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E72A22B25E49FD600D48E37 /* applyppf3_linux.c */; };
+		9E72A22F25E49FD600D48E37 /* applyppf3_linux.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E72A22B25E49FD600D48E37 /* applyppf3_linux.c */; };
+		9E72A23725E4A23600D48E37 /* PPFAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E72A23625E4A23600D48E37 /* PPFAdapter.m */; };
+		9E72A23825E4A23600D48E37 /* PPFAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E72A23625E4A23600D48E37 /* PPFAdapter.m */; };
 		9EAEB1D511E1767B006CF92A /* bandages.icns in Resources */ = {isa = PBXBuildFile; fileRef = 9EAEB1D411E1767B006CF92A /* bandages.icns */; };
 		9EBBF6CA1EA06D2C00EF26A3 /* MPFileTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBBF6C91EA06D2C00EF26A3 /* MPFileTextField.m */; };
 		9ED6066E126D30DC004782CA /* bsdiff.c in Sources */ = {isa = PBXBuildFile; fileRef = 9ED6066C126D30DC004782CA /* bsdiff.c */; };
@@ -58,9 +61,6 @@
 		9EFB02AA256D7D7900B583D0 /* BSdiffAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED60671126D370C004782CA /* BSdiffAdapter.m */; };
 		9EFB02AD256D7D7B00B583D0 /* bsdiff.c in Sources */ = {isa = PBXBuildFile; fileRef = 9ED6066C126D30DC004782CA /* bsdiff.c */; };
 		9EFB02B0256D7D7D00B583D0 /* bspatch.c in Sources */ = {isa = PBXBuildFile; fileRef = 9ED6066D126D30DC004782CA /* bspatch.c */; };
-		9EFB02B3256D7D8700B583D0 /* libppf.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9E28E08011E2BE330002DE08 /* libppf.cc */; };
-		9EFB02B6256D7D8B00B583D0 /* ppf.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9E28E08411E2BE330002DE08 /* ppf.cc */; };
-		9EFB02B9256D7D9000B583D0 /* PPFAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9E28E08C11E2BF5E0002DE08 /* PPFAdapter.mm */; };
 		9EFB02BC256D7D9A00B583D0 /* xdelta3.c in Sources */ = {isa = PBXBuildFile; fileRef = 9EEA30EF11E041B8005B6996 /* xdelta3.c */; };
 		9EFB02BF256D7D9C00B583D0 /* XDeltaAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFA6CE511E153B500CBE19A /* XDeltaAdapter.m */; };
 		9EFB02C4256D7E1500B583D0 /* MPPatchResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EDB5E2821ACE75A0028764B /* MPPatchResult.m */; };
@@ -99,12 +99,6 @@
 		9E2701CA1C31C59000F50B1F /* mbFlipWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mbFlipWindow.h; sourceTree = "<group>"; };
 		9E2701CB1C31C59000F50B1F /* mbFlipWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mbFlipWindow.m; sourceTree = "<group>"; };
 		9E2701CD1C31C64200F50B1F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		9E28E08011E2BE330002DE08 /* libppf.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = libppf.cc; path = libppf/libppf.cc; sourceTree = "<group>"; };
-		9E28E08111E2BE330002DE08 /* libppf.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = libppf.hh; path = libppf/libppf.hh; sourceTree = "<group>"; };
-		9E28E08411E2BE330002DE08 /* ppf.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ppf.cc; path = libppf/ppf.cc; sourceTree = "<group>"; };
-		9E28E08511E2BE330002DE08 /* ppf.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ppf.hh; path = libppf/ppf.hh; sourceTree = "<group>"; };
-		9E28E08B11E2BF5E0002DE08 /* PPFAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPFAdapter.h; sourceTree = "<group>"; };
-		9E28E08C11E2BF5E0002DE08 /* PPFAdapter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PPFAdapter.mm; sourceTree = "<group>"; };
 		9E2C4ADF21B3479300D74816 /* MultiPatchController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MultiPatchController.h; sourceTree = "<group>"; };
 		9E2C4AE021B3479300D74816 /* MultiPatchController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MultiPatchController.m; sourceTree = "<group>"; };
 		9E2F9D1621740CB200EBD217 /* IPSAdapter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = IPSAdapter.mm; sourceTree = "<group>"; };
@@ -187,6 +181,11 @@
 		9E2F9E1121742EC900EBD217 /* flips-support.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "flips-support.cpp"; sourceTree = "<group>"; };
 		9E344FC821BDF59E009AA80A /* RUPAdapter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RUPAdapter.h; sourceTree = "<group>"; };
 		9E344FC921BDF59E009AA80A /* RUPAdapter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RUPAdapter.m; sourceTree = "<group>"; };
+		9E72A22A25E49FD600D48E37 /* makeppf3_linux.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = makeppf3_linux.c; sourceTree = "<group>"; };
+		9E72A22B25E49FD600D48E37 /* applyppf3_linux.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = applyppf3_linux.c; sourceTree = "<group>"; };
+		9E72A23225E4A1E400D48E37 /* ppf3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ppf3.h; sourceTree = "<group>"; };
+		9E72A23525E4A23600D48E37 /* PPFAdapter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPFAdapter.h; sourceTree = "<group>"; };
+		9E72A23625E4A23600D48E37 /* PPFAdapter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PPFAdapter.m; sourceTree = "<group>"; };
 		9EAEB1D411E1767B006CF92A /* bandages.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = bandages.icns; sourceTree = "<group>"; };
 		9EBBF6C81EA06D2C00EF26A3 /* MPFileTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPFileTextField.h; sourceTree = "<group>"; };
 		9EBBF6C91EA06D2C00EF26A3 /* MPFileTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPFileTextField.m; sourceTree = "<group>"; };
@@ -263,11 +262,11 @@
 		29B97314FDCFA39411CA2CEA /* Mother3UPS */ = {
 			isa = PBXGroup;
 			children = (
+				9E72A22925E49FD600D48E37 /* ppfdev */,
 				9E16BDCC21B3938E007FBC85 /* librup */,
 				9E2F9D212174253A00EBD217 /* flips */,
 				9E2F9D1521740CB200EBD217 /* adapters */,
 				9ED6066B126D30BB004782CA /* bsdiff */,
-				9E28E07F11E2BE1C0002DE08 /* libppf */,
 				9EEA30EE11E0418A005B6996 /* xdelta */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -334,19 +333,6 @@
 			path = librup;
 			sourceTree = "<group>";
 		};
-		9E28E07F11E2BE1C0002DE08 /* libppf */ = {
-			isa = PBXGroup;
-			children = (
-				9E28E08011E2BE330002DE08 /* libppf.cc */,
-				9E28E08111E2BE330002DE08 /* libppf.hh */,
-				9E28E08411E2BE330002DE08 /* ppf.cc */,
-				9E28E08511E2BE330002DE08 /* ppf.hh */,
-				9E28E08B11E2BF5E0002DE08 /* PPFAdapter.h */,
-				9E28E08C11E2BF5E0002DE08 /* PPFAdapter.mm */,
-			);
-			name = libppf;
-			sourceTree = "<group>";
-		};
 		9E2F9D1521740CB200EBD217 /* adapters */ = {
 			isa = PBXGroup;
 			children = (
@@ -359,6 +345,8 @@
 				9E2F9E1121742EC900EBD217 /* flips-support.cpp */,
 				9E344FC821BDF59E009AA80A /* RUPAdapter.h */,
 				9E344FC921BDF59E009AA80A /* RUPAdapter.m */,
+				9E72A23525E4A23600D48E37 /* PPFAdapter.h */,
+				9E72A23625E4A23600D48E37 /* PPFAdapter.m */,
 			);
 			path = adapters;
 			sourceTree = "<group>";
@@ -481,6 +469,16 @@
 			path = lib;
 			sourceTree = "<group>";
 		};
+		9E72A22925E49FD600D48E37 /* ppfdev */ = {
+			isa = PBXGroup;
+			children = (
+				9E72A22A25E49FD600D48E37 /* makeppf3_linux.c */,
+				9E72A22B25E49FD600D48E37 /* applyppf3_linux.c */,
+				9E72A23225E4A1E400D48E37 /* ppf3.h */,
+			);
+			path = ppfdev;
+			sourceTree = "<group>";
+		};
 		9ED6066B126D30BB004782CA /* bsdiff */ = {
 			isa = PBXGroup;
 			children = (
@@ -575,7 +573,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1220;
+				LastUpgradeCheck = 1240;
 				TargetAttributes = {
 					8D1107260486CEB800E47090 = {
 						DevelopmentTeam = 436AD92E6J;
@@ -637,13 +635,13 @@
 				9E2F9D1B21740D6200EBD217 /* BPSAdapter.mm in Sources */,
 				9EFA6CE611E153B500CBE19A /* XDeltaAdapter.m in Sources */,
 				9E2F9E1221742EC900EBD217 /* flips-support.cpp in Sources */,
-				9E28E08611E2BE330002DE08 /* libppf.cc in Sources */,
-				9E28E08811E2BE330002DE08 /* ppf.cc in Sources */,
-				9E28E08D11E2BF5E0002DE08 /* PPFAdapter.mm in Sources */,
+				9E72A22E25E49FD600D48E37 /* applyppf3_linux.c in Sources */,
 				9EFB02C9256D7F5800B583D0 /* MPSettings.m in Sources */,
+				9E72A22C25E49FD600D48E37 /* makeppf3_linux.c in Sources */,
 				9E344FCA21BDF59E009AA80A /* RUPAdapter.m in Sources */,
 				9E2F9DAD2174253A00EBD217 /* crc32.cpp in Sources */,
 				9E17AB9F120F9E9800BA4827 /* MPCreationWindow.mm in Sources */,
+				9E72A23725E4A23600D48E37 /* PPFAdapter.m in Sources */,
 				9ED6066E126D30DC004782CA /* bsdiff.c in Sources */,
 				9E2701CC1C31C59000F50B1F /* mbFlipWindow.m in Sources */,
 				9E2F9D1821740CB200EBD217 /* IPSAdapter.mm in Sources */,
@@ -660,18 +658,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9EFB02B6256D7D8B00B583D0 /* ppf.cc in Sources */,
+				9E72A23825E4A23600D48E37 /* PPFAdapter.m in Sources */,
+				9E72A22F25E49FD600D48E37 /* applyppf3_linux.c in Sources */,
 				9EFB0286256D7D0C00B583D0 /* flips.cpp in Sources */,
 				9EFB02CA256D7F5800B583D0 /* MPSettings.m in Sources */,
 				9EFB0280256D7CFE00B583D0 /* md5.c in Sources */,
 				9EFB0283256D7D0100B583D0 /* librup.c in Sources */,
 				9EFB029E256D7D6A00B583D0 /* BPSAdapter.mm in Sources */,
-				9EFB02B3256D7D8700B583D0 /* libppf.cc in Sources */,
 				9EFB0289256D7D1500B583D0 /* crc32.cpp in Sources */,
 				9EFB0295256D7D5800B583D0 /* libips.cpp in Sources */,
-				9EFB02B9256D7D9000B583D0 /* PPFAdapter.mm in Sources */,
 				9EFB02BC256D7D9A00B583D0 /* xdelta3.c in Sources */,
 				9EFB028F256D7D2800B583D0 /* libbps-suf.cpp in Sources */,
+				9E72A22D25E49FD600D48E37 /* makeppf3_linux.c in Sources */,
 				9EFB0298256D7D5B00B583D0 /* libups.cpp in Sources */,
 				9EFB02A7256D7D7400B583D0 /* RUPAdapter.m in Sources */,
 				9EFB02AA256D7D7900B583D0 /* BSdiffAdapter.m in Sources */,
@@ -724,6 +722,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -737,9 +736,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/flips/libdivsufsort-2.0.1";
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sappharad.MultiPatchCmd;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -758,6 +758,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -767,9 +768,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/flips/libdivsufsort-2.0.1";
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sappharad.MultiPatchCmd;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -785,7 +787,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1.7.1;
+				CURRENT_PROJECT_VERSION = 1.8;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -793,14 +795,17 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = MultiPatch_Prefix.pch;
-				GCC_PREPROCESSOR_DEFINITIONS = "PROJECT_VERSION_FULL=\"2\"";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"PROJECT_VERSION_FULL=\"2\"",
+					NO_PRINTF,
+				);
 				GCC_VERSION = "";
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/flips/libdivsufsort-2.0.1";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
-				MARKETING_VERSION = 1.7.1;
+				MARKETING_VERSION = 1.8;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sappharad.${PRODUCT_NAME:identifier}";
 				PRODUCT_NAME = MultiPatch;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -818,7 +823,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1.7.1;
+				CURRENT_PROJECT_VERSION = 1.8;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -826,14 +831,17 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = MultiPatch_Prefix.pch;
-				GCC_PREPROCESSOR_DEFINITIONS = "PROJECT_VERSION_FULL=\"2\"";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"PROJECT_VERSION_FULL=\"2\"",
+					NO_PRINTF,
+				);
 				GCC_VERSION = "";
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/flips/libdivsufsort-2.0.1";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
-				MARKETING_VERSION = 1.7.1;
+				MARKETING_VERSION = 1.8;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sappharad.${PRODUCT_NAME:identifier}";
 				PRODUCT_NAME = MultiPatch;
 				PROVISIONING_PROFILE_SPECIFIER = "";

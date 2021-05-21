@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17506" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="18122" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17506"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="18122"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -759,17 +759,6 @@
                             <action selector="btnSelectOriginal:" target="371" id="xeW-Ml-USP"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" id="464">
-                        <rect key="frame" x="283" y="19" width="149" height="38"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="squareTextured" title="Apply Patch" bezelStyle="texturedSquare" imagePosition="left" alignment="center" enabled="NO" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="465">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="btnApply:" target="371" id="Yp9-rS-sCr"/>
-                        </connections>
-                    </button>
                     <textField verticalHuggingPriority="750" id="492" customClass="MPFileTextField">
                         <rect key="frame" x="20" y="170" width="318" height="22"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
@@ -857,6 +846,17 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
+                    <button verticalHuggingPriority="750" id="464">
+                        <rect key="frame" x="293" y="19" width="137" height="30"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="smallSquare" title="Apply Patch" bezelStyle="smallSquare" alignment="center" enabled="NO" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="465">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="btnApply:" target="371" id="Yp9-rS-sCr"/>
+                        </connections>
+                    </button>
                 </subviews>
             </view>
             <contentBorderThickness minY="0.0"/>
@@ -1185,17 +1185,6 @@
                             <action selector="btnPickModified:" target="512" id="3UF-Gs-wVE"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" id="517">
-                        <rect key="frame" x="283" y="19" width="149" height="38"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="squareTextured" title="Create Patch" bezelStyle="texturedSquare" imagePosition="left" alignment="center" enabled="NO" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="534">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="btnCreatePatch:" target="512" id="3aV-nI-4Pf"/>
-                        </connections>
-                    </button>
                     <textField verticalHuggingPriority="750" id="518">
                         <rect key="frame" x="17" y="195" width="169" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -1283,6 +1272,17 @@
                             <action selector="btnApplyMode:" target="512" id="s1a-FF-JE7"/>
                         </connections>
                     </button>
+                    <button verticalHuggingPriority="750" id="517">
+                        <rect key="frame" x="285" y="19" width="145" height="30"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                        <buttonCell key="cell" type="smallSquare" title="Create Patch" bezelStyle="smallSquare" imagePosition="left" alignment="center" enabled="NO" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="534">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="btnCreatePatch:" target="512" id="3aV-nI-4Pf"/>
+                        </connections>
+                    </button>
                 </subviews>
             </view>
             <contentBorderThickness minY="0.0"/>
@@ -1299,7 +1299,7 @@
                 <outlet property="vwFormatPicker" destination="585" id="PI7-A1-s3R"/>
                 <outlet property="wndApplyPatch" destination="371" id="b21-OP-pvA"/>
             </connections>
-            <point key="canvasLocation" x="1" y="181"/>
+            <point key="canvasLocation" x="0.0" y="172"/>
         </window>
         <customView id="585">
             <rect key="frame" x="0.0" y="0.0" width="329" height="35"/>

@@ -75,7 +75,7 @@
     //[ddFormats addItemWithTitle:@"UPS Patch (*.ups)"];
     //FLIPS does not create UPS. It's deprecated anyway, so use BPS instead
     [ddFormats addItemWithTitle:@"IPS Patch (*.ips)"];
-    //[ddFormats addItemWithTitle:@"PPF Patch (*.ppf)"]; //No PPF creation in LibPPF. :-(
+    [ddFormats addItemWithTitle:@"PPF Patch (*.ppf)"];
     [ddFormats addItemWithTitle:@"XDelta Patch (*.delta)"];
     [ddFormats addItemWithTitle:@"BSDiff Patch (*.bdf)"];
     [fbox setAccessoryView:vwFormatPicker];
@@ -101,6 +101,9 @@
         else if([[ddFormats titleOfSelectedItem] hasPrefix:@"IPS"] && ![selfile hasSuffix:@".ips"]){
             selfile = [selfile stringByAppendingString:@".ips"];
         }
+        else if([[ddFormats titleOfSelectedItem] hasPrefix:@"PPF"] && ![selfile hasSuffix:@".ppf"]){
+            selfile = [selfile stringByAppendingString:@".ppf"];
+        }
         else if([[ddFormats titleOfSelectedItem] hasPrefix:@"XDelta"] && ![selfile hasSuffix:@".delta"]){
             selfile = [selfile stringByAppendingString:@".delta"];
         }
@@ -118,9 +121,9 @@
         else if(currentFormat == XDELTAPAT){
             [lblPatchFormat setStringValue:@"XDelta Patch"];
         }
-        /*else if(currentFormat == PPFPAT){
+        else if(currentFormat == PPFPAT){
             [lblPatchFormat setStringValue:@"PPF Patch"];
-        }*/
+        }
         else if(currentFormat == BSDIFFPAT){
             [lblPatchFormat setStringValue:@"BSDiff Patch"];
         }
