@@ -212,7 +212,7 @@
 		9EFA6CE411E153B500CBE19A /* XDeltaAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XDeltaAdapter.h; sourceTree = "<group>"; };
 		9EFA6CE511E153B500CBE19A /* XDeltaAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XDeltaAdapter.m; sourceTree = "<group>"; };
 		9EFB026B256D6C1C00B583D0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		9EFB026C256D6C1E00B583D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		9EFB026C256D6C1E00B583D0 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9EFB0277256D7BFD00B583D0 /* cmdMultiPatch */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = cmdMultiPatch; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EFB0279256D7BFD00B583D0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		9EFB02C7256D7F5800B583D0 /* MPSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPSettings.h; sourceTree = "<group>"; };
