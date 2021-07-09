@@ -19,9 +19,9 @@
         }
     }
     //Need to be in temp directory for creating ninja.src temp files on macOS 10.7. 
-    chdir([NSTemporaryDirectory() cStringUsingEncoding:[NSString defaultCStringEncoding]]);
+    chdir([NSTemporaryDirectory() fileSystemRepresentation]);
     
-    int result = rup2_apply([patch cStringUsingEncoding:[NSString defaultCStringEncoding]], [output cStringUsingEncoding:[NSString defaultCStringEncoding]]);
+    int result = rup2_apply([patch fileSystemRepresentation], [output fileSystemRepresentation]);
     if(result != 0){
         switch(result){
             case RUP_WRONG_FORMAT:
