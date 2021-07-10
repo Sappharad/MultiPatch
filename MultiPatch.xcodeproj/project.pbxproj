@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
+		55BCAB9F269849BE0030B1E7 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55BCAB9E269849BE0030B1E7 /* Media.xcassets */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -35,7 +36,6 @@
 		9E72A22F25E49FD600D48E37 /* applyppf3_linux.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E72A22B25E49FD600D48E37 /* applyppf3_linux.c */; };
 		9E72A23725E4A23600D48E37 /* PPFAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E72A23625E4A23600D48E37 /* PPFAdapter.m */; };
 		9E72A23825E4A23600D48E37 /* PPFAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E72A23625E4A23600D48E37 /* PPFAdapter.m */; };
-		9EAEB1D511E1767B006CF92A /* bandages.icns in Resources */ = {isa = PBXBuildFile; fileRef = 9EAEB1D411E1767B006CF92A /* bandages.icns */; };
 		9EBBF6CA1EA06D2C00EF26A3 /* MPFileTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBBF6C91EA06D2C00EF26A3 /* MPFileTextField.m */; };
 		9ED6066E126D30DC004782CA /* bsdiff.c in Sources */ = {isa = PBXBuildFile; fileRef = 9ED6066C126D30DC004782CA /* bsdiff.c */; };
 		9ED6066F126D30DC004782CA /* bspatch.c in Sources */ = {isa = PBXBuildFile; fileRef = 9ED6066D126D30DC004782CA /* bspatch.c */; };
@@ -88,6 +88,7 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32CA4F630368D1EE00C91783 /* MultiPatch_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiPatch_Prefix.pch; sourceTree = "<group>"; };
+		55BCAB9E269849BE0030B1E7 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9E0351C10E9D8B570043AC3E /* MPPatchWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MPPatchWindow.mm; sourceTree = "<group>"; };
 		9E0351C20E9D8B570043AC3E /* MPPatchWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPPatchWindow.h; sourceTree = "<group>"; };
@@ -189,30 +190,30 @@
 		9EAEB1D411E1767B006CF92A /* bandages.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = bandages.icns; sourceTree = "<group>"; };
 		9EBBF6C81EA06D2C00EF26A3 /* MPFileTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPFileTextField.h; sourceTree = "<group>"; };
 		9EBBF6C91EA06D2C00EF26A3 /* MPFileTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPFileTextField.m; sourceTree = "<group>"; };
-		9ED6066C126D30DC004782CA /* bsdiff.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = bsdiff.c; path = bsdiff/bsdiff.c; sourceTree = "<group>"; };
-		9ED6066D126D30DC004782CA /* bspatch.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = bspatch.c; path = bsdiff/bspatch.c; sourceTree = "<group>"; };
-		9ED60670126D370C004782CA /* BSdiffAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BSdiffAdapter.h; path = bsdiff/BSdiffAdapter.h; sourceTree = "<group>"; };
-		9ED60671126D370C004782CA /* BSdiffAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BSdiffAdapter.m; path = bsdiff/BSdiffAdapter.m; sourceTree = "<group>"; };
+		9ED6066C126D30DC004782CA /* bsdiff.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bsdiff.c; sourceTree = "<group>"; };
+		9ED6066D126D30DC004782CA /* bspatch.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bspatch.c; sourceTree = "<group>"; };
+		9ED60670126D370C004782CA /* BSdiffAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSdiffAdapter.h; sourceTree = "<group>"; };
+		9ED60671126D370C004782CA /* BSdiffAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSdiffAdapter.m; sourceTree = "<group>"; };
 		9EDB5E2721ACE75A0028764B /* MPPatchResult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPPatchResult.h; sourceTree = "<group>"; };
 		9EDB5E2821ACE75A0028764B /* MPPatchResult.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPPatchResult.m; sourceTree = "<group>"; };
 		9EEA30B411E03F75005B6996 /* MultiPatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MultiPatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		9EEA30EF11E041B8005B6996 /* xdelta3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = xdelta3.c; path = xdelta/xdelta3.c; sourceTree = "<group>"; };
-		9EEA30F011E041B8005B6996 /* xdelta3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = xdelta3.h; path = xdelta/xdelta3.h; sourceTree = "<group>"; };
-		9EEA311611E0473E005B6996 /* xdelta3-main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "xdelta3-main.h"; path = "xdelta/xdelta3-main.h"; sourceTree = "<group>"; };
-		9EEA312111E04776005B6996 /* xdelta3-decode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "xdelta3-decode.h"; path = "xdelta/xdelta3-decode.h"; sourceTree = "<group>"; };
-		9EEA312711E04795005B6996 /* xdelta3-hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "xdelta3-hash.h"; path = "xdelta/xdelta3-hash.h"; sourceTree = "<group>"; };
-		9EEA313F11E04933005B6996 /* xdelta3-cfgs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "xdelta3-cfgs.h"; path = "xdelta/xdelta3-cfgs.h"; sourceTree = "<group>"; };
-		9EEA314011E04933005B6996 /* xdelta3-djw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "xdelta3-djw.h"; path = "xdelta/xdelta3-djw.h"; sourceTree = "<group>"; };
-		9EEA314111E04933005B6996 /* xdelta3-fgk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "xdelta3-fgk.h"; path = "xdelta/xdelta3-fgk.h"; sourceTree = "<group>"; };
-		9EEA314211E04933005B6996 /* xdelta3-list.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "xdelta3-list.h"; path = "xdelta/xdelta3-list.h"; sourceTree = "<group>"; };
-		9EEA314311E04933005B6996 /* xdelta3-merge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "xdelta3-merge.h"; path = "xdelta/xdelta3-merge.h"; sourceTree = "<group>"; };
-		9EEA314411E04933005B6996 /* xdelta3-python.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "xdelta3-python.h"; path = "xdelta/xdelta3-python.h"; sourceTree = "<group>"; };
-		9EEA314511E04933005B6996 /* xdelta3-second.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "xdelta3-second.h"; path = "xdelta/xdelta3-second.h"; sourceTree = "<group>"; };
-		9EEA314611E04933005B6996 /* xdelta3-test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "xdelta3-test.h"; path = "xdelta/xdelta3-test.h"; sourceTree = "<group>"; };
-		9EFA6CE411E153B500CBE19A /* XDeltaAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XDeltaAdapter.h; sourceTree = "<group>"; };
-		9EFA6CE511E153B500CBE19A /* XDeltaAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XDeltaAdapter.m; sourceTree = "<group>"; };
+		9EEA30EF11E041B8005B6996 /* xdelta3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xdelta3.c; sourceTree = "<group>"; };
+		9EEA30F011E041B8005B6996 /* xdelta3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xdelta3.h; sourceTree = "<group>"; };
+		9EEA311611E0473E005B6996 /* xdelta3-main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "xdelta3-main.h"; sourceTree = "<group>"; };
+		9EEA312111E04776005B6996 /* xdelta3-decode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "xdelta3-decode.h"; sourceTree = "<group>"; };
+		9EEA312711E04795005B6996 /* xdelta3-hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "xdelta3-hash.h"; sourceTree = "<group>"; };
+		9EEA313F11E04933005B6996 /* xdelta3-cfgs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "xdelta3-cfgs.h"; sourceTree = "<group>"; };
+		9EEA314011E04933005B6996 /* xdelta3-djw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "xdelta3-djw.h"; sourceTree = "<group>"; };
+		9EEA314111E04933005B6996 /* xdelta3-fgk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "xdelta3-fgk.h"; sourceTree = "<group>"; };
+		9EEA314211E04933005B6996 /* xdelta3-list.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "xdelta3-list.h"; sourceTree = "<group>"; };
+		9EEA314311E04933005B6996 /* xdelta3-merge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "xdelta3-merge.h"; sourceTree = "<group>"; };
+		9EEA314411E04933005B6996 /* xdelta3-python.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "xdelta3-python.h"; sourceTree = "<group>"; };
+		9EEA314511E04933005B6996 /* xdelta3-second.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "xdelta3-second.h"; sourceTree = "<group>"; };
+		9EEA314611E04933005B6996 /* xdelta3-test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "xdelta3-test.h"; sourceTree = "<group>"; };
+		9EFA6CE411E153B500CBE19A /* XDeltaAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XDeltaAdapter.h; sourceTree = SOURCE_ROOT; };
+		9EFA6CE511E153B500CBE19A /* XDeltaAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XDeltaAdapter.m; sourceTree = SOURCE_ROOT; };
 		9EFB026B256D6C1C00B583D0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		9EFB026C256D6C1E00B583D0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		9EFB026C256D6C1E00B583D0 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9EFB0277256D7BFD00B583D0 /* cmdMultiPatch */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = cmdMultiPatch; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EFB0279256D7BFD00B583D0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		9EFB02C7256D7F5800B583D0 /* MPSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPSettings.h; sourceTree = "<group>"; };
@@ -307,6 +308,7 @@
 				8D1107310486CEB800E47090 /* Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
+				55BCAB9E269849BE0030B1E7 /* Media.xcassets */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -487,7 +489,7 @@
 				9ED6066C126D30DC004782CA /* bsdiff.c */,
 				9ED6066D126D30DC004782CA /* bspatch.c */,
 			);
-			name = bsdiff;
+			path = bsdiff;
 			sourceTree = "<group>";
 		};
 		9EEA30B511E03F75005B6996 /* Products */ = {
@@ -518,7 +520,7 @@
 				9EFA6CE411E153B500CBE19A /* XDeltaAdapter.h */,
 				9EFA6CE511E153B500CBE19A /* XDeltaAdapter.m */,
 			);
-			name = xdelta;
+			path = xdelta;
 			sourceTree = "<group>";
 		};
 		9EFB0278256D7BFD00B583D0 /* cmdMultiPatch */ = {
@@ -610,7 +612,7 @@
 			files = (
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
-				9EAEB1D511E1767B006CF92A /* bandages.icns in Resources */,
+				55BCAB9F269849BE0030B1E7 /* Media.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -711,29 +713,16 @@
 		9EFB027B256D7BFD00B583D0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/flips/libdivsufsort-2.0.1";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
@@ -747,25 +736,12 @@
 		9EFB027C256D7BFD00B583D0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/flips/libdivsufsort-2.0.1";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
@@ -780,9 +756,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_OBJC_WEAK = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = bandages;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -791,7 +765,6 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = MultiPatch_Prefix.pch;
@@ -799,7 +772,6 @@
 					"PROJECT_VERSION_FULL=\"2\"",
 					NO_PRINTF,
 				);
-				GCC_VERSION = "";
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
@@ -817,25 +789,19 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_OBJC_WEAK = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = bandages;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1.8;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = MultiPatch_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"PROJECT_VERSION_FULL=\"2\"",
 					NO_PRINTF,
 				);
-				GCC_VERSION = "";
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
@@ -854,11 +820,18 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
@@ -866,24 +839,27 @@
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_THREADSAFE_STATICS = YES;
 				GCC_VERSION = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_MASTER_OBJECT_FILE = NO;
@@ -892,10 +868,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "";
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
-				OTHER_LDFLAGS = (
-					"-l",
-					bz2,
-				);
+				OTHER_LDFLAGS = "-lbz2";
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -905,11 +878,18 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
@@ -917,29 +897,29 @@
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_VERSION = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = (
-					"-l",
-					bz2,
-				);
+				OTHER_LDFLAGS = "-lbz2";
 				SDKROOT = macosx;
 			};
 			name = Release;

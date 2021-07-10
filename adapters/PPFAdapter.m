@@ -17,7 +17,7 @@
         }
     }
     
-    int result = applyPPF([output cStringUsingEncoding:[NSString defaultCStringEncoding]], [patch cStringUsingEncoding:[NSString defaultCStringEncoding]]);
+    int result = applyPPF([output fileSystemRepresentation], [patch fileSystemRepresentation]);
     if(result != 0){
         switch(result){
             case PPFERROR_VERSION_UNSUPPORTED:
@@ -37,7 +37,7 @@
 }
 
 +(MPPatchResult*)CreatePatch:(NSString*)orig withMod:(NSString*)modify andCreate:(NSString*)output{
-    int result = makePPF([orig cStringUsingEncoding:NSString.defaultCStringEncoding], [modify cStringUsingEncoding:NSString.defaultCStringEncoding], [output cStringUsingEncoding:NSString.defaultCStringEncoding]);
+    int result = makePPF([orig fileSystemRepresentation], [modify fileSystemRepresentation], [output fileSystemRepresentation]);
     if(result != 0){
         switch(result){
             case PPFERROR_FAILED_TO_OPEN:
