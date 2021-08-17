@@ -1,5 +1,5 @@
 /* xdelta 3 - delta compression tools and library
- * Copyright (C) 2002, 2003, 2006, 2007.  Joshua P. MacDonald
+ * Copyright (C) 2002, 2003, 2006, 2007, 2013.  Joshua P. MacDonald
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -68,7 +68,7 @@ static inline int xd3_decode_bits (xd3_stream     *stream,
 
  done:
 
-  IF_DEBUG2 (DP(RINT "(d) %u ", value));
+  IF_DEBUG2 (DP(RINT "(d) %"W"u ", value));
 
   (*valuep) = value;
   return 0;
@@ -94,25 +94,27 @@ xd3_test_clean_bits (xd3_stream *stream, bit_state *bits)
 }
 #endif
 
-static xd3_sec_stream*
-xd3_get_secondary (xd3_stream *stream, xd3_sec_stream **sec_streamp)
+static int
+xd3_get_secondary (xd3_stream *stream, xd3_sec_stream **sec_streamp, 
+		   int is_encode)
 {
-  xd3_sec_stream *sec_stream;
-
-  if ((sec_stream = *sec_streamp) == NULL)
+  if (*sec_streamp == NULL)
     {
+      int ret;
+
       if ((*sec_streamp = stream->sec_type->alloc (stream)) == NULL)
 	{
-	  return NULL;
+	  stream->msg = "error initializing secondary stream";
+	  return XD3_INVALID;
 	}
 
-      sec_stream = *sec_streamp;
-
-      /* If cuumulative stats, init once. */
-      stream->sec_type->init (sec_stream);
+      if ((ret = stream->sec_type->init (stream, *sec_streamp, is_encode)) != 0)
+	{
+	  return ret;
+	}
     }
 
-  return sec_stream;
+  return 0;
 }
 
 static int
@@ -120,14 +122,13 @@ xd3_decode_secondary (xd3_stream      *stream,
 		      xd3_desect      *sect,
 		      xd3_sec_stream **sec_streamp)
 {
-  xd3_sec_stream *sec_stream;
-  uint32_t dec_size;
+  usize_t dec_size;
   uint8_t *out_used;
   int ret;
 
-  if ((sec_stream = xd3_get_secondary (stream, sec_streamp)) == NULL)
+  if ((ret = xd3_get_secondary (stream, sec_streamp, 0)) != 0)
     {
-      return ENOMEM;
+      return ret;
     }
 
   /* Decode the size, allocate the buffer. */
@@ -139,9 +140,15 @@ xd3_decode_secondary (xd3_stream      *stream,
       return ret;
     }
 
+  if (dec_size == 0)
+    {
+      stream->msg = "secondary decoder invalid output size";
+      return XD3_INVALID_INPUT;
+    }
+
   out_used = sect->copied2;
 
-  if ((ret = stream->sec_type->decode (stream, sec_stream,
+  if ((ret = stream->sec_type->decode (stream, *sec_streamp,
 				       & sect->buf, sect->buf_max,
 				       & out_used, out_used + dec_size)))
     {
@@ -231,7 +238,7 @@ static inline int xd3_encode_bits (xd3_stream      *stream,
     }
   while (mask != 1);
 
-  IF_DEBUG2 (DP(RINT "(e) %u ", value));
+  IF_DEBUG2 (DP(RINT "(e) %"W"u ", value));
 
   return 0;
 }
@@ -244,7 +251,6 @@ xd3_encode_secondary (xd3_stream      *stream,
 		      xd3_sec_cfg     *cfg,
 		      int             *did_it)
 {
-  xd3_sec_stream *sec_stream;
   xd3_output     *tmp_head;
   xd3_output     *tmp_tail;
 
@@ -257,9 +263,9 @@ xd3_encode_secondary (xd3_stream      *stream,
 
   if (orig_size < SECONDARY_MIN_INPUT) { return 0; }
 
-  if ((sec_stream = xd3_get_secondary (stream, sec_streamp)) == NULL)
+  if ((ret = xd3_get_secondary (stream, sec_streamp, 1)) != 0)
     {
-      return ENOMEM;
+      return ret;
     }
 
   tmp_head = xd3_alloc_output (stream, NULL);
@@ -268,7 +274,7 @@ xd3_encode_secondary (xd3_stream      *stream,
    * simpler, but is a little gross.  Should not need the entire
    * section in contiguous memory, but it is much easier this way. */
   if ((ret = xd3_emit_size (stream, & tmp_head, orig_size)) ||
-      (ret = stream->sec_type->encode (stream, sec_stream, *head,
+      (ret = stream->sec_type->encode (stream, *sec_streamp, *head,
 				       tmp_head, cfg)))
     {
       goto getout;
@@ -290,11 +296,14 @@ xd3_encode_secondary (xd3_stream      *stream,
   XD3_ASSERT (comp_size == xd3_sizeof_output (tmp_head));
   XD3_ASSERT (tmp_tail != NULL);
 
-  if (comp_size < (orig_size - SECONDARY_MIN_SAVINGS))
+  if (comp_size < (orig_size - SECONDARY_MIN_SAVINGS) || cfg->inefficient)
     {
-      IF_DEBUG1(DP(RINT "secondary saved %u bytes: %u -> %u (%0.2f%%)\n",
-		   orig_size - comp_size, orig_size, comp_size,
-	       100.0 * (double) comp_size / (double) orig_size));
+      if (comp_size < orig_size)
+	{
+	  IF_DEBUG1(DP(RINT "[encode_secondary] saved %"W"u bytes: %"W"u -> %"W"u (%0.2f%%)\n",
+		       orig_size - comp_size, orig_size, comp_size,
+		       100.0 * (double) comp_size / (double) orig_size));
+	}
 
       xd3_free_output (stream, *head);
 

@@ -12,43 +12,43 @@ public:
   enum Kind {
     MODIFY = 1,     // Mutate a certain range w/ random or supplied data
     ADD = 2,        // Insert random or supplied data
-    DELETE = 3,     // Delete a specified range of data
+    DELRANGE = 3,     // Delete a specified range of data
     COPY = 4,       // Copy from one region, inserting elsewhere
     MOVE = 5,       // Copy then delete copied-from range
-    OVERWRITE = 6,  // Copy then delete copied-to range
+    COPYOVER = 6    // Copy then delete copied-to range
 
-    // ADD, DELETE, and COPY change the file size
-    // MODIFY, MOVE, OVERWRITE preserve the file size
+    // ADD, DELRANGE, and COPY change the file size
+    // MODIFY, MOVE, COPYOVER preserve the file size
   };
 
   // Constructor for modify, add, delete.
-  Change(Kind kind, xoff_t size, xoff_t addr1)
-    : kind(kind),
-      size(size),
-      addr1(addr1),
+  Change(Kind kind0, xoff_t size0, xoff_t addr1_0)
+    : kind(kind0),
+      size(size0),
+      addr1(addr1_0),
       addr2(0),
       insert(NULL) {
-    CHECK(kind != MOVE && kind != COPY && kind != OVERWRITE);
+    CHECK(kind != MOVE && kind != COPY && kind != COPYOVER);
   }
 
   // Constructor for modify, add w/ provided data.
-  Change(Kind kind, xoff_t size, xoff_t addr1, Segment *insert)
-    : kind(kind),
-      size(size),
-      addr1(addr1),
+  Change(Kind kind0, xoff_t size0, xoff_t addr1_0, Segment *insert0)
+    : kind(kind0),
+      size(size0),
+      addr1(addr1_0),
       addr2(0),
-      insert(insert) {
-    CHECK(kind != MOVE && kind != COPY && kind != OVERWRITE);
+      insert(insert0) {
+    CHECK(kind != MOVE && kind != COPY && kind != COPYOVER);
   }
 
   // Constructor for move, copy, overwrite
-  Change(Kind kind, xoff_t size, xoff_t addr1, xoff_t addr2)
-    : kind(kind),
-      size(size),
-      addr1(addr1),
-      addr2(addr2),
+  Change(Kind kind0, xoff_t size0, xoff_t addr1_0, xoff_t addr2_0)
+    : kind(kind0),
+      size(size0),
+      addr1(addr1_0),
+      addr2(addr2_0),
       insert(NULL) {
-    CHECK(kind == MOVE || kind == COPY || kind == OVERWRITE);
+    CHECK(kind == MOVE || kind == COPY || kind == COPYOVER);
   }
 
   Kind kind;
@@ -97,7 +97,7 @@ public:
     case Change::MODIFY:
       ModifyChange(ch, table, source_table, rand);
       break;
-    case Change::DELETE:
+    case Change::DELRANGE:
       DeleteChange(ch, table, source_table, rand);
       break;
     case Change::COPY:
@@ -106,7 +106,7 @@ public:
     case Change::MOVE:
       MoveChange(ch, table, source_table, rand);
       break;
-    case Change::OVERWRITE:
+    case Change::COPYOVER:
       OverwriteChange(ch, table, source_table, rand);
       break;
     }
@@ -269,7 +269,7 @@ public:
     SegmentMap tmp;
     CHECK_NE(ch.addr1, ch.addr2);
     CopyChange(ch, &tmp, source_table, rand);
-    Change d(Change::DELETE, ch.size,
+    Change d(Change::DELRANGE, ch.size,
 	     ch.addr1 < ch.addr2 ? ch.addr1 : ch.addr1 + ch.size);
     DeleteChange(d, table, &tmp, rand);
   }
@@ -282,7 +282,7 @@ public:
     SegmentMap tmp;
     CHECK_NE(ch.addr1, ch.addr2);
     CopyChange(ch, &tmp, source_table, rand);
-    Change d(Change::DELETE, ch.size, ch.addr2 + ch.size);
+    Change d(Change::DELRANGE, ch.size, ch.addr2 + ch.size);
     DeleteChange(d, table, &tmp, rand);
   }
 

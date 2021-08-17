@@ -50,7 +50,7 @@ public:
       }
       data_ = new uint8_t[data_size_];
       memcpy(data_, tmp, size_);
-      delete tmp;
+      delete [] tmp;
     }
 
     memcpy(data_ + size_, data, size);
@@ -62,36 +62,43 @@ public:
     size_ = 0;
   }
 
-  void Print() const {
-    xoff_t pos = 0;
-    for (size_t i = 0; i < Size(); i++) {
-      if (pos % 16 == 0) {
-	DP(RINT "%5"Q"x: ", pos);
-      }
-      DP(RINT "%02x ", (*this)[i]);
-      if (pos % 16 == 15) {
-	DP(RINT "\n");
-      }
-      pos++;
-    }
-    DP(RINT "\n");
-  }
+  // Note: This does not benefit from -Wformat= checking, due to the
+  // enclosing template. Further, it was not used.
+  // void Print() const {
+  //   xoff_t pos = 0;
+  //   for (size_t i = 0; i < Size(); i++) {
+  //     if (pos % 16 == 0) {
+  // 	DP(RINT "%5" Q "x: ", pos);
+  //     }
+  //     DP(RINT "%02x ", (*this)[i]);
+  //     if (pos % 16 == 15) {
+  // 	DP(RINT "\n");
+  //     }
+  //     pos++;
+  //   }
+  //   DP(RINT "\n");
+  // }
 
   void WriteTmpFile(TmpFile *f) const {
     f->Append(this);
   }
 
   void SetSize(size_t size) {
-    size_ = size;
-
+    uint8_t *t = NULL;
     if (data_size_ < size) {
       if (data_) {
-	delete [] data_;
+	t = data_;
       }
       data_ = new uint8_t[size];
       data_size_ = size;
     }
+    if (t && size < size_) {
+      memcpy(data_, t, size);
+    }
+    delete [] t;
+    size_ = size;
   }
+
 private:
   friend class BlockIterator;
 
@@ -268,6 +275,7 @@ public:
   }
 
   void SetBlock(xoff_t blkno) {
+    CHECK_LE(blkno, Blocks());
     blkno_ = blkno;
   }
 
@@ -305,8 +313,10 @@ class ExtFile {
 public:
   ExtFile() {
     static int static_counter = 0;
-    char buf[32];
-    snprintf(buf, 32, "/tmp/regtest.%d", static_counter++);
+    pid_t pid = getpid();
+    char buf[64];
+    xoff_t xpid = pid;
+    snprintf(buf, 64, "/tmp/regtest.%" Q "u.%d", xpid, static_counter++);
     filename_.append(buf);
     unlink(filename_.c_str());
   }
@@ -330,7 +340,7 @@ public:
     for (BlockIterator iter(spec); !iter.Done(); iter.Next()) {
       iter.Get(&sblock);
       tblock.SetSize(sblock.Size());
-      usize_t tread;
+      size_t tread;
       CHECK_EQ(0, main_file_read(&t,
 				 tblock.Data(),
 				 tblock.Size(), &tread, "read failed"));
@@ -363,7 +373,6 @@ public:
 				"tmpfile write failed"));
   }
 
-
   const char* Name() const {
     if (main_file_isopen(&file_)) {
       CHECK_EQ(0, main_file_close(&file_));
@@ -374,4 +383,3 @@ public:
 private:
   mutable main_file file_;
 };
-

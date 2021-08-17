@@ -20,3 +20,8 @@ DerivedData
 #CocoaPods
 Pods
 build
+xdelta/autom4te.cache
+xdelta/.deps
+xdelta/testing/.deps
+xdelta/*.log
+xdelta/*.status

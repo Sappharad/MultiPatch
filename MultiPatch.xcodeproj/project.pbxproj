@@ -36,6 +36,8 @@
 		9E72A22F25E49FD600D48E37 /* applyppf3_linux.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E72A22B25E49FD600D48E37 /* applyppf3_linux.c */; };
 		9E72A23725E4A23600D48E37 /* PPFAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E72A23625E4A23600D48E37 /* PPFAdapter.m */; };
 		9E72A23825E4A23600D48E37 /* PPFAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E72A23625E4A23600D48E37 /* PPFAdapter.m */; };
+		9EAFBD4226C5FBD20005354C /* liblzma.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EAFBD4126C5FBC50005354C /* liblzma.tbd */; };
+		9EAFBD4326C5FBDB0005354C /* liblzma.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EAFBD4126C5FBC50005354C /* liblzma.tbd */; };
 		9EBBF6CA1EA06D2C00EF26A3 /* MPFileTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBBF6C91EA06D2C00EF26A3 /* MPFileTextField.m */; };
 		9ED6066E126D30DC004782CA /* bsdiff.c in Sources */ = {isa = PBXBuildFile; fileRef = 9ED6066C126D30DC004782CA /* bsdiff.c */; };
 		9ED6066F126D30DC004782CA /* bspatch.c in Sources */ = {isa = PBXBuildFile; fileRef = 9ED6066D126D30DC004782CA /* bspatch.c */; };
@@ -182,12 +184,14 @@
 		9E2F9E1121742EC900EBD217 /* flips-support.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "flips-support.cpp"; sourceTree = "<group>"; };
 		9E344FC821BDF59E009AA80A /* RUPAdapter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RUPAdapter.h; sourceTree = "<group>"; };
 		9E344FC921BDF59E009AA80A /* RUPAdapter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RUPAdapter.m; sourceTree = "<group>"; };
+		9E691C6F26C34D35002CCF8E /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
 		9E72A22A25E49FD600D48E37 /* makeppf3_linux.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = makeppf3_linux.c; sourceTree = "<group>"; };
 		9E72A22B25E49FD600D48E37 /* applyppf3_linux.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = applyppf3_linux.c; sourceTree = "<group>"; };
 		9E72A23225E4A1E400D48E37 /* ppf3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ppf3.h; sourceTree = "<group>"; };
 		9E72A23525E4A23600D48E37 /* PPFAdapter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPFAdapter.h; sourceTree = "<group>"; };
 		9E72A23625E4A23600D48E37 /* PPFAdapter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PPFAdapter.m; sourceTree = "<group>"; };
 		9EAEB1D411E1767B006CF92A /* bandages.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = bandages.icns; sourceTree = "<group>"; };
+		9EAFBD4126C5FBC50005354C /* liblzma.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = liblzma.tbd; path = usr/lib/liblzma.tbd; sourceTree = SDKROOT; };
 		9EBBF6C81EA06D2C00EF26A3 /* MPFileTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPFileTextField.h; sourceTree = "<group>"; };
 		9EBBF6C91EA06D2C00EF26A3 /* MPFileTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPFileTextField.m; sourceTree = "<group>"; };
 		9ED6066C126D30DC004782CA /* bsdiff.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bsdiff.c; sourceTree = "<group>"; };
@@ -207,7 +211,6 @@
 		9EEA314111E04933005B6996 /* xdelta3-fgk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "xdelta3-fgk.h"; sourceTree = "<group>"; };
 		9EEA314211E04933005B6996 /* xdelta3-list.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "xdelta3-list.h"; sourceTree = "<group>"; };
 		9EEA314311E04933005B6996 /* xdelta3-merge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "xdelta3-merge.h"; sourceTree = "<group>"; };
-		9EEA314411E04933005B6996 /* xdelta3-python.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "xdelta3-python.h"; sourceTree = "<group>"; };
 		9EEA314511E04933005B6996 /* xdelta3-second.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "xdelta3-second.h"; sourceTree = "<group>"; };
 		9EEA314611E04933005B6996 /* xdelta3-test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "xdelta3-test.h"; sourceTree = "<group>"; };
 		9EFA6CE411E153B500CBE19A /* XDeltaAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XDeltaAdapter.h; sourceTree = SOURCE_ROOT; };
@@ -228,6 +231,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9E2701CE1C31C64200F50B1F /* QuartzCore.framework in Frameworks */,
+				9EAFBD4226C5FBD20005354C /* liblzma.tbd in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -236,6 +240,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9EAFBD4326C5FBDB0005354C /* liblzma.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -316,6 +321,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9EAFBD4126C5FBC50005354C /* liblzma.tbd */,
 				9E2701CD1C31C64200F50B1F /* QuartzCore.framework */,
 				9E2701C81C31C16B00F50B1F /* CoreImage.framework */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
@@ -504,12 +510,12 @@
 		9EEA30EE11E0418A005B6996 /* xdelta */ = {
 			isa = PBXGroup;
 			children = (
+				9E691C6F26C34D35002CCF8E /* config.h */,
 				9EEA313F11E04933005B6996 /* xdelta3-cfgs.h */,
 				9EEA314011E04933005B6996 /* xdelta3-djw.h */,
 				9EEA314111E04933005B6996 /* xdelta3-fgk.h */,
 				9EEA314211E04933005B6996 /* xdelta3-list.h */,
 				9EEA314311E04933005B6996 /* xdelta3-merge.h */,
-				9EEA314411E04933005B6996 /* xdelta3-python.h */,
 				9EEA314511E04933005B6996 /* xdelta3-second.h */,
 				9EEA314611E04933005B6996 /* xdelta3-test.h */,
 				9EEA312711E04795005B6996 /* xdelta3-hash.h */,
@@ -722,8 +728,15 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
+					HAVE_CONFIG_H,
+					"SECONDARY_DJW=1",
+					"SECONDARY_FGK=1",
 				);
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)";
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/xdelta/",
+					/usr/local/include,
+				);
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/flips/libdivsufsort-2.0.1";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -742,7 +755,16 @@
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				ENABLE_NS_ASSERTIONS = NO;
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_CONFIG_H,
+					"SECONDARY_FGK=1",
+					"SECONDARY_DJW=1",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/xdelta/",
+					/usr/local/include,
+				);
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/flips/libdivsufsort-2.0.1";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -771,8 +793,15 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"PROJECT_VERSION_FULL=\"2\"",
 					NO_PRINTF,
+					HAVE_CONFIG_H,
+					"SECONDARY_FGK=1",
+					"SECONDARY_DJW=1",
 				);
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)";
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/xdelta/",
+					/usr/local/include,
+				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/flips/libdivsufsort-2.0.1";
@@ -801,8 +830,15 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"PROJECT_VERSION_FULL=\"2\"",
 					NO_PRINTF,
+					HAVE_CONFIG_H,
+					"SECONDARY_FGK=1",
+					"SECONDARY_DJW=1",
 				);
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)";
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/xdelta/",
+					/usr/local/include,
+				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/flips/libdivsufsort-2.0.1";

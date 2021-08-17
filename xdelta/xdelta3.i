@@ -5,13 +5,6 @@
 #include "xdelta3.h"
 
 int xd3_main_cmdline (int ARGC, char **ARGV);
-
-#undef SWIG_init
-#undef SWIG_name
-
-#define SWIG_init    initxdelta3
-#define SWIG_name    "xdelta3"
-
 %}
 
 %cstring_input_binary(const char *input, unsigned int input_size);
@@ -46,23 +39,23 @@ int xd3_main_cmdline (int ARGC, char **ARGV);
 
 %max_output_withsize(char *output_buf, unsigned int *output_size, unsigned int max_output);
 
-int     xd3_encode_memory (const char   *input,
-			   unsigned int  input_size,
-			   const char   *source,
-			   unsigned int  source_size,
-			   char         *output_buf,
-			   unsigned int *output_size,
-			   unsigned int  max_output,
-			   int           flags);
+int     xd3_encode_memory (const uint8_t *input,
+			   usize_t        input_size,
+			   const uint8_t *source,
+			   usize_t        source_size,
+			   uint8_t       *output_buffer,
+			   usize_t       *output_size,
+			   usize_t        avail_output,
+			   int            flags);
 
-int     xd3_decode_memory (const char   *input,
-			   unsigned int  input_size,
-			   const char   *source,
-			   unsigned int  source_size,
-			   char         *output_buf,
-			   unsigned int *output_size,
-			   unsigned int  max_output,
-			   int           flags);
+int     xd3_decode_memory (const uint8_t *input,
+			   usize_t        input_size,
+			   const uint8_t *source,
+			   usize_t        source_size,
+			   uint8_t       *output_buf,
+			   usize_t       *output_size,
+			   usize_t        avail_output,
+			   int            flags);
 
 int     xd3_main_cmdline (int ARGC, char **ARGV);
 
@@ -81,7 +74,6 @@ enum {
   /*XD3_SEC_OTHER,*/
   XD3_ADLER32,
   XD3_ADLER32_NOVER,
-  XD3_ALT_CODE_TABLE,
   XD3_NOCOMPRESS,
   XD3_BEGREEDY,
   XD3_COMPLEVEL_SHIFT,

@@ -1,6 +1,6 @@
 /* xdelta 3 - delta compression tools and library
  * Copyright (C) 2001, 2003, 2004, 2005, 2006, 2007,
- * 2008, 2009, 2010. Joshua P. MacDonald
+ * 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015. Joshua P. MacDonald
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -264,10 +264,8 @@
 #ifndef __XDELTA3_C_HEADER_PASS__
 #define __XDELTA3_C_HEADER_PASS__
 
-#include <errno.h>
-#include <string.h>
-
 #include "xdelta3.h"
+#include "xdelta3-internal.h"
 
 /***********************************************************************
  STATIC CONFIGURATION
@@ -281,22 +279,20 @@
 #define VCDIFF_TOOLS XD3_MAIN
 #endif
 
-#ifndef SECONDARY_FGK             /* one from the algorithm preservation department: */
-#define SECONDARY_FGK 0           /* adaptive Huffman routines */
+#ifndef SECONDARY_FGK    /* one from the algorithm preservation department: */
+#define SECONDARY_FGK 0  /* adaptive Huffman routines */
 #endif
 
-#ifndef SECONDARY_DJW             /* semi-adaptive/static Huffman for the eventual */
-#define SECONDARY_DJW 0           /* standardization, off by default until such time. */
+#ifndef SECONDARY_DJW    /* semi-adaptive/static Huffman for the eventual */
+#define SECONDARY_DJW 0  /* standardization, off by default until such time. */
 #endif
 
-#ifndef GENERIC_ENCODE_TABLES    /* These three are the RFC-spec'd app-specific */
-#define GENERIC_ENCODE_TABLES 0  /* code features.  This is tested but not recommended */
-#endif  			 /* unless there's a real application. */
-#ifndef GENERIC_ENCODE_TABLES_COMPUTE
-#define GENERIC_ENCODE_TABLES_COMPUTE 0
+#ifndef SECONDARY_LZMA
+#ifdef HAVE_LZMA_H
+#define SECONDARY_LZMA 1
+#else
+#define SECONDARY_LZMA 0
 #endif
-#ifndef GENERIC_ENCODE_TABLES_COMPUTE_PRINT
-#define GENERIC_ENCODE_TABLES_COMPUTE_PRINT 0
 #endif
 
 #if XD3_ENCODER
@@ -329,14 +325,15 @@
 
 typedef enum {
   VCD_DJW_ID    = 1,
-  VCD_FGK_ID    = 16, /* Note: these are not standard IANA-allocated IDs! */
+  VCD_LZMA_ID   = 2,
+  VCD_FGK_ID    = 16  /* Note: these are not standard IANA-allocated IDs! */
 } xd3_secondary_ids;
 
 typedef enum {
   SEC_NOFLAGS     = 0,
 
   /* Note: SEC_COUNT_FREQS Not implemented (to eliminate 1st Huffman pass) */
-  SEC_COUNT_FREQS = (1 << 0),
+  SEC_COUNT_FREQS = (1 << 0)
 } xd3_secondary_flags;
 
 typedef enum {
@@ -344,21 +341,18 @@ typedef enum {
                  * compressor. */
   INST_SECTION, /* The header section is not compressed, therefore not
                  * listed here. */
-  ADDR_SECTION,
+  ADDR_SECTION
 } xd3_section_type;
 
 typedef unsigned int xd3_rtype;
-#define XD3_NOOP 0U
-#define XD3_ADD 1U
-#define  XD3_RUN 2U
-#define  XD3_CPY 3U /* XD3_CPY rtypes are represented as (XD3_CPY +
-                     * copy-mode value) */
 
 /***********************************************************************/
 
 #include "xdelta3-list.h"
 
+#if XD3_ENCODER
 XD3_MAKELIST(xd3_rlist, xd3_rinst, link);
+#endif
 
 /***********************************************************************/
 
@@ -375,24 +369,14 @@ XD3_MAKELIST(xd3_rlist, xd3_rinst, link);
 #define VCD_SELF       0     /* 1st address mode */
 #define VCD_HERE       1     /* 2nd address mode */
 
-#define CODE_TABLE_STRING_SIZE (6 * 256) /* Should fit a code table string. */
-#define CODE_TABLE_VCDIFF_SIZE (6 * 256) /* Should fit a compressed code
-					  * table string */
-
-#define SECONDARY_ANY (SECONDARY_DJW || SECONDARY_FGK)
+#define SECONDARY_ANY (SECONDARY_DJW || SECONDARY_FGK || SECONDARY_LZMA)
 
 #define ALPHABET_SIZE      256  /* Used in test code--size of the secondary
 				 * compressor alphabet. */
 
-#define HASH_PERMUTE       1    /* The input is permuted by random nums */
-#define ADLER_LARGE_CKSUM  1    /* Adler checksum vs. RK checksum */
-
 #define HASH_CKOFFSET      1U   /* Table entries distinguish "no-entry" from
 				 * offset 0 using this offset. */
 
-#define MIN_SMALL_LOOK    2U    /* Match-optimization stuff. */
-#define MIN_LARGE_LOOK    2U
-#define MIN_MATCH_OFFSET  1U
 #define MAX_MATCH_SPLIT   18U   /* VCDIFF code table: 18 is the default limit
 				 * for direct-coded ADD sizes */
 
@@ -404,7 +388,6 @@ XD3_MAKELIST(xd3_rlist, xd3_rinst, link);
 			       * between them.  0. */
 
 #define MIN_MATCH         4U  /* VCDIFF code table: MIN_MATCH=4 */
-#define MIN_ADD           1U  /* 1 */
 #define MIN_RUN           8U  /* The shortest run, if it is shorter than this
 			       * an immediate add/copy will be just as good.
 			       * ADD1/COPY6 = 1I+1D+1A bytes, RUN18 =
@@ -424,10 +407,6 @@ XD3_MAKELIST(xd3_rlist, xd3_rinst, link);
 #define DATA_HEAD(s) ((s)->enc_heads[1])
 #define INST_HEAD(s) ((s)->enc_heads[2])
 #define ADDR_HEAD(s) ((s)->enc_heads[3])
-
-#define SIZEOF_ARRAY(x) (sizeof(x) / sizeof(x[0]))
-
-#define TOTAL_MODES(x) (2+(x)->acache.s_same+(x)->acache.s_near)
 
 /* Template instances. */
 #if XD3_BUILD_SLOW
@@ -461,34 +440,11 @@ XD3_MAKELIST(xd3_rlist, xd3_rinst, link);
 #define IF_BUILD_DEFAULT(x)
 #endif
 
-/* Consume N bytes of input, only used by the decoder. */
-#define DECODE_INPUT(n)             \
-  do {                              \
-  stream->total_in += (xoff_t) (n); \
-  stream->avail_in -= (n);          \
-  stream->next_in  += (n);          \
-  } while (0)
-
 /* Update the run-length state */
 #define NEXTRUN(c) do { if ((c) == run_c) { run_l += 1; } \
   else { run_c = (c); run_l = 1; } } while (0)
 
 /* This CPP-conditional stuff can be cleaned up... */
-#if XD3_DEBUG
-#define IF_DEBUG(x) x
-#else
-#define IF_DEBUG(x)
-#endif
-#if XD3_DEBUG > 1
-#define IF_DEBUG1(x) x
-#else
-#define IF_DEBUG1(x)
-#endif
-#if XD3_DEBUG > 2
-#define IF_DEBUG2(x) x
-#else
-#define IF_DEBUG2(x)
-#endif
 #if REGRESSION_TEST
 #define IF_REGRESSION(x) x
 #else
@@ -503,27 +459,15 @@ static void*       xd3_alloc0 (xd3_stream *stream,
 			       usize_t      size);
 
 
-static xd3_output* xd3_alloc_output (xd3_stream *stream,
-				     xd3_output *old_output);
-
 static int         xd3_alloc_iopt (xd3_stream *stream, usize_t elts);
 
 static void        xd3_free_output (xd3_stream *stream,
 				    xd3_output *output);
 
-static int         xd3_emit_byte (xd3_stream  *stream,
-				  xd3_output **outputp,
-				  uint8_t      code);
-
-static int         xd3_emit_bytes (xd3_stream     *stream,
-				   xd3_output    **outputp,
-				   const uint8_t  *base,
-				   usize_t          size);
-
 static int         xd3_emit_double (xd3_stream *stream, xd3_rinst *first,
-				    xd3_rinst *second, usize_t code);
+				    xd3_rinst *second, uint8_t code);
 static int         xd3_emit_single (xd3_stream *stream, xd3_rinst *single,
-				    usize_t code);
+				    uint8_t code);
 
 static usize_t      xd3_sizeof_output (xd3_output *output);
 static void        xd3_encode_reset (xd3_stream *stream);
@@ -548,8 +492,6 @@ static int xd3_srcwin_move_point (xd3_stream *stream,
 
 static int xd3_emit_run (xd3_stream *stream, usize_t pos,
 			 usize_t size, uint8_t *run_c);
-static usize_t xd3_checksum_hash (const xd3_hash_cfg *cfg,
-				  const usize_t cksum);
 static xoff_t xd3_source_cksum_offset(xd3_stream *stream, usize_t low);
 static void xd3_scksum_insert (xd3_stream *stream,
 			       usize_t inx,
@@ -564,10 +506,10 @@ static void xd3_verify_run_state (xd3_stream    *stream,
 				  uint8_t       *x_run_c);
 static void xd3_verify_large_state (xd3_stream *stream,
 				    const uint8_t *inp,
-				    uint32_t x_cksum);
+				    usize_t x_cksum);
 static void xd3_verify_small_state (xd3_stream    *stream,
 				    const uint8_t *inp,
-				    uint32_t          x_cksum);
+				    uint32_t       x_cksum);
 
 #endif /* XD3_DEBUG */
 #endif /* XD3_ENCODER */
@@ -575,57 +517,8 @@ static void xd3_verify_small_state (xd3_stream    *stream,
 static int         xd3_decode_allocate (xd3_stream *stream, usize_t size,
 					uint8_t **copied1, usize_t *alloc1);
 
-static void        xd3_compute_code_table_string (const xd3_dinst *code_table,
-						  uint8_t *str);
 static void*       xd3_alloc (xd3_stream *stream, usize_t elts, usize_t size);
 static void        xd3_free  (xd3_stream *stream, void *ptr);
-
-static int         xd3_read_uint32_t (xd3_stream *stream, const uint8_t **inpp,
-				      const uint8_t *max, uint32_t *valp);
-
-#if REGRESSION_TEST
-static int         xd3_selftest      (void);
-#endif
-
-/***********************************************************************/
-
-#define UINT32_OFLOW_MASK 0xfe000000U
-#define UINT64_OFLOW_MASK 0xfe00000000000000ULL
-
-#ifndef UINT32_MAX
-#define UINT32_MAX 4294967295U
-#endif
-
-#ifndef UINT64_MAX
-#define UINT64_MAX 18446744073709551615ULL
-#endif
-
-#if SIZEOF_USIZE_T == 4
-#define USIZE_T_MAX        UINT32_MAX
-#define xd3_decode_size   xd3_decode_uint32_t
-#define xd3_emit_size     xd3_emit_uint32_t
-#define xd3_sizeof_size   xd3_sizeof_uint32_t
-#define xd3_read_size     xd3_read_uint32_t
-#elif SIZEOF_USIZE_T == 8
-#define USIZE_T_MAX        UINT64_MAX
-#define xd3_decode_size   xd3_decode_uint64_t
-#define xd3_emit_size     xd3_emit_uint64_t
-#define xd3_sizeof_size   xd3_sizeof_uint64_t
-#define xd3_read_size     xd3_read_uint64_t
-#endif
-
-#if SIZEOF_XOFF_T == 4
-#define XOFF_T_MAX        UINT32_MAX
-#define xd3_decode_offset xd3_decode_uint32_t
-#define xd3_emit_offset   xd3_emit_uint32_t
-#elif SIZEOF_XOFF_T == 8
-#define XOFF_T_MAX        UINT64_MAX
-#define xd3_decode_offset xd3_decode_uint64_t
-#define xd3_emit_offset   xd3_emit_uint64_t
-#endif
-
-#define USIZE_T_OVERFLOW(a,b) ((USIZE_T_MAX - (usize_t) (a)) < (usize_t) (b))
-#define XOFF_T_OVERFLOW(a,b) ((XOFF_T_MAX - (xoff_t) (a)) < (xoff_t) (b))
 
 const char* xd3_strerror (int ret)
 {
@@ -655,7 +548,7 @@ const char* xd3_strerror (int ret)
 
 struct _xd3_sec_type
 {
-  int         id;
+  uint8_t       id;
   const char *name;
   xd3_secondary_flags flags;
 
@@ -663,7 +556,9 @@ struct _xd3_sec_type
   xd3_sec_stream* (*alloc)   (xd3_stream     *stream);
   void            (*destroy) (xd3_stream     *stream,
 			      xd3_sec_stream *sec);
-  void            (*init)    (xd3_sec_stream *sec);
+  int             (*init)    (xd3_stream     *stream,
+			      xd3_sec_stream *sec_stream,
+			      int             is_encode);
   int             (*decode)  (xd3_stream     *stream,
 			      xd3_sec_stream *sec_stream,
 			      const uint8_t **input,
@@ -685,7 +580,7 @@ struct _xd3_sec_type
 typedef struct _bit_state bit_state;
 struct _bit_state
 {
-  usize_t cur_byte;
+  uint8_t cur_byte;
   usize_t cur_mask;
 };
 
@@ -736,6 +631,19 @@ extern const xd3_sec_type djw_sec_type;
   return XD3_INTERNAL;
 #endif
 
+#if SECONDARY_LZMA
+extern const xd3_sec_type lzma_sec_type;
+#define IF_LZMA(x) x
+#define LZMA_CASE(s) \
+  s->sec_type = & lzma_sec_type; \
+  break;
+#else
+#define IF_LZMA(x)
+#define LZMA_CASE(s) \
+  s->msg = "unavailable secondary compressor: LZMA"; \
+  return XD3_INTERNAL;
+#endif
+
 /***********************************************************************/
 
 #include "xdelta3-hash.h"
@@ -764,7 +672,7 @@ const xd3_sec_type fgk_sec_type =
   SEC_NOFLAGS,
   (xd3_sec_stream* (*)(xd3_stream*)) fgk_alloc,
   (void (*)(xd3_stream*, xd3_sec_stream*)) fgk_destroy,
-  (void (*)(xd3_sec_stream*)) fgk_init,
+  (int (*)(xd3_stream*, xd3_sec_stream*, int)) fgk_init,
   (int (*)(xd3_stream*, xd3_sec_stream*, const uint8_t**, const uint8_t*,
 	   uint8_t**, const uint8_t*)) xd3_decode_fgk,
   IF_ENCODER((int (*)(xd3_stream*, xd3_sec_stream*, xd3_output*,
@@ -781,11 +689,28 @@ const xd3_sec_type djw_sec_type =
   SEC_COUNT_FREQS,
   (xd3_sec_stream* (*)(xd3_stream*)) djw_alloc,
   (void (*)(xd3_stream*, xd3_sec_stream*)) djw_destroy,
-  (void (*)(xd3_sec_stream*)) djw_init,
+  (int (*)(xd3_stream*, xd3_sec_stream*, int)) djw_init,
   (int (*)(xd3_stream*, xd3_sec_stream*, const uint8_t**, const uint8_t*,
 	   uint8_t**, const uint8_t*)) xd3_decode_huff,
   IF_ENCODER((int (*)(xd3_stream*, xd3_sec_stream*, xd3_output*,
 		      xd3_output*, xd3_sec_cfg*))   xd3_encode_huff)
+};
+#endif
+
+#if SECONDARY_LZMA
+#include "xdelta3-lzma.h"
+const xd3_sec_type lzma_sec_type =
+{
+  VCD_LZMA_ID,
+  "lzma",
+  SEC_NOFLAGS,
+  (xd3_sec_stream* (*)(xd3_stream*)) xd3_lzma_alloc,
+  (void (*)(xd3_stream*, xd3_sec_stream*)) xd3_lzma_destroy,
+  (int (*)(xd3_stream*, xd3_sec_stream*, int)) xd3_lzma_init,
+  (int (*)(xd3_stream*, xd3_sec_stream*, const uint8_t**, const uint8_t*,
+	   uint8_t**, const uint8_t*)) xd3_decode_lzma,
+  IF_ENCODER((int (*)(xd3_stream*, xd3_sec_stream*, xd3_output*,
+		      xd3_output*, xd3_sec_cfg*))   xd3_encode_lzma)
 };
 #endif
 
@@ -795,10 +720,6 @@ const xd3_sec_type djw_sec_type =
 
 #if REGRESSION_TEST
 #include "xdelta3-test.h"
-#endif
-
-#if PYTHON_MODULE
-#include "xdelta3-python.h"
 #endif
 
 #endif /* __XDELTA3_C_HEADER_PASS__ */
@@ -839,14 +760,10 @@ const xd3_sec_type djw_sec_type =
 
 /* The XD3_CHOOSE_INSTRUCTION calls xd3_choose_instruction with the
  * table description when GENERIC_ENCODE_TABLES are in use.  The
- * IF_GENCODETBL macro enables generic-code-table specific code. */
-#if GENERIC_ENCODE_TABLES
-#define XD3_CHOOSE_INSTRUCTION(stream,prev,inst) xd3_choose_instruction (stream->code_table_desc, prev, inst)
-#define IF_GENCODETBL(x) x
-#else
-#define XD3_CHOOSE_INSTRUCTION(stream,prev,inst) xd3_choose_instruction (prev, inst)
-#define IF_GENCODETBL(x)
-#endif
+ * IF_GENCODETBL macro enables generic-code-table specific code
+ * (removed 10/2014). */
+#define XD3_CHOOSE_INSTRUCTION(stream,prev,inst) \
+  xd3_choose_instruction (prev, inst)
 
 /* This structure maintains information needed by
  * xd3_choose_instruction to compute the code for a double instruction
@@ -864,24 +781,32 @@ struct _xd3_code_table_desc
   /* Assumes a single RUN instruction */
   /* Assumes that MIN_MATCH is 4 */
 
-  uint8_t add_sizes;            /* Number of immediate-size single adds (default 17) */
+  uint8_t add_sizes;            /* Number of immediate-size single
+				   adds (default 17) */
   uint8_t near_modes;           /* Number of near copy modes (default 4) */
   uint8_t same_modes;           /* Number of same copy modes (default 3) */
-  uint8_t cpy_sizes;            /* Number of immediate-size single copies (default 15) */
+  uint8_t cpy_sizes;            /* Number of immediate-size single
+				   copies (default 15) */
 
-  uint8_t addcopy_add_max;      /* Maximum add size for an add-copy double instruction,
-				   all modes (default 4) */
-  uint8_t addcopy_near_cpy_max; /* Maximum cpy size for an add-copy double instruction,
-				   up through VCD_NEAR modes (default 6) */
-  uint8_t addcopy_same_cpy_max; /* Maximum cpy size for an add-copy double instruction,
-				   VCD_SAME modes (default 4) */
+  uint8_t addcopy_add_max;      /* Maximum add size for an add-copy
+				   double instruction, all modes
+				   (default 4) */
+  uint8_t addcopy_near_cpy_max; /* Maximum cpy size for an add-copy
+				   double instruction, up through
+				   VCD_NEAR modes (default 6) */
+  uint8_t addcopy_same_cpy_max; /* Maximum cpy size for an add-copy
+				   double instruction, VCD_SAME modes
+				   (default 4) */
 
-  uint8_t copyadd_add_max;      /* Maximum add size for a copy-add double instruction,
-				   all modes (default 1) */
-  uint8_t copyadd_near_cpy_max; /* Maximum cpy size for a copy-add double instruction,
-				   up through VCD_NEAR modes (default 4) */
-  uint8_t copyadd_same_cpy_max; /* Maximum cpy size for a copy-add double instruction,
-				   VCD_SAME modes (default 4) */
+  uint8_t copyadd_add_max;      /* Maximum add size for a copy-add
+				   double instruction, all modes
+				   (default 1) */
+  uint8_t copyadd_near_cpy_max; /* Maximum cpy size for a copy-add
+				   double instruction, up through
+				   VCD_NEAR modes (default 4) */
+  uint8_t copyadd_same_cpy_max; /* Maximum cpy size for a copy-add
+				   double instruction, VCD_SAME modes
+				   (default 4) */
 
   xd3_code_table_sizes addcopy_max_sizes[MAX_MODES];
   xd3_code_table_sizes copyadd_max_sizes[MAX_MODES];
@@ -903,61 +828,20 @@ static const xd3_code_table_desc __rfc3284_code_table_desc = {
   4,  /* copy-add max cpy, same */
 
   /* addcopy */
-  { {6,163,3},{6,175,3},{6,187,3},{6,199,3},{6,211,3},{6,223,3},{4,235,1},{4,239,1},{4,243,1} },
+  { {6,163,3},{6,175,3},{6,187,3},{6,199,3},{6,211,3},{6,223,3},
+    {4,235,1},{4,239,1},{4,243,1} },
   /* copyadd */
-  { {4,247,1},{4,248,1},{4,249,1},{4,250,1},{4,251,1},{4,252,1},{4,253,1},{4,254,1},{4,255,1} },
+  { {4,247,1},{4,248,1},{4,249,1},{4,250,1},{4,251,1},{4,252,1},
+    {4,253,1},{4,254,1},{4,255,1} },
 };
-
-#if GENERIC_ENCODE_TABLES
-/* An alternate code table for testing (5 near, 0 same):
- *
- *         TYPE      SIZE     MODE    TYPE     SIZE     MODE     INDEX
- *        ---------------------------------------------------------------
- *     1.  Run         0        0     Noop       0        0        0
- *     2.  Add    0, [1,23]     0     Noop       0        0      [1,24]
- *     3.  Copy   0, [4,20]     0     Noop       0        0     [25,42]
- *     4.  Copy   0, [4,20]     1     Noop       0        0     [43,60]
- *     5.  Copy   0, [4,20]     2     Noop       0        0     [61,78]
- *     6.  Copy   0, [4,20]     3     Noop       0        0     [79,96]
- *     7.  Copy   0, [4,20]     4     Noop       0        0     [97,114]
- *     8.  Copy   0, [4,20]     5     Noop       0        0    [115,132]
- *     9.  Copy   0, [4,20]     6     Noop       0        0    [133,150]
- *    10.  Add       [1,4]      0     Copy     [4,6]      0    [151,162]
- *    11.  Add       [1,4]      0     Copy     [4,6]      1    [163,174]
- *    12.  Add       [1,4]      0     Copy     [4,6]      2    [175,186]
- *    13.  Add       [1,4]      0     Copy     [4,6]      3    [187,198]
- *    14.  Add       [1,4]      0     Copy     [4,6]      4    [199,210]
- *    15.  Add       [1,4]      0     Copy     [4,6]      5    [211,222]
- *    16.  Add       [1,4]      0     Copy     [4,6]      6    [223,234]
- *    17.  Copy        4      [0,6]   Add      [1,3]      0    [235,255]
- *        --------------------------------------------------------------- */
-static const xd3_code_table_desc __alternate_code_table_desc = {
-  23, /* add sizes */
-  5,  /* near modes */
-  0,  /* same modes */
-  17, /* copy sizes */
-
-  4,  /* add-copy max add */
-  6,  /* add-copy max cpy, near */
-  0,  /* add-copy max cpy, same */
-
-  3,  /* copy-add max add */
-  4,  /* copy-add max cpy, near */
-  0,  /* copy-add max cpy, same */
-
-  /* addcopy */
-  { {6,151,3},{6,163,3},{6,175,3},{6,187,3},{6,199,3},{6,211,3},{6,223,3},{0,0,0},{0,0,0} },
-  /* copyadd */
-  { {4,235,1},{4,238,1},{4,241,1},{4,244,1},{4,247,1},{4,250,1},{4,253,1},{0,0,0},{0,0,0} },
-};
-#endif
 
 /* Computes code table entries of TBL using the specified description. */
 static void
 xd3_build_code_table (const xd3_code_table_desc *desc, xd3_dinst *tbl)
 {
-  usize_t size1, size2, mode;
-  usize_t cpy_modes = 2 + desc->near_modes + desc->same_modes;
+  uint8_t size1, size2;
+  uint8_t mode;
+  usize_t cpy_modes = 2U + desc->near_modes + desc->same_modes;
   xd3_dinst *d = tbl;
 
   (d++)->type1 = XD3_RUN;
@@ -973,7 +857,8 @@ xd3_build_code_table (const xd3_code_table_desc *desc, xd3_dinst *tbl)
     {
       (d++)->type1 = XD3_CPY + mode;
 
-      for (size1 = MIN_MATCH; size1 < MIN_MATCH + desc->cpy_sizes; size1 += 1, d += 1)
+      for (size1 = MIN_MATCH; size1 < MIN_MATCH + desc->cpy_sizes;
+	   size1 += 1, d += 1)
 	{
 	  d->type1 = XD3_CPY + mode;
 	  d->size1 = size1;
@@ -1034,116 +919,6 @@ xd3_rfc3284_code_table (void)
 }
 
 #if XD3_ENCODER
-#if GENERIC_ENCODE_TABLES
-/* This function generates the alternate code table. */
-static const xd3_dinst*
-xd3_alternate_code_table (void)
-{
-  static xd3_dinst __alternate_code_table[256];
-
-  if (__alternate_code_table[0].type1 != XD3_RUN)
-    {
-      xd3_build_code_table (& __alternate_code_table_desc, __alternate_code_table);
-    }
-
-  return __alternate_code_table;
-}
-
-/* This function computes the ideal second instruction INST based on
- * preceding instruction PREV.  If it is possible to issue a double
- * instruction based on this pair it sets PREV->code2, otherwise it
- * sets INST->code1. */
-static void
-xd3_choose_instruction (const xd3_code_table_desc *desc, xd3_rinst *prev, xd3_rinst *inst)
-{
-  switch (inst->type)
-    {
-    case XD3_RUN:
-      /* The 0th instruction is RUN */
-      inst->code1 = 0;
-      break;
-
-    case XD3_ADD:
-
-      if (inst->size > desc->add_sizes)
-	{
-	  /* The first instruction is non-immediate ADD */
-	  inst->code1 = 1;
-	}
-      else
-	{
-	  /* The following ADD_SIZES instructions are immediate ADDs */
-	  inst->code1 = 1 + inst->size;
-
-	  /* Now check for a possible COPY-ADD double instruction */
-	  if (prev != NULL)
-	    {
-	      int prev_mode = prev->type - XD3_CPY;
-
-	      /* If previous is a copy.  Note: as long as the previous
-	       * is not a RUN instruction, it should be a copy because
-	       * it cannot be an add.  This check is more clear. */
-	      if (prev_mode >= 0 && inst->size <= desc->copyadd_add_max)
-		{
-		  const xd3_code_table_sizes *sizes = & desc->copyadd_max_sizes[prev_mode];
-
-		  /* This check and the inst->size-<= above are == in
-		     the default table. */
-		  if (prev->size <= sizes->cpy_max)
-		    {
-		      /* The second and third exprs are 0 in the
-			 default table. */
-		      prev->code2 = sizes->offset +
-			(sizes->mult * (prev->size - MIN_MATCH)) +
-			(inst->size - MIN_ADD);
-		    }
-		}
-	    }
-	}
-      break;
-
-    default:
-      {
-	int mode = inst->type - XD3_CPY;
-
-	/* The large copy instruction is offset by the run, large add,
-	 * and immediate adds, then multipled by the number of
-	 * immediate copies plus one (the large copy) (i.e., if there
-	 * are 15 immediate copy instructions then there are 16 copy
-	 * instructions per mode). */
-	inst->code1 = 2 + desc->add_sizes + (1 + desc->cpy_sizes) * mode;
-
-	/* Now if the copy is short enough for an immediate instruction. */
-	if (inst->size < MIN_MATCH + desc->cpy_sizes &&
-	    /* TODO: there needs to be a more comprehensive test for this
-	     * boundary condition, merge is now exercising code in which
-	     * size < MIN_MATCH is possible and it's unclear if the above
-	     * size < (MIN_MATCH + cpy_sizes) should be a <= from inspection
-	     * of the default table version below. */
-	    inst->size >= MIN_MATCH)
-	  {
-	    inst->code1 += inst->size + 1 - MIN_MATCH;
-
-	    /* Now check for a possible ADD-COPY double instruction. */
-	    if ( (prev != NULL) &&
-		 (prev->type == XD3_ADD) &&
-		 (prev->size <= desc->addcopy_add_max) )
-	      {
-		const xd3_code_table_sizes *sizes = & desc->addcopy_max_sizes[mode];
-
-		if (inst->size <= sizes->cpy_max)
-		  {
-		    prev->code2 = sizes->offset +
-		      (sizes->mult * (prev->size - MIN_ADD)) +
-		      (inst->size - MIN_MATCH);
-		  }
-	      }
-	  }
-      }
-    }
-}
-#else /* GENERIC_ENCODE_TABLES */
-
 /* This version of xd3_choose_instruction is hard-coded for the default
    table. */
 static void
@@ -1175,7 +950,7 @@ xd3_choose_instruction (xd3_rinst *prev, xd3_rinst *inst)
 
     default:
       {
-	int mode = inst->type - XD3_CPY;
+	uint8_t mode = inst->type - XD3_CPY;
 
 	XD3_ASSERT (inst->type >= XD3_CPY && inst->type < 12);
 
@@ -1192,8 +967,9 @@ xd3_choose_instruction (xd3_rinst *prev, xd3_rinst *inst)
 		if ( (inst->size <= 6) &&
 		     (mode       <= 5) )
 		  {
-		    prev->code2 = 163 + (mode * 12) + (3 * (prev->size - 1)) + (inst->size - 4);
-
+		    prev->code2 = (uint8_t)(163 + (mode * 12) +
+					    (3 * (prev->size - 1)) +
+					    (inst->size - 4));
 		    XD3_ASSERT (prev->code2 <= 234);
 		  }
 		else if ( (inst->size == 4) &&
@@ -1211,261 +987,7 @@ xd3_choose_instruction (xd3_rinst *prev, xd3_rinst *inst)
       break;
     }
 }
-#endif /* GENERIC_ENCODE_TABLES */
-
-/***********************************************************************
- Instruction table encoder/decoder
- ***********************************************************************/
-
-#if GENERIC_ENCODE_TABLES
-#if GENERIC_ENCODE_TABLES_COMPUTE == 0
-
-/* In this case, we hard-code the result of
- * compute_code_table_encoding for each alternate code table,
- * presuming that saves time/space.  This has been 131 bytes, but
- * secondary compression was turned off. */
-static const uint8_t __alternate_code_table_compressed[178] =
-{0xd6,0xc3,0xc4,0x00,0x00,0x01,0x8a,0x6f,0x40,0x81,0x27,0x8c,0x00,0x00,0x4a,0x4a,0x0d,0x02,0x01,0x03,
-0x01,0x03,0x00,0x01,0x00,0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0a,0x0b,0x0c,0x0d,0x0e,
-0x0f,0x10,0x11,0x12,0x13,0x14,0x15,0x16,0x17,0x00,0x01,0x01,0x01,0x02,0x02,0x02,0x03,0x03,0x03,0x04,
-0x04,0x04,0x04,0x00,0x04,0x05,0x06,0x01,0x02,0x03,0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x05,0x05,0x05,
-0x06,0x06,0x06,0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x00,0x02,0x00,0x18,0x13,0x63,0x00,0x1b,0x00,0x54,
-0x00,0x15,0x23,0x6f,0x00,0x28,0x13,0x54,0x00,0x15,0x01,0x1a,0x31,0x23,0x6c,0x0d,0x23,0x48,0x00,0x15,
-0x93,0x6f,0x00,0x28,0x04,0x23,0x51,0x04,0x32,0x00,0x2b,0x00,0x12,0x00,0x12,0x00,0x12,0x00,0x12,0x00,
-0x12,0x00,0x12,0x53,0x57,0x9c,0x07,0x43,0x6f,0x00,0x34,0x00,0x0c,0x00,0x0c,0x00,0x0c,0x00,0x0c,0x00,
-0x0c,0x00,0x0c,0x00,0x15,0x00,0x82,0x6f,0x00,0x15,0x12,0x0c,0x00,0x03,0x03,0x00,0x06,0x00,};
-
-static int
-xd3_compute_alternate_table_encoding (xd3_stream *stream, const uint8_t **data, usize_t *size)
-{
-  (*data) = __alternate_code_table_compressed;
-  (*size) = sizeof (__alternate_code_table_compressed);
-  return 0;
-}
-
-#else
-
-/* The alternate code table will be computed and stored here. */
-static uint8_t __alternate_code_table_compressed[CODE_TABLE_VCDIFF_SIZE];
-static usize_t  __alternate_code_table_compressed_size;
-
-/* This function generates a delta describing the code table for
- * encoding within a VCDIFF file.  This function is NOT thread safe
- * because it is only intended that this function is used to generate
- * statically-compiled strings.  "comp_string" must be sized
- * CODE_TABLE_VCDIFF_SIZE. */
-int xd3_compute_code_table_encoding (xd3_stream *in_stream,
-				     const xd3_dinst *code_table,
-				     uint8_t *comp_string,
-				     usize_t *comp_string_size)
-{
-  /* Use DJW secondary compression if it is on by default.  This saves
-   * about 20 bytes. */
-  int flags = (SECONDARY_DJW ? XD3_SEC_DJW : 0) | XD3_COMPLEVEL_9 | XD3_ADLER32;
-
-  uint8_t dflt_string[CODE_TABLE_STRING_SIZE];
-  uint8_t code_string[CODE_TABLE_STRING_SIZE];
-  int ret;
-
-  xd3_compute_code_table_string (xd3_rfc3284_code_table (), dflt_string);
-  xd3_compute_code_table_string (code_table, code_string);
-
-  return xd3_encode_memory (code_string, CODE_TABLE_STRING_SIZE,
-			    dflt_string, CODE_TABLE_STRING_SIZE,
-			    comp_string, comp_string_size,
-			    CODE_TABLE_VCDIFF_SIZE);
-}
-
-/* Compute a delta between alternate and rfc3284 tables.  As soon as
- * another alternate table is added, this code should become generic.
- * For now there is only one alternate table for testing. */
-static int
-xd3_compute_alternate_table_encoding (xd3_stream *stream, const uint8_t **data, usize_t *size)
-{
-  int ret;
-
-  if (__alternate_code_table_compressed[0] == 0)
-    {
-      if ((ret = xd3_compute_code_table_encoding (stream, xd3_alternate_code_table (),
-						  __alternate_code_table_compressed,
-						  & __alternate_code_table_compressed_size)))
-	{
-	  return ret;
-	}
-
-      /* During development of a new code table, enable this variable to print
-       * the new static contents and determine its size.  At run time the
-       * table will be filled in appropriately, but at least it should have
-       * the proper size beforehand. */
-#if GENERIC_ENCODE_TABLES_COMPUTE_PRINT
-      {
-	int i;
-
-	DP(RINT, "\nstatic const usize_t __alternate_code_table_compressed_size = %u;\n",
-		 __alternate_code_table_compressed_size);
-
-	DP(RINT, "static const uint8_t __alternate_code_table_compressed[%u] =\n{",
-		 __alternate_code_table_compressed_size);
-
-	for (i = 0; i < __alternate_code_table_compressed_size; i += 1)
-	  {
-	    DP(RINT, "0x%02x,", __alternate_code_table_compressed[i]);
-	    if ((i % 20) == 19) { DP(RINT, "\n"); }
-	  }
-
-	DP(RINT, "};\n");
-      }
-#endif
-    }
-
-  (*data) = __alternate_code_table_compressed;
-  (*size) = __alternate_code_table_compressed_size;
-
-  return 0;
-}
-#endif /* GENERIC_ENCODE_TABLES_COMPUTE != 0 */
-#endif /* GENERIC_ENCODE_TABLES */
-
 #endif /* XD3_ENCODER */
-
-/* This function generates the 1536-byte string specified in sections 5.4 and
- * 7 of rfc3284, which is used to represent a code table within a VCDIFF
- * file. */
-void xd3_compute_code_table_string (const xd3_dinst *code_table, uint8_t *str)
-{
-  int i, s;
-
-  XD3_ASSERT (CODE_TABLE_STRING_SIZE == 6 * 256);
-
-  for (s = 0; s < 6; s += 1)
-    {
-      for (i = 0; i < 256; i += 1)
-	{
-	  switch (s)
-	    {
-	    case 0: *str++ = (code_table[i].type1 >= XD3_CPY ? XD3_CPY : code_table[i].type1); break;
-	    case 1: *str++ = (code_table[i].type2 >= XD3_CPY ? XD3_CPY : code_table[i].type2); break;
-	    case 2: *str++ = (code_table[i].size1); break;
-	    case 3: *str++ = (code_table[i].size2); break;
-	    case 4: *str++ = (code_table[i].type1 >= XD3_CPY ? code_table[i].type1 - XD3_CPY : 0); break;
-	    case 5: *str++ = (code_table[i].type2 >= XD3_CPY ? code_table[i].type2 - XD3_CPY : 0); break;
-	    }
-	}
-    }
-}
-
-/* This function translates the code table string into the internal representation.  The
- * stream's near and same-modes should already be set. */
-static int
-xd3_apply_table_string (xd3_stream *stream, const uint8_t *code_string)
-{
-  int i, s;
-  int modes = TOTAL_MODES (stream);
-  xd3_dinst *code_table;
-
-  if ((code_table = stream->code_table_alloc =
-       (xd3_dinst*) xd3_alloc (stream, sizeof (xd3_dinst), 256)) == NULL)
-    {
-      return ENOMEM;
-    }
-
-  for (s = 0; s < 6; s += 1)
-    {
-      for (i = 0; i < 256; i += 1)
-	{
-	  switch (s)
-	    {
-	    case 0:
-	      if (*code_string > XD3_CPY)
-		{
-		  stream->msg = "invalid code-table opcode";
-		  return XD3_INTERNAL;
-		}
-	      code_table[i].type1 = *code_string++;
-	      break;
-	    case 1:
-	      if (*code_string > XD3_CPY)
-		{
-		  stream->msg = "invalid code-table opcode";
-		  return XD3_INTERNAL;
-		}
-	      code_table[i].type2 = *code_string++;
-	      break;
-	    case 2:
-	      if (*code_string != 0 && code_table[i].type1 == XD3_NOOP)
-		{
-		  stream->msg = "invalid code-table size";
-		  return XD3_INTERNAL;
-		}
-	      code_table[i].size1 = *code_string++;
-	      break;
-	    case 3:
-	      if (*code_string != 0 && code_table[i].type2 == XD3_NOOP)
-		{
-		  stream->msg = "invalid code-table size";
-		  return XD3_INTERNAL;
-		}
-	      code_table[i].size2 = *code_string++;
-	      break;
-	    case 4:
-	      if (*code_string >= modes)
-		{
-		  stream->msg = "invalid code-table mode";
-		  return XD3_INTERNAL;
-		}
-	      if (*code_string != 0 && code_table[i].type1 != XD3_CPY)
-		{
-		  stream->msg = "invalid code-table mode";
-		  return XD3_INTERNAL;
-		}
-	      code_table[i].type1 += *code_string++;
-	      break;
-	    case 5:
-	      if (*code_string >= modes)
-		{
-		  stream->msg = "invalid code-table mode";
-		  return XD3_INTERNAL;
-		}
-	      if (*code_string != 0 && code_table[i].type2 != XD3_CPY)
-		{
-		  stream->msg = "invalid code-table mode";
-		  return XD3_INTERNAL;
-		}
-	      code_table[i].type2 += *code_string++;
-	      break;
-	    }
-	}
-    }
-
-  stream->code_table = code_table;
-  return 0;
-}
-
-/* This function applies a code table delta and returns an actual code table. */
-static int
-xd3_apply_table_encoding (xd3_stream *in_stream, const uint8_t *data, usize_t size)
-{
-  uint8_t dflt_string[CODE_TABLE_STRING_SIZE];
-  uint8_t code_string[CODE_TABLE_STRING_SIZE];
-  usize_t code_size;
-  int ret;
-
-  xd3_compute_code_table_string (xd3_rfc3284_code_table (), dflt_string);
-
-  if ((ret = xd3_decode_memory (data, size,
-				dflt_string, CODE_TABLE_STRING_SIZE,
-				code_string, &code_size,
-				CODE_TABLE_STRING_SIZE,
-				0))) { return ret; }
-
-  if (code_size != sizeof (code_string))
-    {
-      in_stream->msg = "corrupt code-table encoding";
-      return XD3_INTERNAL;
-    }
-
-  return xd3_apply_table_string (in_stream, code_string);
-}
 
 /***********************************************************************/
 
@@ -1487,9 +1009,9 @@ xd3_swap_usize_t (usize_t* p1, usize_t* p2)
 
 /* It's not constant time, but it computes the log. */
 static int
-xd3_check_pow2 (usize_t value, usize_t *logof)
+xd3_check_pow2 (xoff_t value, usize_t *logof)
 {
-  usize_t x = 1;
+  xoff_t x = 1;
   usize_t nolog;
   if (logof == NULL) {
     logof = &nolog;
@@ -1508,10 +1030,20 @@ xd3_check_pow2 (usize_t value, usize_t *logof)
   return XD3_INTERNAL;
 }
 
-static usize_t
+usize_t
 xd3_pow2_roundup (usize_t x)
 {
   usize_t i = 1;
+  while (x > i) {
+    i <<= 1U;
+  }
+  return i;
+}
+
+static xoff_t
+xd3_xoff_roundup (xoff_t x)
+{
+  xoff_t i = 1;
   while (x > i) {
     i <<= 1U;
   }
@@ -1525,7 +1057,17 @@ xd3_round_blksize (usize_t sz, usize_t blksz)
 
   XD3_ASSERT (xd3_check_pow2 (blksz, NULL) == 0);
 
-  return mod ? (sz + (blksz - mod)) : sz;
+  if (mod == 0)
+    {
+      return sz;
+    }
+
+  if (sz > USIZE_T_MAXBLKSZ)
+    {
+      return USIZE_T_MAXBLKSZ;
+    }
+
+  return sz + (blksz - mod);
 }
 
 /***********************************************************************
@@ -1533,7 +1075,8 @@ xd3_round_blksize (usize_t sz, usize_t blksz)
  ***********************************************************************/
 
 #define A32_BASE 65521L /* Largest prime smaller than 2^16 */
-#define A32_NMAX 5552   /* NMAX is the largest n such that 255n(n+1)/2 + (n+1)(BASE-1) <= 2^32-1 */
+#define A32_NMAX 5552   /* NMAX is the largest n such that 255n(n+1)/2
+			   + (n+1)(BASE-1) <= 2^32-1 */
 
 #define A32_DO1(buf,i)  {s1 += buf[i]; s2 += s1;}
 #define A32_DO2(buf,i)  A32_DO1(buf,i); A32_DO1(buf,i+1);
@@ -1541,10 +1084,10 @@ xd3_round_blksize (usize_t sz, usize_t blksz)
 #define A32_DO8(buf,i)  A32_DO4(buf,i); A32_DO4(buf,i+4);
 #define A32_DO16(buf)   A32_DO8(buf,0); A32_DO8(buf,8);
 
-static unsigned long adler32 (unsigned long adler, const uint8_t *buf, usize_t len)
+static uint32_t adler32 (uint32_t adler, const uint8_t *buf, usize_t len)
 {
-    unsigned long s1 = adler & 0xffff;
-    unsigned long s2 = (adler >> 16) & 0xffff;
+    uint32_t s1 = adler & 0xffffU;
+    uint32_t s2 = (adler >> 16) & 0xffffU;
     int k;
 
     while (len > 0)
@@ -1603,52 +1146,8 @@ xd3_comprun (const uint8_t *seg, usize_t slook, uint8_t *run_cp)
  Basic encoder/decoder functions
  ***********************************************************************/
 
-static inline int
-xd3_decode_byte (xd3_stream *stream, usize_t *val)
-{
-  if (stream->avail_in == 0)
-    {
-      stream->msg = "further input required";
-      return XD3_INPUT;
-    }
-
-  (*val) = stream->next_in[0];
-
-  DECODE_INPUT (1);
-  return 0;
-}
-
-static inline int
-xd3_decode_bytes (xd3_stream *stream, uint8_t *buf, usize_t *pos, usize_t size)
-{
-  usize_t want;
-  usize_t take;
-
-  /* Note: The case where (*pos == size) happens when a zero-length
-   * appheader or code table is transmitted, but there is nothing in
-   * the standard against that. */
-  while (*pos < size)
-    {
-      if (stream->avail_in == 0)
-	{
-	  stream->msg = "further input required";
-	  return XD3_INPUT;
-	}
-
-      want = size - *pos;
-      take = min (want, stream->avail_in);
-
-      memcpy (buf + *pos, stream->next_in, take);
-
-      DECODE_INPUT (take);
-      (*pos) += take;
-    }
-
-  return 0;
-}
-
 #if XD3_ENCODER
-static inline int
+inline int
 xd3_emit_byte (xd3_stream  *stream,
 	       xd3_output **outputp,
 	       uint8_t      code)
@@ -1672,11 +1171,11 @@ xd3_emit_byte (xd3_stream  *stream,
   return 0;
 }
 
-static inline int
+inline int
 xd3_emit_bytes (xd3_stream     *stream,
 		xd3_output    **outputp,
 		const uint8_t  *base,
-		usize_t          size)
+		usize_t         size)
 {
   xd3_output *output = (*outputp);
 
@@ -1696,9 +1195,9 @@ xd3_emit_bytes (xd3_stream     *stream,
 	  output = (*outputp) = aoutput;
 	}
 
-      take = min (output->avail - output->next, size);
+      take = xd3_min (output->avail - output->next, size);
 
-      memcpy (output->base + output->next, base, take);
+      memcpy (output->base + output->next, base, (size_t) take);
 
       output->next += take;
       size -= take;
@@ -1709,150 +1208,6 @@ xd3_emit_bytes (xd3_stream     *stream,
   return 0;
 }
 #endif /* XD3_ENCODER */
-
-/*********************************************************************
- Integer encoder/decoder functions
- **********************************************************************/
-
-#define DECODE_INTEGER_TYPE(PART,OFLOW)                                \
-  while (stream->avail_in != 0)                                        \
-    {                                                                  \
-      usize_t next = stream->next_in[0];                               \
-                                                                       \
-      DECODE_INPUT(1);                                                 \
-                                                                       \
-      if (PART & OFLOW)                                                \
-	{                                                              \
-	  stream->msg = "overflow in decode_integer";                  \
-	  return XD3_INVALID_INPUT;                                    \
-	}                                                              \
-                                                                       \
-      PART = (PART << 7) | (next & 127);                               \
-                                                                       \
-      if ((next & 128) == 0)                                           \
-	{                                                              \
-	  (*val) = PART;                                               \
-	  PART = 0;                                                    \
-	  return 0;                                                    \
-	}                                                              \
-    }                                                                  \
-                                                                       \
-  stream->msg = "further input required";                              \
-  return XD3_INPUT
-
-#define READ_INTEGER_TYPE(TYPE, OFLOW)                                 \
-  TYPE val = 0;                                                        \
-  const uint8_t *inp = (*inpp);                                        \
-  usize_t next;                                                        \
-                                                                       \
-  do                                                                   \
-    {                                                                  \
-      if (inp == max)                                                  \
-	{                                                              \
-	  stream->msg = "end-of-input in read_integer";                \
-	  return XD3_INVALID_INPUT;                                    \
-	}                                                              \
-                                                                       \
-      if (val & OFLOW)                                                 \
-	{                                                              \
-	  stream->msg = "overflow in read_intger";                     \
-	  return XD3_INVALID_INPUT;                                    \
-	}                                                              \
-                                                                       \
-      next = (*inp++);                                                 \
-      val  = (val << 7) | (next & 127);                                \
-    }                                                                  \
-  while (next & 128);                                                  \
-                                                                       \
-  (*valp) = val;                                                       \
-  (*inpp) = inp;                                                       \
-                                                                       \
-  return 0
-
-#define EMIT_INTEGER_TYPE()                                            \
-  /* max 64-bit value in base-7 encoding is 9.1 bytes */               \
-  uint8_t buf[10];                                                     \
-  usize_t  bufi = 10;                                                  \
-                                                                       \
-  /* This loop performs division and turns on all MSBs. */             \
-  do                                                                   \
-    {                                                                  \
-      buf[--bufi] = (num & 127) | 128;                                 \
-      num >>= 7U;                                                      \
-    }                                                                  \
-  while (num != 0);                                                    \
-                                                                       \
-  /* Turn off MSB of the last byte. */                                 \
-  buf[9] &= 127;                                                       \
-                                                                       \
-  return xd3_emit_bytes (stream, output, buf + bufi, 10 - bufi)
-
-#define IF_SIZEOF32(x) if (num < (1U   << (7 * (x)))) return (x);
-#define IF_SIZEOF64(x) if (num < (1ULL << (7 * (x)))) return (x);
-
-#if USE_UINT32
-static inline uint32_t
-xd3_sizeof_uint32_t (uint32_t num)
-{
-  IF_SIZEOF32(1);
-  IF_SIZEOF32(2);
-  IF_SIZEOF32(3);
-  IF_SIZEOF32(4);
-  return 5;
-}
-
-static inline int
-xd3_decode_uint32_t (xd3_stream *stream, uint32_t *val)
-{ DECODE_INTEGER_TYPE (stream->dec_32part, UINT32_OFLOW_MASK); }
-
-static inline int
-xd3_read_uint32_t (xd3_stream *stream, const uint8_t **inpp,
-		   const uint8_t *max, uint32_t *valp)
-{ READ_INTEGER_TYPE (uint32_t, UINT32_OFLOW_MASK); }
-
-#if XD3_ENCODER
-static inline int
-xd3_emit_uint32_t (xd3_stream *stream, xd3_output **output, uint32_t num)
-{ EMIT_INTEGER_TYPE (); }
-#endif
-#endif
-
-#if USE_UINT64
-static inline int
-xd3_decode_uint64_t (xd3_stream *stream, uint64_t *val)
-{ DECODE_INTEGER_TYPE (stream->dec_64part, UINT64_OFLOW_MASK); }
-
-#if XD3_ENCODER
-static inline int
-xd3_emit_uint64_t (xd3_stream *stream, xd3_output **output, uint64_t num)
-{ EMIT_INTEGER_TYPE (); }
-#endif
-
-/* These are tested but not used */
-#if REGRESSION_TEST
-static int
-xd3_read_uint64_t (xd3_stream *stream, const uint8_t **inpp,
-		   const uint8_t *max, uint64_t *valp)
-{ READ_INTEGER_TYPE (uint64_t, UINT64_OFLOW_MASK); }
-
-static uint32_t
-xd3_sizeof_uint64_t (uint64_t num)
-{
-  IF_SIZEOF64(1);
-  IF_SIZEOF64(2);
-  IF_SIZEOF64(3);
-  IF_SIZEOF64(4);
-  IF_SIZEOF64(5);
-  IF_SIZEOF64(6);
-  IF_SIZEOF64(7);
-  IF_SIZEOF64(8);
-  IF_SIZEOF64(9);
-
-  return 10;
-}
-#endif
-
-#endif
 
 /***********************************************************************
  Address cache stuff
@@ -1873,11 +1228,13 @@ xd3_alloc_cache (xd3_stream *stream)
 
   if (((stream->acache.s_near > 0) &&
        (stream->acache.near_array = (usize_t*)
-	xd3_alloc (stream, stream->acache.s_near, sizeof (usize_t)))
+	xd3_alloc (stream, stream->acache.s_near,
+		   (usize_t) sizeof (usize_t)))
        == NULL) ||
       ((stream->acache.s_same > 0) &&
        (stream->acache.same_array = (usize_t*)
-	xd3_alloc (stream, stream->acache.s_same * 256, sizeof (usize_t)))
+	xd3_alloc (stream, stream->acache.s_same * 256,
+		   (usize_t) sizeof (usize_t)))
        == NULL))
     {
       return ENOMEM;
@@ -1925,7 +1282,8 @@ xd3_encode_address (xd3_stream *stream,
 		    uint8_t* mode)
 {
   usize_t d, bestd;
-  usize_t i, bestm, ret;
+  usize_t i, bestm;
+  int ret;
   xd3_addr_cache* acache = & stream->acache;
 
 #define SMALLEST_INT(x) do { if (((x) & ~127U) == 0) { goto good; } } while (0)
@@ -1999,7 +1357,7 @@ xd3_encode_address (xd3_stream *stream,
 static int
 xd3_decode_address (xd3_stream *stream, usize_t here,
 		    usize_t mode, const uint8_t **inpp,
-		    const uint8_t *max, uint32_t *valp)
+		    const uint8_t *max, usize_t *valp)
 {
   int ret;
   usize_t same_start = 2 + stream->acache.s_near;
@@ -2045,9 +1403,9 @@ xd3_decode_address (xd3_stream *stream, usize_t here,
 ***********************************************************************/
 
 static void*
-__xd3_alloc_func (void* opaque, usize_t items, usize_t size)
+__xd3_alloc_func (void* opaque, size_t items, usize_t size)
 {
-  return malloc (items * size);
+  return malloc (items * (size_t) size);
 }
 
 static void
@@ -2066,8 +1424,8 @@ xd3_alloc (xd3_stream *stream,
   if (a != NULL)
     {
       IF_DEBUG (stream->alloc_cnt += 1);
-      IF_DEBUG2 (DP(RINT "[stream %p malloc] size %u ptr %p\n",
-		    stream, elts * size, a));
+      IF_DEBUG2 (DP(RINT "[stream %p malloc] size %"W"u ptr %p\n",
+		    (void*)stream, elts * size, a));
     }
   else
     {
@@ -2086,7 +1444,7 @@ xd3_free (xd3_stream *stream,
       IF_DEBUG (stream->free_cnt += 1);
       XD3_ASSERT (stream->free_cnt <= stream->alloc_cnt);
       IF_DEBUG2 (DP(RINT "[stream %p free] %p\n",
-		    stream, ptr));
+		    (void*)stream, ptr));
       stream->free (stream->opaque, ptr);
     }
 }
@@ -2101,13 +1459,13 @@ xd3_alloc0 (xd3_stream *stream,
 
   if (a != NULL)
     {
-      memset (a, 0, elts * size);
+      memset (a, 0, (size_t) (elts * size));
     }
 
   return a;
 }
 
-static xd3_output*
+xd3_output*
 xd3_alloc_output (xd3_stream *stream,
 		  xd3_output *old_output)
 {
@@ -2122,7 +1480,8 @@ xd3_alloc_output (xd3_stream *stream,
   else
     {
       if ((output = (xd3_output*) xd3_alloc (stream, 1,
-					     sizeof (xd3_output))) == NULL)
+					     (usize_t) sizeof (xd3_output)))
+	  == NULL)
 	{
 	  return NULL;
 	}
@@ -2215,11 +1574,13 @@ xd3_free_stream (xd3_stream *stream)
       xd3_free (stream, tmp);
     }
 
+#if XD3_ENCODER
   xd3_free (stream, stream->large_table);
   xd3_free (stream, stream->small_table);
+  xd3_free (stream, stream->large_hash.powers);
+  xd3_free (stream, stream->small_hash.powers);
   xd3_free (stream, stream->small_prev);
 
-#if XD3_ENCODER
   {
     int i;
     for (i = 0; i < ENC_SECTS; i += 1)
@@ -2237,8 +1598,11 @@ xd3_free_stream (xd3_stream *stream)
   xd3_free (stream, stream->addr_sect.copied1);
   xd3_free (stream, stream->data_sect.copied1);
 
+  if (stream->dec_lastwin != stream->dec_buffer)
+    {
+      xd3_free (stream, (uint8_t*) stream->dec_lastwin);
+    }
   xd3_free (stream, stream->dec_buffer);
-  xd3_free (stream, (uint8_t*) stream->dec_lastwin);
 
   xd3_free (stream, stream->buf_in);
   xd3_free (stream, stream->dec_appheader);
@@ -2325,8 +1689,6 @@ xd3_config_stream(xd3_stream *stream,
 
   stream->winsize = config->winsize ? config->winsize : XD3_DEFAULT_WINSIZE;
   stream->sprevsz = config->sprevsz ? config->sprevsz : XD3_DEFAULT_SPREVSZ;
-  stream->srcwin_maxsz = config->srcwin_maxsz ?
-    config->srcwin_maxsz : XD3_DEFAULT_SRCWINSZ;
 
   if (config->iopt_size == 0)
     {
@@ -2376,28 +1738,15 @@ xd3_config_stream(xd3_stream *stream,
       FGK_CASE (stream);
     case XD3_SEC_DJW:
       DJW_CASE (stream);
+    case XD3_SEC_LZMA:
+      LZMA_CASE (stream);
     default:
       stream->msg = "too many secondary compressor types set";
       return XD3_INTERNAL;
     }
 
-  /* Check/set encoder code table. */
-  switch (stream->flags & XD3_ALT_CODE_TABLE) {
-  case 0:
-    stream->code_table_desc = & __rfc3284_code_table_desc;
-    stream->code_table_func = xd3_rfc3284_code_table;
-    break;
-#if GENERIC_ENCODE_TABLES
-  case XD3_ALT_CODE_TABLE:
-    stream->code_table_desc = & __alternate_code_table_desc;
-    stream->code_table_func = xd3_alternate_code_table;
-    stream->comp_table_func = xd3_compute_alternate_table_encoding;
-    break;
-#endif
-  default:
-    stream->msg = "alternate code table support was not compiled";
-    return XD3_INTERNAL;
-  }
+  stream->code_table_desc = & __rfc3284_code_table_desc;
+  stream->code_table_func = xd3_rfc3284_code_table;
 
   /* Check sprevsz */
   if (smatcher->small_chain == 1 &&
@@ -2496,12 +1845,14 @@ xd3_config_stream(xd3_stream *stream,
  Getblk interface
  ***********************************************************/
 
+inline
 xoff_t xd3_source_eof(const xd3_source *src)
 {
-  xoff_t r = (src->blksize * src->max_blkno) + (xoff_t)src->onlastblk;
+  xoff_t r = (src->max_blkno << src->shiftby) + (xoff_t)src->onlastblk;
   return r;
 }
 
+inline
 usize_t xd3_bytes_on_srcblk (xd3_source *src, xoff_t blkno)
 {
   usize_t r = (blkno == src->max_blkno ?
@@ -2511,8 +1862,9 @@ usize_t xd3_bytes_on_srcblk (xd3_source *src, xoff_t blkno)
 }
 
 /* This function interfaces with the client getblk function, checks
- * its results, updates frontier_blkno, max_blkno, onlastblk, eof_known. */
-int xd3_getblk (xd3_stream *stream, xoff_t blkno)
+ * its results, updates max_blkno, onlastblk, eof_known. */
+static int
+xd3_getblk (xd3_stream *stream, xoff_t blkno)
 {
   int ret;
   xd3_source *source = stream->src;
@@ -2523,6 +1875,7 @@ int xd3_getblk (xd3_stream *stream, xoff_t blkno)
 
       if (stream->getblk == NULL)
 	{
+	  IF_DEBUG2 (DP(RINT "[getblk] XD3_GETSRCBLK %"Q"u\n", blkno));
 	  stream->msg = "getblk source input";
 	  return XD3_GETSRCBLK;
 	}
@@ -2530,58 +1883,44 @@ int xd3_getblk (xd3_stream *stream, xoff_t blkno)
       ret = stream->getblk (stream, source, blkno);
       if (ret != 0)
 	{
-	  IF_DEBUG1 (DP(RINT "[getblk] app error blkno %"Q"u: %s\n", 
+	  IF_DEBUG2 (DP(RINT "[getblk] app error blkno %"Q"u: %s\n",
 			blkno, xd3_strerror (ret)));
 	  return ret;
 	}
+
+      IF_DEBUG2 (DP(RINT "[getblk] read source block %"Q"u onblk "
+		    "%"W"u blksize %"W"u max_blkno %"Q"u\n", blkno, source->onblk,
+		    source->blksize, source->max_blkno));
     }
 
-  if (blkno >= source->frontier_blkno)
+  if (blkno > source->max_blkno)
     {
-      if (blkno > source->max_blkno)
-	{
-	  source->max_blkno = blkno;
-	  source->onlastblk = source->onblk;
-	}
+      source->max_blkno = blkno;
 
       if (source->onblk == source->blksize)
 	{
-	  source->frontier_blkno = blkno + 1;
-
-	  IF_DEBUG2 (DP(RINT "[getblk] full source blkno %"Q"u: "
+	  IF_DEBUG1 (DP(RINT "[getblk] full source blkno %"Q"u: "
 			"source length unknown %"Q"u\n",
 			blkno,
 			xd3_source_eof (source)));
 	}
-      else
+      else if (!source->eof_known)
 	{
-	  if (!source->eof_known)
-	    {
-	      IF_DEBUG2 (DP(RINT "[getblk] eof block has %d bytes; "
-			    "source length known %"Q"u\n",
-			    xd3_bytes_on_srcblk (source, blkno),
-			    xd3_source_eof (source)));
-	      source->eof_known = 1;
-	    }
-
-	  source->frontier_blkno = blkno;
+	  IF_DEBUG1 (DP(RINT "[getblk] eof block has %"W"u bytes; "
+			"source length known %"Q"u\n",
+			xd3_bytes_on_srcblk (source, blkno),
+			xd3_source_eof (source)));
+	  source->eof_known = 1;
 	}
     }
 
   XD3_ASSERT (source->curblk != NULL);
-  IF_DEBUG2 (DP(RINT "[getblk] read source block %"Q"u onblk %u blksize %u\n",
-		blkno, source->onblk, source->blksize));
 
   if (blkno == source->max_blkno)
     {
       /* In case the application sets the source as 1 block w/ a
-	 preset buffer. */
+       * preset buffer. */
       source->onlastblk = source->onblk;
-
-      if (source->onblk == source->blksize)
-	{
-	  source->frontier_blkno = blkno + 1;
-	}
     }
   return 0;
 }
@@ -2602,22 +1941,27 @@ xd3_set_source (xd3_stream *stream,
 
   /* Enforce power-of-two blocksize so that source-block number
    * calculations are cheap. */
-  if (!xd3_check_pow2 (src->blksize, &shiftby) == 0)
+  if (xd3_check_pow2 (src->blksize, &shiftby) != 0)
     {
-      int check;
       src->blksize = xd3_pow2_roundup(src->blksize);
-      check = xd3_check_pow2 (src->blksize, &shiftby);
-      XD3_ASSERT (check == 0);
-      IF_DEBUG1 (DP(RINT "raising srcblksz to %u\n", src->blksize));
+      xd3_check_pow2 (src->blksize, &shiftby);
+      IF_DEBUG1 (DP(RINT "raising src_blksz to %"W"u\n", src->blksize));
     }
 
   src->shiftby = shiftby;
-  src->maskby = (1 << shiftby) - 1;
+  src->maskby = (1ULL << shiftby) - 1ULL;
+
+  if (xd3_check_pow2 (src->max_winsize, NULL) != 0)
+    {
+      src->max_winsize = xd3_xoff_roundup(src->max_winsize);
+      IF_DEBUG1 (DP(RINT "raising src_maxsize to %"W"u\n", src->blksize));
+    }
+  src->max_winsize = xd3_max (src->max_winsize, XD3_ALLOCSIZE);
   return 0;
 }
 
 int
-xd3_set_source_and_size (xd3_stream *stream, 
+xd3_set_source_and_size (xd3_stream *stream,
 			 xd3_source *user_source,
 			 xoff_t source_size) {
   int ret = xd3_set_source (stream, user_source);
@@ -2626,11 +1970,13 @@ xd3_set_source_and_size (xd3_stream *stream,
       stream->src->eof_known = 1;
       IF_DEBUG2 (DP(RINT "[set source] size known %"Q"u\n",
 		    source_size));
-
       xd3_blksize_div(source_size,
 		      stream->src,
 		      &stream->src->max_blkno,
 		      &stream->src->onlastblk);
+
+      IF_DEBUG1 (DP(RINT "[set source] size known %"Q"u max_blkno %"Q"u\n",
+		    source_size, stream->src->max_blkno));
     }
   return ret;
 }
@@ -2684,8 +2030,8 @@ xd3_close_stream (xd3_stream *stream)
 	  break;
 	default:
 	  /* If decoding, should be ready for the next window. */
-	  stream->msg = "EOF in decode";
-	  return XD3_INTERNAL;
+	  stream->msg = "eof in decode";
+	  return XD3_INVALID_INPUT;
 	}
     }
 
@@ -2793,7 +2139,7 @@ xd3_iopt_finish_encoding (xd3_stream *stream, xd3_rinst *inst)
 	    else
 	      {
 		stream->srcwin_decided_early = (!stream->src->eof_known ||
-						(stream->srcwin_cksum_pos < 
+						(stream->srcwin_cksum_pos <
 						 xd3_source_eof (stream->src)));
 	      }
 
@@ -2801,24 +2147,24 @@ xd3_iopt_finish_encoding (xd3_stream *stream, xd3_rinst *inst)
 	    if (inst->xtra)
 	      {
 		XD3_ASSERT (inst->addr >= src->srcbase);
-		XD3_ASSERT (inst->addr + inst->size <= 
+		XD3_ASSERT (inst->addr + inst->size <=
 			    src->srcbase + src->srclen);
-		addr = (usize_t)(inst->addr - src->srcbase);
+		addr = inst->addr - src->srcbase;
 		stream->n_scpy += 1;
-		stream->l_scpy += (xoff_t) inst->size;
+		stream->l_scpy += inst->size;
 	      }
 	    else
 	      {
-		/* with source window: target copy address is offset 
+		/* with source window: target copy address is offset
 		 * by taroff. */
-		addr = stream->taroff + (usize_t) inst->addr;
+		addr = stream->taroff + inst->addr;
 		stream->n_tcpy += 1;
-		stream->l_tcpy += (xoff_t) inst->size;
+		stream->l_tcpy += inst->size;
 	      }
 	  }
 	else
 	  {
-	    addr = (usize_t) inst->addr;
+	    addr = inst->addr;
 	    stream->n_tcpy += 1;
 	    stream->l_tcpy += inst->size;
 	  }
@@ -2834,7 +2180,7 @@ xd3_iopt_finish_encoding (xd3_stream *stream, xd3_rinst *inst)
 
 	IF_DEBUG2 ({
 	  static int cnt;
-	  DP(RINT "[iopt copy:%d] pos %"Q"u-%"Q"u addr %"Q"u-%"Q"u size %u\n",
+	  DP(RINT "[iopt copy:%d] pos %"Q"u-%"Q"u addr %"Q"u-%"Q"u size %"W"u\n",
 		   cnt++,
 		   stream->total_in + inst->pos,
 		   stream->total_in + inst->pos + inst->size,
@@ -2844,8 +2190,6 @@ xd3_iopt_finish_encoding (xd3_stream *stream, xd3_rinst *inst)
       }
     case XD3_RUN:
       {
-	XD3_ASSERT (inst->size >= MIN_MATCH);
-
 	if ((ret = xd3_emit_byte (stream, & DATA_TAIL (stream), inst->xtra))) { return ret; }
 
 	stream->n_run += 1;
@@ -2853,7 +2197,7 @@ xd3_iopt_finish_encoding (xd3_stream *stream, xd3_rinst *inst)
 
 	IF_DEBUG2 ({
 	  static int cnt;
-	  DP(RINT "[iopt run:%d] pos %"Q"u size %u\n", cnt++, stream->total_in + inst->pos, inst->size);
+	  DP(RINT "[iopt run:%d] pos %"Q"u size %"W"u\n", cnt++, stream->total_in + inst->pos, inst->size);
 	});
 	break;
       }
@@ -2867,7 +2211,7 @@ xd3_iopt_finish_encoding (xd3_stream *stream, xd3_rinst *inst)
 
 	IF_DEBUG2 ({
 	  static int cnt;
-	  DP(RINT "[iopt add:%d] pos %"Q"u size %u\n", cnt++, stream->total_in + inst->pos, inst->size);
+	  DP(RINT "[iopt add:%d] pos %"Q"u size %"W"u\n", cnt++, stream->total_in + inst->pos, inst->size);
 	});
 
 	break;
@@ -2886,7 +2230,8 @@ xd3_iopt_finish_encoding (xd3_stream *stream, xd3_rinst *inst)
     {
       if (stream->iout->code2 != 0)
 	{
-	  if ((ret = xd3_emit_double (stream, stream->iout, inst, stream->iout->code2))) { return ret; }
+	  if ((ret = xd3_emit_double (stream, stream->iout, inst, 
+				      stream->iout->code2))) { return ret; }
 
 	  xd3_iopt_free_nonadd (stream, stream->iout);
 	  xd3_iopt_free_nonadd (stream, inst);
@@ -3057,7 +2402,7 @@ xd3_iopt_flush_instructions (xd3_stream *stream, int force)
 	  /* Try to balance the length of both instructions, but avoid
 	   * making both longer than MAX_MATCH_SPLIT . */
 	  average = gap / 2;
-	  newsize = min (MAX_MATCH_SPLIT, gap - average);
+	  newsize = xd3_min (MAX_MATCH_SPLIT, gap - average);
 
 	  /* Should be possible to simplify this code. */
 	  if (newsize > r1->size)
@@ -3243,16 +2588,16 @@ xd3_iopt_last_matched (xd3_stream *stream)
  ***********************************************************/
 
 static int
-xd3_emit_single (xd3_stream *stream, xd3_rinst *single, usize_t code)
+xd3_emit_single (xd3_stream *stream, xd3_rinst *single, uint8_t code)
 {
   int has_size = stream->code_table[code].size1 == 0;
   int ret;
 
-  IF_DEBUG2 (DP(RINT "[emit1] %u %s (%u) code %u\n",
-	       single->pos,
+  IF_DEBUG2 (DP(RINT "[emit1] %"W"u %s (%"W"u) code %u\n",
+		single->pos,
 		xd3_rtype_to_string ((xd3_rtype) single->type, 0),
-	       single->size,
-	       code));
+		single->size,
+		code));
 
   if ((ret = xd3_emit_byte (stream, & INST_TAIL (stream), code)))
     {
@@ -3272,7 +2617,7 @@ xd3_emit_single (xd3_stream *stream, xd3_rinst *single, usize_t code)
 
 static int
 xd3_emit_double (xd3_stream *stream, xd3_rinst *first,
-                 xd3_rinst *second, usize_t code)
+                 xd3_rinst *second, uint8_t code)
 {
   int ret;
 
@@ -3286,13 +2631,13 @@ xd3_emit_double (xd3_stream *stream, xd3_rinst *first,
       return ret;
     }
 
-  IF_DEBUG2 (DP(RINT "[emit2]: %u %s (%u) %s (%u) code %u\n",
-	       first->pos,
+  IF_DEBUG2 (DP(RINT "[emit2]: %"W"u %s (%"W"u) %s (%"W"u) code %u\n",
+		first->pos,
 		xd3_rtype_to_string ((xd3_rtype) first->type, 0),
-	       first->size,
+		first->size,
 		xd3_rtype_to_string ((xd3_rtype) second->type, 0),
-	       second->size,
-	       code));
+		second->size,
+		code));
 
   return 0;
 }
@@ -3342,8 +2687,8 @@ xd3_emit_hdr (xd3_stream *stream)
   int  use_secondary = stream->sec_type != NULL;
   int  use_adler32   = stream->flags & (XD3_ADLER32 | XD3_ADLER32_RECODE);
   int  vcd_source    = xd3_encoder_used_source (stream);
-  usize_t win_ind = 0;
-  usize_t del_ind = 0;
+  uint8_t win_ind = 0;
+  uint8_t del_ind = 0;
   usize_t enc_len;
   usize_t tgt_len;
   usize_t data_len;
@@ -3352,13 +2697,10 @@ xd3_emit_hdr (xd3_stream *stream)
 
   if (stream->current_window == 0)
     {
-      usize_t hdr_ind = 0;
+      uint8_t hdr_ind = 0;
       int use_appheader  = stream->enc_appheader != NULL;
-      int use_gencodetbl = GENERIC_ENCODE_TABLES &&
-	(stream->code_table_desc != & __rfc3284_code_table_desc);
 
       if (use_secondary)  { hdr_ind |= VCD_SECONDARY; }
-      if (use_gencodetbl) { hdr_ind |= VCD_CODETABLE; }
       if (use_appheader)  { hdr_ind |= VCD_APPHEADER; }
 
       if ((ret = xd3_emit_byte (stream, & HDR_TAIL (stream),
@@ -3383,31 +2725,6 @@ xd3_emit_hdr (xd3_stream *stream)
 	  return ret;
 	}
 #endif
-
-      /* Compressed code table */
-      if (use_gencodetbl)
-	{
-	  usize_t code_table_size;
-	  const uint8_t *code_table_data;
-
-	  if ((ret = stream->comp_table_func (stream, & code_table_data,
-					      & code_table_size)))
-	    {
-	      return ret;
-	    }
-
-	  if ((ret = xd3_emit_size (stream, & HDR_TAIL (stream),
-				    code_table_size + 2)) ||
-	      (ret = xd3_emit_byte (stream, & HDR_TAIL (stream),
-				    stream->code_table_desc->near_modes)) ||
-	      (ret = xd3_emit_byte (stream, & HDR_TAIL (stream),
-				    stream->code_table_desc->same_modes)) ||
-	      (ret = xd3_emit_bytes (stream, & HDR_TAIL (stream),
-				     code_table_data, code_table_size)))
-	    {
-	      return ret;
-	    }
-	}
 
       /* Application header */
       if (use_appheader)
@@ -3478,7 +2795,7 @@ xd3_emit_hdr (xd3_stream *stream)
   inst_len = xd3_sizeof_output (INST_HEAD (stream));
   addr_len = xd3_sizeof_output (ADDR_HEAD (stream));
 
-  /* The enc_len field is a redundency for future extensions.*/
+  /* The enc_len field is a redundency for future extensions. */
   enc_len = (1 + (xd3_sizeof_size (tgt_len) +
 		  xd3_sizeof_size (data_len) +
 		  xd3_sizeof_size (inst_len) +
@@ -3552,7 +2869,8 @@ xd3_encode_buffer_leftover (xd3_stream *stream)
       XD3_ASSERT (stream->buf_avail == 0);
       XD3_ASSERT (stream->buf_leftavail < stream->winsize);
 
-      IF_DEBUG2 (DP(RINT "[leftover] previous %u avail %u\n", stream->buf_leftavail, stream->avail_in));
+      IF_DEBUG2 (DP(RINT "[leftover] previous %"W"u avail %"W"u\n",
+		    stream->buf_leftavail, stream->avail_in));
 
       memcpy (stream->buf_in, stream->buf_leftover, stream->buf_leftavail);
 
@@ -3562,7 +2880,7 @@ xd3_encode_buffer_leftover (xd3_stream *stream)
 
   /* Copy into the buffer. */
   room = stream->winsize - stream->buf_avail;
-  take = min (room, stream->avail_in);
+  take = xd3_min (room, stream->avail_in);
 
   memcpy (stream->buf_in + stream->buf_avail, stream->next_in, take);
 
@@ -3577,12 +2895,12 @@ xd3_encode_buffer_leftover (xd3_stream *stream)
   else if ((stream->buf_avail < stream->winsize) && !(stream->flags & XD3_FLUSH))
     {
       /* Buffer has space */
-      IF_DEBUG2 (DP(RINT "[leftover] emptied %u\n", take));
+      IF_DEBUG2 (DP(RINT "[leftover] emptied %"W"u\n", take));
       return XD3_INPUT;
     }
 
   /* Use the buffer: */
-  IF_DEBUG2 (DP(RINT "[leftover] take %u remaining %u\n", take, stream->buf_leftavail));
+  IF_DEBUG2 (DP(RINT "[leftover] take %"W"u remaining %"W"u\n", take, stream->buf_leftavail));
   stream->next_in   = stream->buf_in;
   stream->avail_in  = stream->buf_avail;
   stream->buf_avail = 0;
@@ -3619,6 +2937,7 @@ xd3_alloc_iopt (xd3_stream *stream, usize_t elts)
 static int
 xd3_encode_init (xd3_stream *stream, int full_init)
 {
+  int ret;
   int i;
 
   if (full_init)
@@ -3631,24 +2950,33 @@ xd3_encode_init (xd3_stream *stream, int full_init)
        * identical or short inputs require no table allocation. */
       if (large_comp)
 	{
-	  usize_t hash_values = (stream->srcwin_maxsz /
-				 stream->smatcher.large_step);
+	  /* TODO Need to check for overflow here. */
+	  usize_t hash_values = stream->src->max_winsize /
+	                        stream->smatcher.large_step;
 
-	  xd3_size_hashtable (stream,
-			      hash_values,
-			      & stream->large_hash);
+	  if ((ret = xd3_size_hashtable (stream,
+					 hash_values,
+					 stream->smatcher.large_look,
+					 & stream->large_hash)))
+	    {
+	      return ret;
+	    }
 	}
 
       if (small_comp)
 	{
-	  /* TODO: This is under devel: used to have min(sprevsz) here, which sort
+	  /* TODO: This is under devel: used to have min (sprevsz) here, which sort
 	   * of makes sense, but observed fast performance w/ larger tables, which
 	   * also sort of makes sense. @@@ */
 	  usize_t hash_values = stream->winsize;
 
-	  xd3_size_hashtable (stream,
-			      hash_values,
-			      & stream->small_hash);
+	  if ((ret = xd3_size_hashtable (stream,
+					 hash_values,
+					 stream->smatcher.small_look,
+					 & stream->small_hash)))
+	    {
+	      return ret;
+	    }
 	}
     }
 
@@ -3797,14 +3125,14 @@ xd3_encode_input (xd3_stream *stream)
 
       stream->enc_state = ENC_SEARCH;
 
-      IF_DEBUG2 (DP(RINT "[WINSTART:%"Q"u] input bytes %u offset %"Q"u\n",
+      IF_DEBUG2 (DP(RINT "[WINSTART:%"Q"u] input bytes %"W"u offset %"Q"u\n",
 		    stream->current_window, stream->avail_in,
 		    stream->total_in));
       return XD3_WINSTART;
 
     case ENC_SEARCH:
-      IF_DEBUG2 (DP(RINT "[SEARCH] match_state %d avail_in %u %s\n",
-		    stream->match_state, stream->avail_in, 
+      IF_DEBUG2 (DP(RINT "[SEARCH] match_state %d avail_in %"W"u %s\n",
+		    stream->match_state, stream->avail_in,
 		    stream->src ? "source" : "no source"));
 
       /* Reentrant matching. */
@@ -3848,6 +3176,7 @@ xd3_encode_input (xd3_stream *stream)
 		   * or else it can get stuck in a match-backward
 		   * (getsrcblk) then match-forward (getsrcblk),
 		   * find insufficient match length, then repeat
+
 		   * exactly the same search.
 		   */
 		  stream->input_position += stream->match_fwd;
@@ -3873,7 +3202,7 @@ xd3_encode_input (xd3_stream *stream)
 
     case ENC_INSTR:
       /* Note: Jump here to encode VCDIFF deltas w/o using this
-       * string-matching code.  Merging code code enters here. */
+       * string-matching code.  Merging code enters here. */
 
       /* Flush the instrution buffer, then possibly add one more
        * instruction, then emit the header. */
@@ -3910,7 +3239,7 @@ xd3_encode_input (xd3_stream *stream)
       stream->enc_state  = ENC_POSTOUT;
       stream->next_out   = stream->enc_current->base;
       stream->avail_out  = stream->enc_current->next;
-      stream->total_out += (xoff_t) stream->avail_out;
+      stream->total_out += stream->avail_out;
 
       /* If there is any output in this buffer, return it, otherwise
        * fall through to handle the next buffer or finish the window
@@ -3935,7 +3264,7 @@ xd3_encode_input (xd3_stream *stream)
 	  goto enc_output;
 	}
 
-      stream->total_in += (xoff_t) stream->avail_in;
+      stream->total_in += stream->avail_in;
       stream->enc_state = ENC_POSTWIN;
 
       IF_DEBUG2 (DP(RINT "[WINFINISH:%"Q"u] in=%"Q"u\n",
@@ -3970,7 +3299,7 @@ xd3_encode_input (xd3_stream *stream)
  Client convenience functions
  ******************************************************************/
 
-static int
+int
 xd3_process_stream (int            is_encode,
 		    xd3_stream    *stream,
 		    int          (*func) (xd3_stream *),
@@ -3982,7 +3311,7 @@ xd3_process_stream (int            is_encode,
 		    usize_t        output_size_max)
 {
   usize_t ipos = 0;
-  usize_t n = min(stream->winsize, input_size);
+  usize_t n = xd3_min (stream->winsize, input_size);
 
   (*output_size) = 0;
 
@@ -3994,14 +3323,15 @@ xd3_process_stream (int            is_encode,
   for (;;)
     {
       int ret;
-      switch((ret = func (stream)))
+      switch ((ret = func (stream)))
 	{
 	case XD3_OUTPUT: { /* memcpy below */ break; }
 	case XD3_INPUT: {
-	  n = min(stream->winsize, input_size - ipos);
-	  if (n == 0) {
-	    goto done;
-	  }
+	  n = xd3_min(stream->winsize, input_size - ipos);
+	  if (n == 0) 
+	    {
+	      goto done;
+	    }
 	  xd3_avail_input (stream, input + ipos, n);
 	  ipos += n;
 	  continue;
@@ -4011,7 +3341,11 @@ xd3_process_stream (int            is_encode,
 	case XD3_WINFINISH: { /* ignore */ continue; }
 	case XD3_GETSRCBLK:
 	  {
-	    stream->msg = "stream requires source input";
+	    /* When the getblk function is NULL, it is necessary to
+	     * provide the complete source as a single block using
+	     * xd3_set_source_and_size, otherwise this error.  The
+	     * library should never ask for another source block. */
+	    stream->msg = "library requested source block";
 	    return XD3_INTERNAL;
 	  }
 	case 0:
@@ -4043,7 +3377,6 @@ xd3_process_stream (int            is_encode,
 static int
 xd3_process_memory (int            is_encode,
 		    int          (*func) (xd3_stream *),
-		    int            close_stream,
 		    const uint8_t *input,
 		    usize_t        input_size,
 		    const uint8_t *source,
@@ -4070,10 +3403,7 @@ xd3_process_memory (int            is_encode,
 
   if (is_encode)
     {
-      config.srcwin_maxsz = source_size;
-      config.winsize = min(input_size, (usize_t) XD3_DEFAULT_WINSIZE);
-      config.iopt_size = min(input_size / 32, XD3_DEFAULT_IOPT_SIZE);
-      config.iopt_size = max(config.iopt_size, 128U);
+      config.winsize = xd3_min(input_size, (usize_t) XD3_DEFAULT_WINSIZE);
       config.sprevsz = xd3_pow2_roundup (config.winsize);
     }
 
@@ -4090,6 +3420,7 @@ xd3_process_memory (int            is_encode,
       src.onblk = source_size;
       src.curblk = source;
       src.curblkno = 0;
+      src.max_winsize = source_size;
 
       if ((ret = xd3_set_source_and_size (&stream, &src, source_size)) != 0)
 	{
@@ -4139,7 +3470,7 @@ xd3_decode_memory (const uint8_t *input,
 		   usize_t       *output_size,
 		   usize_t        output_size_max,
 		   int            flags) {
-  return xd3_process_memory (0, & xd3_decode_input, 1,
+  return xd3_process_memory (0, & xd3_decode_input,
 			     input, input_size,
 			     source, source_size,
 			     output, output_size, output_size_max,
@@ -4170,7 +3501,7 @@ xd3_encode_memory (const uint8_t *input,
 		   usize_t        *output_size,
 		   usize_t        output_size_max,
 		   int            flags) {
-  return xd3_process_memory (1, & xd3_encode_input, 1,
+  return xd3_process_memory (1, & xd3_encode_input,
 			     input, input_size,
 			     source, source_size,
 			     output, output_size, output_size_max,
@@ -4245,7 +3576,7 @@ xd3_string_match_init (xd3_stream *stream)
   return 0;
 }
 
-#if XD3_USE_LARGEFILE64
+#if XD3_USE_LARGEFILE64 && !XD3_USE_LARGESIZET
 /* This function handles the 32/64bit ambiguity -- file positions are 64bit
  * but the hash table for source-offsets is 32bit. */
 static xoff_t
@@ -4272,7 +3603,7 @@ xd3_source_cksum_offset(xd3_stream *stream, usize_t low)
 static xoff_t
 xd3_source_cksum_offset(xd3_stream *stream, usize_t low)
 {
-  return (xoff_t) low;
+  return low;
 }
 #endif
 
@@ -4306,7 +3637,7 @@ xd3_srcwin_setup (xd3_stream *stream)
    * use smaller windows. */
   length = stream->match_maxaddr - stream->match_minaddr;
 
-  x = (xoff_t) USIZE_T_MAX;
+  x = USIZE_T_MAX;
   if (length > x)
     {
       stream->msg = "source window length overflow (not 64bit)";
@@ -4325,13 +3656,23 @@ xd3_srcwin_setup (xd3_stream *stream)
 
   /* Otherwise, we have to make a guess.  More copies may still be
    * issued, but we have to decide the source window base and length
-   * now.  */
+   * now.  
+   * TODO: This may not working well in practice, more testing needed. */
   src->srcbase = stream->match_minaddr;
-  src->srclen  = max ((usize_t) length,
-		      stream->avail_in + (stream->avail_in >> 2));
+  src->srclen  = xd3_max ((usize_t) length,
+			  stream->avail_in + (stream->avail_in >> 2));
 
-  /* OPT: If we know the source size, it might be possible to reduce
-   * srclen. */
+  if (src->eof_known)
+    {
+      /* Note: if the source size is known, we must reduce srclen or
+       * code that expects to pass a single block w/ getblk == NULL
+       * will not function, as the code will return GETSRCBLK asking
+       * for the second block. */
+      src->srclen = xd3_min (src->srclen, xd3_source_eof(src) - src->srcbase);
+    }
+  IF_DEBUG1 (DP(RINT "[srcwin_setup_constrained] base %"Q"u len %"W"u\n",
+		src->srcbase, src->srclen));
+
   XD3_ASSERT (src->srclen);
  done:
   /* Set the taroff.  This convenience variable is used even when
@@ -4349,9 +3690,8 @@ xd3_srcwin_setup (xd3_stream *stream)
 static int
 xd3_source_match_setup (xd3_stream *stream, xoff_t srcpos)
 {
-  xd3_source *src = stream->src;
+  xd3_source *const src = stream->src;
   usize_t greedy_or_not;
-  xoff_t frontier_pos;
 
   stream->match_maxback = 0;
   stream->match_maxfwd  = 0;
@@ -4372,30 +3712,36 @@ xd3_source_match_setup (xd3_stream *stream, xoff_t srcpos)
       goto bad;
     }
 
-  /* Implement srcwin_maxsz, which prevents the encoder from seeking
+  /* Implement src->max_winsize, which prevents the encoder from seeking
    * back further than the LRU cache maintaining FIFO discipline, (to
    * avoid seeking). */
-  frontier_pos =
-    stream->src->frontier_blkno * stream->src->blksize;
-  IF_DEBUG1(DP(RINT "[match_setup] frontier_pos %"Q"u, srcpos %"Q"u, "
-	       "srcwin_maxsz %u\n",
-	       frontier_pos, srcpos, stream->srcwin_maxsz));
-  if (srcpos < frontier_pos &&
-      frontier_pos - srcpos > stream->srcwin_maxsz) {
-    IF_DEBUG1(DP(RINT "[match_setup] rejected due to srcwin_maxsz "
-		 "distance eof=%"Q"u srcpos=%"Q"u maxsz=%u\n",
-		 xd3_source_eof (stream->src),
-		 srcpos, stream->srcwin_maxsz));
-    goto bad;
-  }
+  if (srcpos < stream->srcwin_cksum_pos &&
+      stream->srcwin_cksum_pos - srcpos > src->max_winsize)
+    {
+      IF_DEBUG2(DP(RINT "[match_setup] rejected due to src->max_winsize "
+		   "distance eof=%"Q"u srcpos=%"Q"u max_winsz=%"Q"u\n",
+		   xd3_source_eof (src),
+		   srcpos, src->max_winsize));
+      goto bad;
+    }
+
+  /* There are cases where the above test does not reject a match that
+   * will experience XD3_TOOFARBACK at the first xd3_getblk call
+   * because the input may have advanced up to one block beyond the
+   * actual EOF. */
+  IF_DEBUG2(DP(RINT "[match_setup] %"Q"u srcpos %"Q"u, "
+	       "src->max_winsize %"Q"u\n",
+	       stream->total_in + stream->input_position,
+	       srcpos, src->max_winsize));
 
   /* Going backwards, the 1.5-pass algorithm allows some
    * already-matched input may be covered by a longer source match.
-   * The greedy algorithm does not allow this. */
+   * The greedy algorithm does not allow this.
+   * TODO: Measure this. */
   if (stream->flags & XD3_BEGREEDY)
     {
       /* The greedy algorithm allows backward matching to the last
-	 matched position. */
+       * matched position. */
       greedy_or_not = xd3_iopt_last_matched (stream);
     }
   else
@@ -4424,24 +3770,25 @@ xd3_source_match_setup (xd3_stream *stream, xoff_t srcpos)
        * 0--src->size.  We compare the usize_t
        * match_maxfwd/match_maxback against the xoff_t
        * src->size/srcpos values and take the min. */
-      if (srcpos < (xoff_t) stream->match_maxback)
+      /* TODO #if XD3_USE_LARGESIZET ? */
+      if (srcpos < stream->match_maxback)
 	{
 	  stream->match_maxback = (usize_t) srcpos;
 	}
 
-      if (stream->src->eof_known)
+      if (src->eof_known)
 	{
-	  xoff_t srcavail = xd3_source_eof (stream->src) - srcpos;
+	  xoff_t srcavail = xd3_source_eof (src) - srcpos;
 
-	  if (srcavail < (xoff_t) stream->match_maxfwd)
+	  if (srcavail < stream->match_maxfwd)
 	    {
 	      stream->match_maxfwd = (usize_t) srcavail;
 	    }
 	}
 
-      IF_DEBUG1(DP(RINT
+      IF_DEBUG2(DP(RINT
 		   "[match_setup] srcpos %"Q"u (tgtpos %"Q"u) "
-		   "unrestricted maxback %u maxfwd %u\n",
+		   "unrestricted maxback %"W"u maxfwd %"W"u\n",
 		   srcpos,
 		   stream->total_in + stream->input_position,
 		   stream->match_maxback,
@@ -4454,7 +3801,7 @@ xd3_source_match_setup (xd3_stream *stream, xoff_t srcpos)
 
   /* Restricted case: fail if the srcpos lies outside the source window */
   if ((srcpos < src->srcbase) ||
-      (srcpos > (src->srcbase + (xoff_t) src->srclen)))
+      (srcpos > (src->srcbase + src->srclen)))
     {
       IF_DEBUG1(DP(RINT "[match_setup] restricted source window failure\n"));
       goto bad;
@@ -4469,15 +3816,15 @@ xd3_source_match_setup (xd3_stream *stream, xoff_t srcpos)
 	  stream->match_maxback = srcavail;
 	}
 
-      srcavail = (usize_t) (src->srcbase + (xoff_t) src->srclen - srcpos);
+      srcavail = src->srcbase + src->srclen - srcpos;
       if (srcavail < stream->match_maxfwd)
 	{
 	  stream->match_maxfwd = srcavail;
 	}
 
-      IF_DEBUG1(DP(RINT
+      IF_DEBUG2(DP(RINT
 		   "[match_setup] srcpos %"Q"u (tgtpos %"Q"u) "
-		   "restricted maxback %u maxfwd %u\n",
+		   "restricted maxback %"W"u maxfwd %"W"u\n",
 		   srcpos,
 		   stream->total_in + stream->input_position,
 		   stream->match_maxback,
@@ -4493,23 +3840,23 @@ xd3_source_match_setup (xd3_stream *stream, xoff_t srcpos)
 
  bad:
   stream->match_state  = MATCH_SEARCHING;
+  stream->match_last_srcpos = srcpos;
   return 1;
 }
 
-#if 1
-static inline int
-xd3_forward_match(const uint8_t *s1c, const uint8_t *s2c, int n)
+static inline usize_t
+xd3_forward_match(const uint8_t *s1c, const uint8_t *s2c, usize_t n)
 {
-  int i = 0;
+  usize_t i = 0;
 #if UNALIGNED_OK
-  int nint = n / sizeof(int);
+  usize_t nint = n / sizeof(int);
 
   if (nint >> 3)
     {
-      int j = 0;
+      usize_t j = 0;
       const int *s1 = (const int*)s1c;
       const int *s2 = (const int*)s2c;
-      int nint_8 = nint - 8;
+      usize_t nint_8 = nint - 8;
 
       while (i <= nint_8 &&
 	     s1[i++] == s2[j++] &&
@@ -4531,19 +3878,6 @@ xd3_forward_match(const uint8_t *s1c, const uint8_t *s2c, int n)
     }
   return i;
 }
-#else
-static inline usize_t
-xd3_forward_match(const uint8_t *s1c,
-		  const uint8_t *s2c,
-		  usize_t n) {
-  usize_t i = 0;
-  while (i < n && s1c[i] == s2c[i])
-    {
-      i++;
-    }
-  return i;
-}
-#endif
 
 /* This function expands the source match backward and forward.  It is
  * reentrant, since xd3_getblk may return XD3_GETSRCBLK, so most
@@ -4558,7 +3892,7 @@ static int
 xd3_source_extend_match (xd3_stream *stream)
 {
   int ret;
-  xd3_source *src = stream->src;
+  xd3_source *const src = stream->src;
   xoff_t matchoff;  /* matchoff is the current right/left-boundary of
 		       the source match being tested. */
   usize_t streamoff; /* streamoff is the current right/left-boundary
@@ -4578,7 +3912,7 @@ xd3_source_extend_match (xd3_stream *stream)
   if (stream->match_state == MATCH_BACKWARD)
     {
       /* Note: this code is practically duplicated below, substituting
-       * match_fwd/match_back and direction.  TODO: Consolidate? */
+       * match_fwd/match_back and direction. */
       matchoff  = stream->match_srcpos - stream->match_back;
       streamoff = stream->input_position - stream->match_back;
       xd3_blksize_div (matchoff, src, &tryblk, &tryoff);
@@ -4595,19 +3929,31 @@ xd3_source_extend_match (xd3_stream *stream)
 
 	  if ((ret = xd3_getblk (stream, tryblk)))
 	    {
-	      /* if search went too far back, continue forward. */
 	      if (ret == XD3_TOOFARBACK)
 		{
-		  break;
+		  IF_DEBUG2(DP(RINT "[maxback] %"Q"u TOOFARBACK: %"W"u INP %"Q"u CKSUM %"Q"u\n",
+			       tryblk, stream->match_back,
+			       stream->total_in + stream->input_position,
+			       stream->srcwin_cksum_pos));
+
+		  /* the starting position is too far back. */
+		  if (stream->match_back == 0)
+		    {
+		      XD3_ASSERT(stream->match_fwd == 0);
+		      goto donefwd;
+		    }
+
+		  /* search went too far back, continue forward. */
+		  goto doneback;
 		}
 
 	      /* could be a XD3_GETSRCBLK failure. */
 	      return ret;
 	    }
 
-	  tryrem = min (tryoff, stream->match_maxback - stream->match_back);
+	  tryrem = xd3_min (tryoff, stream->match_maxback - stream->match_back);
 
-	  IF_DEBUG2(DP(RINT "[maxback] maxback %u trysrc %"Q"u/%u tgt %u tryrem %u\n",
+	  IF_DEBUG2(DP(RINT "[maxback] maxback %"W"u trysrc %"Q"u/%"W"u tgt %"W"u tryrem %"W"u\n",
 		       stream->match_maxback, tryblk, tryoff, streamoff, tryrem));
 
 	  /* TODO: This code can be optimized similar to xd3_match_forward() */
@@ -4644,17 +3990,20 @@ xd3_source_extend_match (xd3_stream *stream)
 
       if ((ret = xd3_getblk (stream, tryblk)))
 	{
-	  /* if search went too far back, continue forward. */
 	  if (ret == XD3_TOOFARBACK)
 	    {
-	      break;
+	      IF_DEBUG2(DP(RINT "[maxfwd] %"Q"u TOOFARBACK: %"W"u INP %"Q"u CKSUM %"Q"u\n",
+			   tryblk, stream->match_fwd,
+			   stream->total_in + stream->input_position,
+			   stream->srcwin_cksum_pos));
+	      goto donefwd;
 	    }
 
 	  /* could be a XD3_GETSRCBLK failure. */
 	  return ret;
 	}
 
-      tryrem = min(stream->match_maxfwd - stream->match_fwd,
+      tryrem = xd3_min(stream->match_maxfwd - stream->match_fwd,
 		   src->onblk - tryoff);
 
       if (tryrem == 0)
@@ -4679,7 +4028,13 @@ xd3_source_extend_match (xd3_stream *stream)
 	}
     }
 
+ donefwd:
   stream->match_state = MATCH_SEARCHING;
+
+  IF_DEBUG2(DP(RINT "[extend match] input %"Q"u srcpos %"Q"u len %"W"u\n",
+	       stream->input_position + stream->total_in,
+	       stream->match_srcpos,
+	       stream->match_fwd));
 
   /* If the match ends short of the last instruction end, we probably
    * don't want it.  There is the possibility that a copy ends short
@@ -4730,16 +4085,16 @@ xd3_source_extend_match (xd3_stream *stream)
 	  stream->maxsrcaddr = match_end;
 	}
 
-      IF_DEBUG1 ({
+      IF_DEBUG2 ({
 	static int x = 0;
-	DP(RINT "[source match:%d] <inp %"Q"u %"Q"u>  <src %"Q"u %"Q"u> (%s) [ %u bytes ]\n",
+	DP(RINT "[source match:%d] length %"W"u <inp %"Q"u %"Q"u>  <src %"Q"u %"Q"u> (%s)\n",
 	   x++,
+	   match_length,
 	   stream->total_in + target_position,
 	   stream->total_in + target_position + match_length,
 	   match_position,
 	   match_position + match_length,
-	   (stream->total_in + target_position == match_position) ? "same" : "diff",
-	   match_length);
+	   (stream->total_in + target_position == match_position) ? "same" : "diff");
       });
 
       if ((ret = xd3_found_match (stream,
@@ -4837,7 +4192,7 @@ xd3_smatch (xd3_stream *stream,
 
  again:
 
-  IF_DEBUG2 (DP(RINT "smatch at base=%u inp=%u cksum=%u\n", base,
+  IF_DEBUG2 (DP(RINT "smatch at base=%"W"u inp=%"W"u cksum=%"W"u\n", base,
                 stream->input_position, scksum));
 
   /* For small matches, we can always go to the end-of-input because
@@ -4938,7 +4293,7 @@ xd3_smatch (xd3_stream *stream,
 static void
 xd3_verify_small_state (xd3_stream    *stream,
 			const uint8_t *inp,
-			uint32_t          x_cksum)
+			uint32_t       x_cksum)
 {
   uint32_t state;
   uint32_t cksum = xd3_scksum (&state, inp, stream->smatcher.small_look);
@@ -4949,9 +4304,9 @@ xd3_verify_small_state (xd3_stream    *stream,
 static void
 xd3_verify_large_state (xd3_stream    *stream,
 			const uint8_t *inp,
-			uint32_t          x_cksum)
+			usize_t        x_cksum)
 {
-  uint32_t cksum = xd3_lcksum (inp, stream->smatcher.large_look);
+  usize_t cksum = xd3_large_cksum (&stream->large_hash, inp, stream->smatcher.large_look);
   XD3_ASSERT (cksum == x_cksum);
 }
 static void
@@ -4974,17 +4329,18 @@ xd3_verify_run_state (xd3_stream    *stream,
  * stream->input_position reaches the value returned as
  * *next_move_point.  NB: this is one of the most expensive functions
  * in this code and also the most critical for good compression.
- * TODO: optimize the inner loop
  */
 static int
 xd3_srcwin_move_point (xd3_stream *stream, usize_t *next_move_point)
 {
-  xoff_t logical_input_cksum_pos;
-  xoff_t source_size;
+  /* the source file is indexed until this point */
+  xoff_t target_cksum_pos;
+  /* the absolute target file input position */
+  xoff_t absolute_input_pos;
 
   if (stream->src->eof_known)
     {
-      source_size = xd3_source_eof (stream->src);
+      xoff_t source_size = xd3_source_eof (stream->src);
       XD3_ASSERT(stream->srcwin_cksum_pos <= source_size);
 
       if (stream->srcwin_cksum_pos == source_size)
@@ -4994,19 +4350,31 @@ xd3_srcwin_move_point (xd3_stream *stream, usize_t *next_move_point)
 	}
     }
 
-  /* Begin by advancing at twice the input rate, up to half the
-   * maximum window size. */
-  logical_input_cksum_pos = min((stream->total_in + stream->input_position) * 2,
-				(stream->total_in + stream->input_position) +
-				  (stream->srcwin_maxsz / 2));
+  absolute_input_pos = stream->total_in + stream->input_position;
 
-  /* If srcwin_cksum_pos is already greater, wait until the difference
-   * is met. */
-  if (stream->srcwin_cksum_pos > logical_input_cksum_pos)
+  /* Immediately read the entire window. 
+   *
+   * Note: this reverses a long held policy, at this point in the
+   * code, of advancing relatively slowly as the input is read, which
+   * results in better compression for very-similar inputs, but worse
+   * compression where data is deleted near the beginning of the file.
+   * 
+   * The new policy is simpler, somewhat slower and can benefit, or
+   * slightly worsen, compression performance. */
+  if (absolute_input_pos < stream->src->max_winsize / 2)
     {
-      *next_move_point = stream->input_position +
-	(usize_t)(stream->srcwin_cksum_pos - logical_input_cksum_pos);
-      return 0;
+      target_cksum_pos = stream->src->max_winsize;
+    }
+  else
+    {
+      /* TODO: The addition of 2 blocks here is arbitrary.  Do a
+       * better job of stream alignment based on observed source copy
+       * addresses, and when both input sizes are known, the
+       * difference in size. */
+      target_cksum_pos = absolute_input_pos +
+	stream->src->max_winsize / 2 +
+	stream->src->blksize * 2;
+      target_cksum_pos &= ~stream->src->maskby;
     }
 
   /* A long match may have extended past srcwin_cksum_pos.  Don't
@@ -5016,29 +4384,12 @@ xd3_srcwin_move_point (xd3_stream *stream, usize_t *next_move_point)
       stream->srcwin_cksum_pos = stream->maxsrcaddr;
     }
 
-  if (logical_input_cksum_pos < stream->srcwin_cksum_pos)
+  if (target_cksum_pos < stream->srcwin_cksum_pos)
     {
-      logical_input_cksum_pos = stream->srcwin_cksum_pos;
+      target_cksum_pos = stream->srcwin_cksum_pos;
     }
 
-  /* Advance at least one source block.  With the command-line
-   * defaults this means:
-   *
-   * if (src->size <= srcwin_maxsz), index the entire source at once
-   * using the position of the first non-match.  This is good for
-   * small inputs, especially when the content may have moved anywhere
-   * in the file (e.g., tar files).
-   *
-   * if (src->size > srcwin_maxsz), index at least one block (which
-   * the command-line sets to 1/32 of srcwin_maxsz) ahead of the
-   * logical position.  This is good for different reasons: when a
-   * long match spanning several source blocks is encountered, this
-   * avoids computing checksums for those blocks.  If the data can
-   * move anywhere, this is bad.
-   */
-  logical_input_cksum_pos += stream->src->blksize;
-
-  while (stream->srcwin_cksum_pos < logical_input_cksum_pos &&
+  while (stream->srcwin_cksum_pos < target_cksum_pos &&
 	 (!stream->src->eof_known ||
 	  stream->srcwin_cksum_pos < xd3_source_eof (stream->src)))
     {
@@ -5060,17 +4411,19 @@ xd3_srcwin_move_point (xd3_stream *stream, usize_t *next_move_point)
 	    {
  	      ret = XD3_INTERNAL;
 	    }
+
 	  IF_DEBUG1 (DP(RINT
-			"[srcwin_move_point] async getblk return for %"Q"u\n",
-			blkno));
+			"[srcwin_move_point] async getblk return for %"Q"u: %s\n",
+			blkno, xd3_strerror (ret)));
 	  return ret;
 	}
 
       IF_DEBUG1 (DP(RINT
-		    "[srcwin_move_point] T=%"Q"u{%"Q"u} S=%"Q"u EOF=%"Q"u %s\n",
+		    "[srcwin_move_point] block %"Q"u T=%"Q"u S=%"Q"u L=%"Q"u EOF=%"Q"u %s\n",
+		    blkno,
 		    stream->total_in + stream->input_position,
-		    logical_input_cksum_pos,
 		    stream->srcwin_cksum_pos,
+		    target_cksum_pos,
 		    xd3_source_eof (stream->src),
 		    stream->src->eof_known ? "known" : "unknown"));
 
@@ -5079,7 +4432,7 @@ xd3_srcwin_move_point (xd3_stream *stream, usize_t *next_move_point)
       if (blkpos < (ssize_t) stream->smatcher.large_look)
 	{
 	  stream->srcwin_cksum_pos = (blkno + 1) * stream->src->blksize;
-	  IF_DEBUG1 (DP(RINT "[srcwin_move_point] continue (end-of-block)\n"));
+	  IF_DEBUG2 (DP(RINT "[srcwin_move_point] continue (end-of-block): %"Z"d\n", blkpos));
 	  continue;
 	}
 
@@ -5097,8 +4450,12 @@ xd3_srcwin_move_point (xd3_stream *stream, usize_t *next_move_point)
 
       do
 	{
-	  uint32_t cksum = xd3_lcksum (stream->src->curblk + blkpos,
-				       stream->smatcher.large_look);
+	  /* TODO: This would be significantly faster if the compiler
+	   * knew stream->smatcher.large_look (which the template for
+	   * xd3_string_match_* allows). */
+	  usize_t cksum = xd3_large_cksum (&stream->large_hash, 
+					   stream->src->curblk + blkpos,
+					   stream->smatcher.large_look);
 	  usize_t hval = xd3_checksum_hash (& stream->large_hash, cksum);
 
 	  stream->large_table[hval] =
@@ -5115,18 +4472,16 @@ xd3_srcwin_move_point (xd3_stream *stream, usize_t *next_move_point)
     }
 
   IF_DEBUG1 (DP(RINT
-		"[srcwin_move_point] exited loop T=%"Q"u{%"Q"u} "
+		"[srcwin_move_point] exited loop T=%"Q"u "
 		"S=%"Q"u EOF=%"Q"u %s\n",
 		stream->total_in + stream->input_position,
-		logical_input_cksum_pos,
 		stream->srcwin_cksum_pos,
 		xd3_source_eof (stream->src),
 		stream->src->eof_known ? "known" : "unknown"));
 
   if (stream->src->eof_known)
     {
-      source_size = xd3_source_eof (stream->src);
-
+      xoff_t source_size = xd3_source_eof (stream->src);
       if (stream->srcwin_cksum_pos >= source_size)
 	{
 	  /* This invariant is needed for xd3_source_cksum_offset() */
@@ -5139,9 +4494,22 @@ xd3_srcwin_move_point (xd3_stream *stream, usize_t *next_move_point)
     }
 
   /* How long until this function should be called again. */
-  XD3_ASSERT(stream->srcwin_cksum_pos >= logical_input_cksum_pos);
-  *next_move_point = stream->input_position + 1 +
-    (usize_t)(stream->srcwin_cksum_pos - logical_input_cksum_pos);
+  XD3_ASSERT(stream->srcwin_cksum_pos >= target_cksum_pos);
+
+  *next_move_point = stream->input_position +
+    stream->src->blksize -
+    ((stream->srcwin_cksum_pos - target_cksum_pos) & stream->src->maskby);
+  
+  IF_DEBUG2 (DP(RINT
+		"[srcwin_move_point] finished T=%"Q"u "
+		"S=%"Q"u L=%"Q"u EOF=%"Q"u %s again in %"W"u\n",
+		stream->total_in + stream->input_position,
+		stream->srcwin_cksum_pos,
+		target_cksum_pos,
+		xd3_source_eof (stream->src),
+		stream->src->eof_known ? "known" : "unknown",
+		*next_move_point - stream->input_position));
+
   return 0;
 }
 
@@ -5190,7 +4558,7 @@ XD3_TEMPLATE(xd3_string_match_) (xd3_stream *stream)
   const uint8_t *inp;
   uint32_t       scksum = 0;
   uint32_t       scksum_state = 0;
-  uint32_t       lcksum = 0;
+  usize_t        lcksum = 0;
   usize_t        sinx;
   usize_t        linx;
   uint8_t        run_c;
@@ -5198,7 +4566,9 @@ XD3_TEMPLATE(xd3_string_match_) (xd3_stream *stream)
   int            ret;
   usize_t        match_length;
   usize_t        match_offset = 0;
-  usize_t        next_move_point;
+  usize_t        next_move_point = 0;
+
+  IF_DEBUG2(DP(RINT "[string_match] initial entry %"W"u\n", stream->input_position));
 
   /* If there will be no compression due to settings or short input,
    * skip it entirely. */
@@ -5210,6 +4580,8 @@ XD3_TEMPLATE(xd3_string_match_) (xd3_stream *stream)
   /* The restartloop label is reached when the incremental loop state
    * needs to be reset. */
  restartloop:
+
+  IF_DEBUG2(DP(RINT "[string_match] restartloop %"W"u\n", stream->input_position));
 
   /* If there is not enough input remaining for any kind of match,
      skip it. */
@@ -5223,9 +4595,9 @@ XD3_TEMPLATE(xd3_string_match_) (xd3_stream *stream)
    * of length 8 at the next position. */
   if (xd3_iopt_last_matched (stream) > stream->input_position)
     {
-      stream->min_match = max(MIN_MATCH,
-			      1 + xd3_iopt_last_matched(stream) -
-			      stream->input_position);
+      stream->min_match = xd3_max (MIN_MATCH,
+				   1 + xd3_iopt_last_matched(stream) -
+				   stream->input_position);
     }
   else
     {
@@ -5254,13 +4626,15 @@ XD3_TEMPLATE(xd3_string_match_) (xd3_stream *stream)
     {
       /* Source window: next_move_point is the point that
        * stream->input_position must reach before computing more
-       * source checksum. */
+       * source checksum.  Note: this is called unconditionally
+       * the first time after reentry, subsequent calls will be
+       * avoided if next_move_point is > input_position */
       if ((ret = xd3_srcwin_move_point (stream, & next_move_point)))
 	{
 	  return ret;
 	}
 
-      lcksum = xd3_lcksum (inp, LLOOK);
+      lcksum = xd3_large_cksum (&stream->large_hash, inp, LLOOK);
     }
 
   /* TRYLAZYLEN: True if a certain length match should be followed by
@@ -5380,8 +4754,8 @@ XD3_TEMPLATE(xd3_string_match_) (xd3_stream *stream)
 	    {
 	      IF_DEBUG2 ({
 		static int x = 0;
-		DP(RINT "[target match:%d] <inp %u %u>  <cpy %u %u> "
-		   "(-%d) [ %u bytes ]\n",
+		DP(RINT "[target match:%d] <inp %"W"u %"W"u>  <cpy %"W"u %"W"u> "
+		   "(-%"W"d) [ %"W"u bytes ]\n",
 		   x++,
 		   stream->input_position,
 		   stream->input_position + match_length,
@@ -5436,7 +4810,7 @@ XD3_TEMPLATE(xd3_string_match_) (xd3_stream *stream)
 
       if (DO_LARGE && (stream->input_position + LLOOK < stream->avail_in))
 	{
-	  lcksum = xd3_large_cksum_update (lcksum, inp, LLOOK);
+	  lcksum = xd3_large_cksum_update (&stream->large_hash, lcksum, inp, LLOOK);
 	}
     }
 
