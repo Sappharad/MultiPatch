@@ -21,6 +21,14 @@
     return self;
 }
 
+-(void)dealloc{
+    if(_acceptFileDrop != nil){
+        [_acceptFileDrop release];
+        _acceptFileDrop = nil;
+    }
+    [super dealloc];
+}
+
 -(NSDragOperation)draggingEntered:(id<NSDraggingInfo>)sender{
     NSArray* fileList = [[sender draggingPasteboard] readObjectsForClasses:@[[NSURL class]] options:nil];
     if(fileList.count == 1){

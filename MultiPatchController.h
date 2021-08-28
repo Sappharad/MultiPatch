@@ -13,9 +13,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MultiPatchController : NSObject<NSApplicationDelegate>
 @property (assign) IBOutlet NSWindow *wndPreferences;
 @property (assign) IBOutlet NSButton *chkIgnoreXDelta;
+@property (assign) IBOutlet NSButton *chkCheckForUpdates;
 
 - (IBAction)showPreferences:(id)sender;
-- (IBAction)chkIgnoreXdeltaChecks:(id)sender;
+- (IBAction)chkIgnoreXdelta_Changed:(id)sender;
+- (IBAction)chkCheckForUpdates_Changed:(id)sender;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -36,6 +36,9 @@
 		9E72A22F25E49FD600D48E37 /* applyppf3_linux.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E72A22B25E49FD600D48E37 /* applyppf3_linux.c */; };
 		9E72A23725E4A23600D48E37 /* PPFAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E72A23625E4A23600D48E37 /* PPFAdapter.m */; };
 		9E72A23825E4A23600D48E37 /* PPFAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E72A23625E4A23600D48E37 /* PPFAdapter.m */; };
+		9EA7918A26D5E52A00AB4337 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 9EA7918926D5E52A00AB4337 /* Credits.rtf */; };
+		9EA7BD0726D483B500D2ADDF /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EA7BD0526D483AC00D2ADDF /* Sparkle.framework */; };
+		9EA7BD0826D483B500D2ADDF /* Sparkle.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9EA7BD0526D483AC00D2ADDF /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9EAFBD4226C5FBD20005354C /* liblzma.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EAFBD4126C5FBC50005354C /* liblzma.tbd */; };
 		9EAFBD4326C5FBDB0005354C /* liblzma.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EAFBD4126C5FBC50005354C /* liblzma.tbd */; };
 		9EBBF6CA1EA06D2C00EF26A3 /* MPFileTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBBF6C91EA06D2C00EF26A3 /* MPFileTextField.m */; };
@@ -72,6 +75,17 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		9EA7BD0926D483B500D2ADDF /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				9EA7BD0826D483B500D2ADDF /* Sparkle.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9EFB0275256D7BFD00B583D0 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -190,7 +204,8 @@
 		9E72A23225E4A1E400D48E37 /* ppf3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ppf3.h; sourceTree = "<group>"; };
 		9E72A23525E4A23600D48E37 /* PPFAdapter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPFAdapter.h; sourceTree = "<group>"; };
 		9E72A23625E4A23600D48E37 /* PPFAdapter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PPFAdapter.m; sourceTree = "<group>"; };
-		9EAEB1D411E1767B006CF92A /* bandages.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = bandages.icns; sourceTree = "<group>"; };
+		9EA7918926D5E52A00AB4337 /* Credits.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
+		9EA7BD0526D483AC00D2ADDF /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		9EAFBD4126C5FBC50005354C /* liblzma.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = liblzma.tbd; path = usr/lib/liblzma.tbd; sourceTree = SDKROOT; };
 		9EBBF6C81EA06D2C00EF26A3 /* MPFileTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPFileTextField.h; sourceTree = "<group>"; };
 		9EBBF6C91EA06D2C00EF26A3 /* MPFileTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPFileTextField.m; sourceTree = "<group>"; };
@@ -233,6 +248,7 @@
 				9E2701CE1C31C64200F50B1F /* QuartzCore.framework in Frameworks */,
 				9EAFBD4226C5FBD20005354C /* liblzma.tbd in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+				9EA7BD0726D483B500D2ADDF /* Sparkle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -309,7 +325,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				9EAEB1D411E1767B006CF92A /* bandages.icns */,
+				9EA7918926D5E52A00AB4337 /* Credits.rtf */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
@@ -321,6 +337,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9EA7BD0526D483AC00D2ADDF /* Sparkle.framework */,
 				9EAFBD4126C5FBC50005354C /* liblzma.tbd */,
 				9E2701CD1C31C64200F50B1F /* QuartzCore.framework */,
 				9E2701C81C31C16B00F50B1F /* CoreImage.framework */,
@@ -547,6 +564,7 @@
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
+				9EA7BD0926D483B500D2ADDF /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -619,6 +637,7 @@
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
 				55BCAB9F269849BE0030B1E7 /* Media.xcassets in Resources */,
+				9EA7918A26D5E52A00AB4337 /* Credits.rtf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -783,9 +802,13 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1.8;
+				CURRENT_PROJECT_VERSION = 1.8.999;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -804,9 +827,14 @@
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/flips/libdivsufsort-2.0.1";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
-				MARKETING_VERSION = 1.8;
+				MARKETING_VERSION = 1.8.999;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sappharad.${PRODUCT_NAME:identifier}";
 				PRODUCT_NAME = MultiPatch;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -822,9 +850,13 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1.8;
+				CURRENT_PROJECT_VERSION = 1.8.999;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = MultiPatch_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -841,9 +873,14 @@
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/flips/libdivsufsort-2.0.1";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
-				MARKETING_VERSION = 1.8;
+				MARKETING_VERSION = 1.8.999;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sappharad.${PRODUCT_NAME:identifier}";
 				PRODUCT_NAME = MultiPatch;
 				PROVISIONING_PROFILE_SPECIFIER = "";
