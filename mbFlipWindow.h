@@ -2,6 +2,7 @@
 //Modified for modernization. No license specified...
 
 #import <Foundation/Foundation.h>
+#import <Cocoa/Cocoa.h>
 
 @interface mbFlipWindow : NSObject
 {
