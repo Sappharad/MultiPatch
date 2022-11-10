@@ -4,7 +4,7 @@
 import PackageDescription
 
 let cxxSettings: [CXXSetting] = [
-    .headerSearchPath("./"),
+    .headerSearchPath("../"),
     .headerSearchPath("./xdelta"),
     .headerSearchPath("./adapters"),
     .define("HAVE_CONFIG_H"),
@@ -13,9 +13,9 @@ let cxxSettings: [CXXSetting] = [
 ]
 
 let cSettings: [CSetting] = [
-    .headerSearchPath("./"),
+    .headerSearchPath("../"),
     .headerSearchPath("./xdelta"),
-    .headerSearchPath("./flips"),
+    .headerSearchPath("../flips"),
     .headerSearchPath("./adapters"),
     .define("HAVE_CONFIG_H"),
     .define("SECONDARY_FGK", to: "1"),
@@ -56,7 +56,7 @@ var products: [Product] = [
 var targets: [Target] = [
     .target(name: "MultiPatcherShared",
             dependencies: ["flips", "librup", "ppfdev", "bsdiff"],
-            path: "./",
+            path: "Shared",
             exclude: ["en.lproj"],
             sources: [
                 "MPSettings.m",
@@ -66,8 +66,8 @@ var targets: [Target] = [
                 "adapters/RUPAdapter.m",
                 "adapters/IPSAdapter.mm",
                 "adapters/flips-support.mm",
-                "bsdiff/BSdiffAdapter.m",
-                "bsdiff/BSdiffAdapter.h",
+                "adapters/BSdiffAdapter.m",
+                "adapters/BSdiffAdapter.h",
                 "MPPatchResult.h",
                 "MPPatchResult.m",
                 // "XDeltaAdapter.h",
@@ -138,10 +138,10 @@ targets.append(.executableTarget(
         "main.mm"
     ],
     cSettings: [
-         .headerSearchPath("./"),
+         .headerSearchPath("../"),
         .headerSearchPath("../xdelta"),
         .headerSearchPath("../flips"),
-        .headerSearchPath("../adapters"),
+        .headerSearchPath("../Shared/adapters"),
         .define("HAVE_CONFIG_H"),
         .define("SECONDARY_FGK", to: "1"),
         .define("SECONDARY_DJW", to: "1")
@@ -150,7 +150,7 @@ targets.append(.executableTarget(
          .headerSearchPath("./"),
         .headerSearchPath("../xdelta"),
         .headerSearchPath("../flips"),
-        .headerSearchPath("../adapters"),
+        .headerSearchPath("../Shared/adapters"),
         .define("HAVE_CONFIG_H"),
         .define("SECONDARY_FGK", to: "1"),
         .define("SECONDARY_DJW", to: "1")
@@ -167,7 +167,7 @@ targets.append(.executableTarget(
 //         "MultiPatcherShared",
 //         // "Sparkle"
 //     ],
-//     path: "./",
+//     path: "App",
 //     exclude: ["en.lproj"],
 //     sources: [
 //         "main.m",
