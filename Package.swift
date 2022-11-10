@@ -5,8 +5,8 @@ import PackageDescription
 
 let cxxSettings: [CXXSetting] = [
     .headerSearchPath("../"),
-    .headerSearchPath("./xdelta"),
-    .headerSearchPath("./adapters"),
+    .headerSearchPath("../xdelta"),
+    .headerSearchPath("adapters"),
     .define("HAVE_CONFIG_H"),
     .define("SECONDARY_FGK", to: "1"),
     .define("SECONDARY_DJW", to: "1")
@@ -14,9 +14,9 @@ let cxxSettings: [CXXSetting] = [
 
 let cSettings: [CSetting] = [
     .headerSearchPath("../"),
-    .headerSearchPath("./xdelta"),
+    .headerSearchPath("../xdelta"),
     .headerSearchPath("../flips"),
-    .headerSearchPath("./adapters"),
+    .headerSearchPath("adapters"),
     .define("HAVE_CONFIG_H"),
     .define("SECONDARY_FGK", to: "1"),
     .define("SECONDARY_DJW", to: "1")
@@ -42,20 +42,17 @@ var products: [Product] = [
 		.library(name: "bsdiff", type: .static, targets: ["bsdiff"]),
 		.library(name: "ppfdev", type: .static, targets: ["ppfdev"]),
 		.library(name: "flips", type: .static, targets: ["flips"]),
+        .library(name: "xdelta", type: .static, targets: ["xdelta"])
 ]
 
-#if HAVE_XDELTA
-    products.append(.library(name: "xdelta", type: .static, targets: ["xdelta"]))
-#endif
-
 #if os(macOS)
-    // products.append(.executable(name: "MultiPatcher", targets: ["MultiPatcher"]))
+    products.append(.executable(name: "MultiPatcher", targets: ["MultiPatcher"]))
     products.append(.executable(name: "cmdMultiPatch", targets: ["cmdMultiPatch"]))
 #endif
 
 var targets: [Target] = [
     .target(name: "MultiPatcherShared",
-            dependencies: ["flips", "librup", "ppfdev", "bsdiff"],
+            dependencies: ["flips", "librup", "ppfdev", "bsdiff", "xdelta"],
             path: "Shared",
             sources: [
                 "MPSettings.m",
@@ -69,9 +66,8 @@ var targets: [Target] = [
                 "adapters/BSdiffAdapter.h",
                 "MPPatchResult.h",
                 "MPPatchResult.m",
-                // "XDeltaAdapter.h",
-                "../xdelta/xdelta3.h",
-                // "XDeltaAdapter.m",
+                "adapters/XDeltaAdapter.h",
+                "adapters/XDeltaAdapter.m"
             ],
             publicHeadersPath: "",
             cSettings: cSettings,
@@ -115,7 +111,7 @@ var targets: [Target] = [
                 "xdelta3.h",
                 "xdelta3.m"
             ],
-            publicHeadersPath: "",
+            publicHeadersPath: "include",
             cSettings: cSettings,
             cxxSettings: cxxSettings,
             linkerSettings: [
