@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "liblzma",
+        "repositoryURL": "https://github.com/awxkee/liblzma.swift.git",
+        "state": {
+          "branch": null,
+          "revision": "dd667f83d51ed3171c36d405992bbc406da86592",
+          "version": "1.0.0"
+        }
+      },
+      {
         "package": "Sparkle",
         "repositoryURL": "https://github.com/sparkle-project/Sparkle.git",
         "state": {

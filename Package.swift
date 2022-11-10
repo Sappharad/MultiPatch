@@ -1,6 +1,10 @@
 // swift-tools-version:5.5
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
+// build:
+//  - macos: swift build
+//  - iOS: swift build -Xswiftc "-sdk" -Xswiftc "`xcrun --sdk iphonesimulator --show-sdk-path`" -Xswiftc "-target" -Xswiftc "x86_64-apple-ios13.0-simulator"
+
 import PackageDescription
 
 let cxxSettings: [CXXSetting] = [
@@ -106,6 +110,7 @@ var targets: [Target] = [
             publicHeadersPath: "include"),
 
     .target(name: "xdelta",
+            dependencies: [.product(name: "liblzma", package: "liblzma.swift", condition: .when(platforms: [.iOS]))],
             path: "xdelta",
             sources: [
                 "xdelta3.h",
@@ -116,7 +121,8 @@ var targets: [Target] = [
             cxxSettings: cxxSettings,
             linkerSettings: [
                 .linkedFramework("Foundation"),
-                .linkedFramework("CoreFoundation")
+                .linkedFramework("CoreFoundation"),
+                .linkedLibrary("lzma", .when(platforms: [.linux])),
             ])
 ]
 
@@ -130,7 +136,7 @@ targets.append(.executableTarget(
         "main.mm"
     ],
     cSettings: [
-         .headerSearchPath("../"),
+        .headerSearchPath("../"),
         .headerSearchPath("../xdelta"),
         .headerSearchPath("../flips"),
         .headerSearchPath("../Shared/adapters"),
@@ -139,7 +145,7 @@ targets.append(.executableTarget(
         .define("SECONDARY_DJW", to: "1")
     ],
     cxxSettings: [
-         .headerSearchPath("./"),
+        .headerSearchPath("./"),
         .headerSearchPath("../xdelta"),
         .headerSearchPath("../flips"),
         .headerSearchPath("../Shared/adapters"),
@@ -201,6 +207,7 @@ targets.append(.executableTarget(
 let package = Package(
     name: "MultiPatcher",
 	defaultLocalization: "en",
+
 	platforms: [
 		.iOS(.v13),
 		.tvOS(.v13),
@@ -208,7 +215,8 @@ let package = Package(
 	],
     products: products,
     dependencies: [
-        .package(url: "https://github.com/sparkle-project/Sparkle.git", from: "2.0.0")
+        .package(url: "https://github.com/sparkle-project/Sparkle.git", from: "2.0.0"),
+        .package(url: "https://github.com/awxkee/liblzma.swift.git", from: "1.0.0")
     ],
     targets: targets,
     cLanguageStandard: .gnu11,
