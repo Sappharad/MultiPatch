@@ -6,7 +6,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#if defined(HAVE_XDELTA)
 #import "XDeltaAdapter.h"
+#endif
 #import "IPSAdapter.h"
 #import "PPFAdapter.h"
 #import "BSdiffAdapter.h"
@@ -71,9 +73,11 @@ int applyPatch(NSString* patch, NSString* input, NSString* output){
     else if([lowerPath hasSuffix:@".ppf"]){
         retval = [PPFAdapter ApplyPatch:patch toFile:input andCreate:output];
     }
+#if defined(HAVE_XDELTA)
     else if([lowerPath hasSuffix:@".dat"] || [lowerPath hasSuffix:@"delta"]){
         retval = [XDeltaAdapter ApplyPatch:patch toFile:input andCreate:output];
     }
+#endif
     else if([lowerPath hasSuffix:@".bdf"] || [lowerPath hasSuffix:@".bsdiff"]){
         retval = [BSdiffAdapter ApplyPatch:patch toFile:input andCreate:output];
     }
@@ -99,9 +103,11 @@ int createPatch(NSString* oldPath, NSString* newPath, NSString* output){
     if([lowerPath hasSuffix:@".ips"]){
         retval = [IPSAdapter CreatePatch:oldPath withMod:newPath andCreate:output];
     }
+#if defined(HAVE_XDELTA)
     else if([lowerPath hasSuffix:@".dat"] || [lowerPath hasSuffix:@"delta"]){
         retval = [XDeltaAdapter CreatePatch:oldPath withMod:newPath andCreate:output];
     }
+#endif
     else if([lowerPath hasSuffix:@".bdf"] || [lowerPath hasSuffix:@".bsdiff"]){
         retval = [BSdiffAdapter CreatePatch:oldPath withMod:newPath andCreate:output];
     }
