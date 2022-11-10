@@ -201,5 +201,7 @@ let package = Package(
     dependencies: [
         // .package(url: "https://github.com/sparkle-project/Sparkle.git", from: "2.0.0")
     ],
-    targets: targets
+    targets: targets,
+    cLanguageStandard: .gnu11,
+    cxxLanguageStandard: .cxx11
 )
