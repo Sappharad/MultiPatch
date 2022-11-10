@@ -23,7 +23,10 @@ let cSettings: [CSetting] = [
     .headerSearchPath("adapters"),
     .define("HAVE_CONFIG_H"),
     .define("SECONDARY_FGK", to: "1"),
-    .define("SECONDARY_DJW", to: "1")
+    .define("SECONDARY_DJW", to: "1"),
+    .define("SECONDARY_LZMA", to: "0", .when(platforms: [.iOS, .tvOS]))
+//    .define("HAVE_LIBLZMA", to: "0", .when(platforms: [.iOS, .tvOS])),
+//    .define("HAVE_LZMA_H", to: "0", .when(platforms: [.iOS, .tvOS]))
 ]
 
 let linkerSettings: [LinkerSetting] = [
@@ -112,7 +115,7 @@ var targets: [Target] = [
     .target(name: "xdelta",
             dependencies: [.product(name: "liblzma", package: "liblzma.swift", condition: .when(platforms: [.iOS, .tvOS]))],
             path: "xdelta",
-            exclude: ["examples"],
+            exclude: ["examples", "testing", "m4", "go", "include", "cpp-btree"],
             sources: [
                 "xdelta3.h",
                 "xdelta3.m"
