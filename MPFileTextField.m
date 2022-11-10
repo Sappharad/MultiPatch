@@ -21,6 +21,7 @@
     return self;
 }
 
+#if !__has_feature(objc_arc)
 -(void)dealloc{
     if(_acceptFileDrop != nil){
         [_acceptFileDrop release];
@@ -28,6 +29,7 @@
     }
     [super dealloc];
 }
+#endif
 
 -(NSDragOperation)draggingEntered:(id<NSDraggingInfo>)sender{
     NSArray* fileList = [[sender draggingPasteboard] readObjectsForClasses:@[[NSURL class]] options:nil];

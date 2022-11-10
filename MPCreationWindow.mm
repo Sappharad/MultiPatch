@@ -167,13 +167,17 @@
 			}
             else if(errMsg.IsWarning){
                 NSRunAlertPanel(@"Patch creation finished with warning.", errMsg.Message, @"Okay", nil, nil);
+                #if !__has_feature(objc_arc)
                 [errMsg release];
+                #endif
                 errMsg = nil;
             }
 			else{
 				NSRunAlertPanel(@"Patch creation failed.", errMsg.Message, @"Okay", nil, nil);
-				[errMsg release];
-				errMsg = nil;
+                #if !__has_feature(objc_arc)
+                [errMsg release];
+                #endif
+                errMsg = nil;
 			}
 		}
 		else{
