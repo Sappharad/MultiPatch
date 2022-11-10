@@ -25,8 +25,6 @@ let cSettings: [CSetting] = [
     .define("SECONDARY_FGK", to: "1"),
     .define("SECONDARY_DJW", to: "1"),
     .define("SECONDARY_LZMA", to: "0", .when(platforms: [.iOS, .tvOS]))
-//    .define("HAVE_LIBLZMA", to: "0", .when(platforms: [.iOS, .tvOS])),
-//    .define("HAVE_LZMA_H", to: "0", .when(platforms: [.iOS, .tvOS]))
 ]
 
 let linkerSettings: [LinkerSetting] = [
@@ -34,14 +32,15 @@ let linkerSettings: [LinkerSetting] = [
     .linkedFramework("CoreFoundation"),
     .linkedLibrary("lzma"),
     .linkedLibrary("bz2"),
-    .linkedLibrary("z")
+    .linkedLibrary("z"),
 ]
 
 var linkerSettingsApp: [LinkerSetting] = linkerSettings
-linkerSettingsApp.append(.linkedFramework("AppKit"))
-linkerSettingsApp.append(.linkedFramework("Cocoa"))
-linkerSettingsApp.append(.linkedFramework("ApplicationServices"))
-linkerSettingsApp.append(.linkedFramework("Sparkle"))
+linkerSettingsApp.append(.linkedFramework("AppKit", .when(platforms: [.macOS])))
+linkerSettingsApp.append(.linkedFramework("Cocoa", .when(platforms: [.macOS])))
+linkerSettingsApp.append(.linkedFramework("ApplicationServices", .when(platforms: [.macOS])))
+linkerSettingsApp.append(.linkedFramework("Sparkle", .when(platforms: [.macOS])))
+linkerSettingsApp.append(.linkedFramework("UIKit", .when(platforms: [.iOS, .tvOS])))
 
 var products: [Product] = [
 		.library(name: "MultiPatcherShared", type: .dynamic, targets: ["MultiPatcherShared"]),
@@ -49,7 +48,7 @@ var products: [Product] = [
 		.library(name: "bsdiff", type: .static, targets: ["bsdiff"]),
 		.library(name: "ppfdev", type: .static, targets: ["ppfdev"]),
 		.library(name: "flips", type: .static, targets: ["flips"]),
-        .library(name: "xdelta", type: .static, targets: ["xdelta"])
+        .library(name: "xdelta", type: .static, targets: ["xdelta"]),
 ]
 
 #if os(macOS)
