@@ -48,7 +48,7 @@
 		9EDB5E2921ACE75A0028764B /* MPPatchResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EDB5E2821ACE75A0028764B /* MPPatchResult.m */; };
 		9EEA30F111E041B8005B6996 /* xdelta3.c in Sources */ = {isa = PBXBuildFile; fileRef = 9EEA30EF11E041B8005B6996 /* xdelta3.c */; };
 		9EFA6CE611E153B500CBE19A /* XDeltaAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFA6CE511E153B500CBE19A /* XDeltaAdapter.m */; };
-		9EFB027A256D7BFD00B583D0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFB0279256D7BFD00B583D0 /* main.m */; };
+		9EFB027A256D7BFD00B583D0 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9EFB0279256D7BFD00B583D0 /* main.mm */; };
 		9EFB0280256D7CFE00B583D0 /* md5.c in Sources */ = {isa = PBXBuildFile; fileRef = 9EFBC84A21B8DEB60005DCA6 /* md5.c */; };
 		9EFB0283256D7D0100B583D0 /* librup.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E16BDCE21B39633007FBC85 /* librup.c */; };
 		9EFB0286256D7D0C00B583D0 /* flips.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9E2F9D222174253A00EBD217 /* flips.cpp */; };
@@ -105,7 +105,7 @@
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32CA4F630368D1EE00C91783 /* MultiPatch_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiPatch_Prefix.pch; sourceTree = "<group>"; };
 		55BCAB9E269849BE0030B1E7 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
-		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = App/Info.plist; sourceTree = "<group>"; };
 		9E0351C10E9D8B570043AC3E /* MPPatchWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MPPatchWindow.mm; sourceTree = "<group>"; };
 		9E0351C20E9D8B570043AC3E /* MPPatchWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPPatchWindow.h; sourceTree = "<group>"; };
 		9E16BDCD21B39633007FBC85 /* librup.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = librup.h; sourceTree = "<group>"; };
@@ -204,7 +204,7 @@
 		9E72A23225E4A1E400D48E37 /* ppf3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ppf3.h; sourceTree = "<group>"; };
 		9E72A23525E4A23600D48E37 /* PPFAdapter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPFAdapter.h; sourceTree = "<group>"; };
 		9E72A23625E4A23600D48E37 /* PPFAdapter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PPFAdapter.m; sourceTree = "<group>"; };
-		9EA7918926D5E52A00AB4337 /* Credits.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
+		9EA7918926D5E52A00AB4337 /* Credits.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = Credits.rtf; path = App/Credits.rtf; sourceTree = "<group>"; };
 		9EA7BD0526D483AC00D2ADDF /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		9EAFBD4126C5FBC50005354C /* liblzma.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = liblzma.tbd; path = usr/lib/liblzma.tbd; sourceTree = SDKROOT; };
 		9EBBF6C81EA06D2C00EF26A3 /* MPFileTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPFileTextField.h; sourceTree = "<group>"; };
@@ -228,12 +228,12 @@
 		9EEA314311E04933005B6996 /* xdelta3-merge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "xdelta3-merge.h"; sourceTree = "<group>"; };
 		9EEA314511E04933005B6996 /* xdelta3-second.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "xdelta3-second.h"; sourceTree = "<group>"; };
 		9EEA314611E04933005B6996 /* xdelta3-test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "xdelta3-test.h"; sourceTree = "<group>"; };
-		9EFA6CE411E153B500CBE19A /* XDeltaAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XDeltaAdapter.h; sourceTree = SOURCE_ROOT; };
-		9EFA6CE511E153B500CBE19A /* XDeltaAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XDeltaAdapter.m; sourceTree = SOURCE_ROOT; };
+		9EFA6CE411E153B500CBE19A /* XDeltaAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XDeltaAdapter.h; sourceTree = "<group>"; };
+		9EFA6CE511E153B500CBE19A /* XDeltaAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XDeltaAdapter.m; sourceTree = "<group>"; };
 		9EFB026B256D6C1C00B583D0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		9EFB026C256D6C1E00B583D0 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9EFB0277256D7BFD00B583D0 /* cmdMultiPatch */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = cmdMultiPatch; sourceTree = BUILT_PRODUCTS_DIR; };
-		9EFB0279256D7BFD00B583D0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		9EFB0279256D7BFD00B583D0 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		9EFB02C7256D7F5800B583D0 /* MPSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPSettings.h; sourceTree = "<group>"; };
 		9EFB02C8256D7F5800B583D0 /* MPSettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPSettings.m; sourceTree = "<group>"; };
 		9EFBC84A21B8DEB60005DCA6 /* md5.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = md5.c; sourceTree = "<group>"; };
@@ -284,28 +284,15 @@
 		29B97314FDCFA39411CA2CEA /* Mother3UPS */ = {
 			isa = PBXGroup;
 			children = (
+				B3076740291CE5E000B5EAAC /* Shared */,
+				B307673F291CE52A00B5EAAC /* App */,
 				9E72A22925E49FD600D48E37 /* ppfdev */,
 				9E16BDCC21B3938E007FBC85 /* librup */,
 				9E2F9D212174253A00EBD217 /* flips */,
-				9E2F9D1521740CB200EBD217 /* adapters */,
 				9ED6066B126D30BB004782CA /* bsdiff */,
 				9EEA30EE11E0418A005B6996 /* xdelta */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
-				9E0351C20E9D8B570043AC3E /* MPPatchWindow.h */,
-				9E0351C10E9D8B570043AC3E /* MPPatchWindow.mm */,
-				9E17AB9D120F9E9800BA4827 /* MPCreationWindow.h */,
-				9E17AB9E120F9E9800BA4827 /* MPCreationWindow.mm */,
-				9E2701CA1C31C59000F50B1F /* mbFlipWindow.h */,
-				9E2701CB1C31C59000F50B1F /* mbFlipWindow.m */,
-				9EBBF6C81EA06D2C00EF26A3 /* MPFileTextField.h */,
-				9EBBF6C91EA06D2C00EF26A3 /* MPFileTextField.m */,
-				9EDB5E2721ACE75A0028764B /* MPPatchResult.h */,
-				9EDB5E2821ACE75A0028764B /* MPPatchResult.m */,
-				9E2C4ADF21B3479300D74816 /* MultiPatchController.h */,
-				9E2C4AE021B3479300D74816 /* MultiPatchController.m */,
-				9EFB02C7256D7F5800B583D0 /* MPSettings.h */,
-				9EFB02C8256D7F5800B583D0 /* MPSettings.m */,
 				9EFB0278256D7BFD00B583D0 /* cmdMultiPatch */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				9EEA30B511E03F75005B6996 /* Products */,
@@ -317,7 +304,6 @@
 			isa = PBXGroup;
 			children = (
 				32CA4F630368D1EE00C91783 /* MultiPatch_Prefix.pch */,
-				29B97316FDCFA39411CA2CEA /* main.m */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
@@ -361,6 +347,8 @@
 		9E2F9D1521740CB200EBD217 /* adapters */ = {
 			isa = PBXGroup;
 			children = (
+				9EFA6CE411E153B500CBE19A /* XDeltaAdapter.h */,
+				9EFA6CE511E153B500CBE19A /* XDeltaAdapter.m */,
 				9E2F9D1721740CB200EBD217 /* IPSAdapter.h */,
 				9E2F9D1621740CB200EBD217 /* IPSAdapter.mm */,
 				9E2F9D1921740D6200EBD217 /* BPSAdapter.h */,
@@ -372,6 +360,8 @@
 				9E344FC921BDF59E009AA80A /* RUPAdapter.m */,
 				9E72A23525E4A23600D48E37 /* PPFAdapter.h */,
 				9E72A23625E4A23600D48E37 /* PPFAdapter.m */,
+				9ED60670126D370C004782CA /* BSdiffAdapter.h */,
+				9ED60671126D370C004782CA /* BSdiffAdapter.m */,
 			);
 			path = adapters;
 			sourceTree = "<group>";
@@ -507,8 +497,6 @@
 		9ED6066B126D30BB004782CA /* bsdiff */ = {
 			isa = PBXGroup;
 			children = (
-				9ED60670126D370C004782CA /* BSdiffAdapter.h */,
-				9ED60671126D370C004782CA /* BSdiffAdapter.m */,
 				9ED6066C126D30DC004782CA /* bsdiff.c */,
 				9ED6066D126D30DC004782CA /* bspatch.c */,
 			);
@@ -540,8 +528,6 @@
 				9EEA311611E0473E005B6996 /* xdelta3-main.h */,
 				9EEA30EF11E041B8005B6996 /* xdelta3.c */,
 				9EEA30F011E041B8005B6996 /* xdelta3.h */,
-				9EFA6CE411E153B500CBE19A /* XDeltaAdapter.h */,
-				9EFA6CE511E153B500CBE19A /* XDeltaAdapter.m */,
 			);
 			path = xdelta;
 			sourceTree = "<group>";
@@ -549,9 +535,39 @@
 		9EFB0278256D7BFD00B583D0 /* cmdMultiPatch */ = {
 			isa = PBXGroup;
 			children = (
-				9EFB0279256D7BFD00B583D0 /* main.m */,
+				9EFB0279256D7BFD00B583D0 /* main.mm */,
 			);
 			path = cmdMultiPatch;
+			sourceTree = "<group>";
+		};
+		B307673F291CE52A00B5EAAC /* App */ = {
+			isa = PBXGroup;
+			children = (
+				9E0351C20E9D8B570043AC3E /* MPPatchWindow.h */,
+				9E0351C10E9D8B570043AC3E /* MPPatchWindow.mm */,
+				9E17AB9D120F9E9800BA4827 /* MPCreationWindow.h */,
+				9E17AB9E120F9E9800BA4827 /* MPCreationWindow.mm */,
+				9E2701CA1C31C59000F50B1F /* mbFlipWindow.h */,
+				9E2701CB1C31C59000F50B1F /* mbFlipWindow.m */,
+				9EBBF6C81EA06D2C00EF26A3 /* MPFileTextField.h */,
+				9EBBF6C91EA06D2C00EF26A3 /* MPFileTextField.m */,
+				9E2C4ADF21B3479300D74816 /* MultiPatchController.h */,
+				9E2C4AE021B3479300D74816 /* MultiPatchController.m */,
+				29B97316FDCFA39411CA2CEA /* main.m */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		B3076740291CE5E000B5EAAC /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				9E2F9D1521740CB200EBD217 /* adapters */,
+				9EDB5E2721ACE75A0028764B /* MPPatchResult.h */,
+				9EDB5E2821ACE75A0028764B /* MPPatchResult.m */,
+				9EFB02C7256D7F5800B583D0 /* MPSettings.h */,
+				9EFB02C8256D7F5800B583D0 /* MPSettings.m */,
+			);
+			path = Shared;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -708,7 +724,7 @@
 				9EFB02A1256D7D6C00B583D0 /* UPSAdapter.mm in Sources */,
 				9EFB028C256D7D1800B583D0 /* divsufsort.c in Sources */,
 				9EFB029B256D7D6700B583D0 /* IPSAdapter.mm in Sources */,
-				9EFB027A256D7BFD00B583D0 /* main.m in Sources */,
+				9EFB027A256D7BFD00B583D0 /* main.mm in Sources */,
 				9EFB0292256D7D2B00B583D0 /* libbps.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -825,7 +841,7 @@
 					"$(PROJECT_DIR)/xdelta/",
 					/usr/local/include,
 				);
-				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_FILE = App/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -871,7 +887,7 @@
 					"$(PROJECT_DIR)/xdelta/",
 					/usr/local/include,
 				);
-				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_FILE = App/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

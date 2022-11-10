@@ -149,7 +149,7 @@
 	NSString *modPath = [txtModFile stringValue];
 	NSString *patchPath = [txtPatchFile stringValue];
 	//NSRange lastSlash = [patchPath rangeOfString:@"/" options:NSBackwardsSearch];
-	
+
 	if([fileManager fileExistsAtPath:origPath] && [fileManager fileExistsAtPath:modPath]){
 		if([origPath length] > 0 && [modPath length] > 0 && [patchPath length] > 0){
 			[lblStatus setStringValue:@"Now creating patch..."];
@@ -161,19 +161,23 @@
 			[barProgress stopAnimation:self];
 			[NSApp endSheet:pnlPatching]; //Tell the sheet we're done.
 			[pnlPatching orderOut:self]; //Lets hide the sheet.
-			
+
 			if(errMsg == nil){
 				NSRunAlertPanel(@"Finished!",@"The patch was created sucessfully!",@"Okay",nil,nil);
 			}
             else if(errMsg.IsWarning){
                 NSRunAlertPanel(@"Patch creation finished with warning.", errMsg.Message, @"Okay", nil, nil);
+                #if !__has_feature(objc_arc)
                 [errMsg release];
+                #endif
                 errMsg = nil;
             }
 			else{
 				NSRunAlertPanel(@"Patch creation failed.", errMsg.Message, @"Okay", nil, nil);
-				[errMsg release];
-				errMsg = nil;
+                #if !__has_feature(objc_arc)
+                [errMsg release];
+                #endif
+                errMsg = nil;
 			}
 		}
 		else{

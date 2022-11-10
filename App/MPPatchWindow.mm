@@ -53,7 +53,7 @@ static mbFlipWindow* _flipper;
 	NSString *romPath = [txtRomPath stringValue];
 	NSString *outputPath = [txtOutputPath stringValue];
 	NSString *patchPath = [txtPatchPath stringValue];
-	
+
 	if([fileManager fileExistsAtPath:patchPath]){
 		if([romPath length] > 0 && [outputPath length] > 0 && [patchPath length] > 0){
 			[lblStatus setStringValue:@"Now patching..."];
@@ -64,18 +64,22 @@ static mbFlipWindow* _flipper;
 			[barProgress stopAnimation:self];
 			[NSApp endSheet:pnlPatching]; //Tell the sheet we're done.
 			[pnlPatching orderOut:self]; //Lets hide the sheet.
-			
+
 			if(errMsg == nil){
                 NSRunAlertPanel(@"Finished!", @"The file was patched successfully.", @"Okay", nil, nil);
 			}
             else if(errMsg.IsWarning){
                 NSRunAlertPanel(@"Patching finished with warning", errMsg.Message, @"Okay", nil, nil);
+                #if !__has_feature(objc_arc)
                 [errMsg release];
+                #endif
                 errMsg = nil;
             }
             else{
 				NSRunAlertPanel(@"Patching failed", errMsg.Message, @"Okay", nil, nil);
+                #if !__has_feature(objc_arc)
 				[errMsg release];
+                #endif
 				errMsg = nil;
 			}
 		}
@@ -133,11 +137,15 @@ static mbFlipWindow* _flipper;
 -(void)setTargetFile:(NSURL*)target{
     NSString* selfile = [target path];
     [txtRomPath setStringValue:selfile];
+    #if !__has_feature(objc_arc)
     if(romFormat != nil){
         [romFormat release];
     }
+    #endif
     romFormat = [selfile pathExtension];
+    #if !__has_feature(objc_arc)
     [romFormat retain];
+    #endif
 }
 
 - (IBAction)btnSelectOriginal:(id)sender {

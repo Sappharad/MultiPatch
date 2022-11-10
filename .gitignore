@@ -25,3 +25,5 @@ xdelta/.deps
 xdelta/testing/.deps
 xdelta/*.log
 xdelta/*.status
+/.swiftpm
+/.build

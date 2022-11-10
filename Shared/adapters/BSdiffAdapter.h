@@ -3,7 +3,7 @@
 //  MultiPatch
 //
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 #import "MPPatchResult.h"
 
 @interface BSdiffAdapter : NSObject {}

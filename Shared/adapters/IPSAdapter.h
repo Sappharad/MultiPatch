@@ -3,9 +3,8 @@
 //  MultiPatch
 //
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 #import "MPPatchResult.h"
-
 
 @interface IPSAdapter : NSObject {}
 +(MPPatchResult*)ApplyPatch:(NSString*)patch toFile:(NSString*)input andCreate:(NSString*)output;
