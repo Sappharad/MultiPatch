@@ -30,9 +30,11 @@ let cSettings: [CSetting] = [
 let linkerSettings: [LinkerSetting] = [
     .linkedFramework("Foundation"),
     .linkedFramework("CoreFoundation"),
-    .linkedLibrary("lzma"),
+    .linkedLibrary("lzma", .when(platforms: [.macOS, .linux])),
     .linkedLibrary("bz2"),
     .linkedLibrary("z"),
+    .linkedLibrary("ssl", .when(platforms: [.linux])),
+    .linkedLibrary("crypto", .when(platforms: [.linux]))
 ]
 
 var linkerSettingsApp: [LinkerSetting] = linkerSettings
