@@ -57,7 +57,6 @@ var targets: [Target] = [
     .target(name: "MultiPatcherShared",
             dependencies: ["flips", "librup", "ppfdev", "bsdiff"],
             path: "Shared",
-            exclude: ["en.lproj"],
             sources: [
                 "MPSettings.m",
                 "adapters/PPFAdapter.m",
@@ -71,7 +70,7 @@ var targets: [Target] = [
                 "MPPatchResult.h",
                 "MPPatchResult.m",
                 // "XDeltaAdapter.h",
-                "xdelta/xdelta3.h",
+                "../xdelta/xdelta3.h",
                 // "XDeltaAdapter.m",
             ],
             publicHeadersPath: "",
@@ -86,9 +85,6 @@ var targets: [Target] = [
 
     .target(name: "bsdiff",
             path: "bsdiff",
-            exclude: [
-                "BSdiffAdapter.m",
-                "BSdiffAdapter.h"],
             publicHeadersPath: "",
             cSettings: [.headerSearchPath("../")]),
 
@@ -161,32 +157,49 @@ targets.append(.executableTarget(
 
 // MultiPatcher.app
 // TODO: Fix Sparkle and C++ support
-// targets.append(.executableTarget(
-//     name: "MultiPatcher",
-//     dependencies: [
-//         "MultiPatcherShared",
-//         // "Sparkle"
-//     ],
-//     path: "App",
-//     exclude: ["en.lproj"],
-//     sources: [
-//         "main.m",
-//         "MPPatchWindow.mm",
-//         "MPFileTextField.m",
-//         "mbFlipWindow.m",
-//         "MPCreationWindow.mm",
-//         "MultiPatchController.m"
-//     ],
-//     cSettings: cSettings,
-//     cxxSettings: cxxSettings,
-//     linkerSettings: linkerSettingsApp
-// //         // resources: [
-// //         //     .process("text.txt"),
-// //         //     .process("example.png"),
-// //         //     .copy("settings.plist")
-// //         // ]
-//     )
-// )
+targets.append(.executableTarget(
+    name: "MultiPatcher",
+    dependencies: [
+        "MultiPatcherShared",
+        "Sparkle"
+    ],
+    path: "App",
+    // exclude: ["en.lproj"],
+    sources: [
+        "main.m",
+        "MPPatchWindow.mm",
+        "MPFileTextField.m",
+        "mbFlipWindow.m",
+        "MPCreationWindow.mm",
+        "MultiPatchController.m"
+    ],
+    resources: [
+        .process("../Base.lproj/MainMenu.xib"),
+        .process("../en.lproj/InfoPlist.strings"),
+        .process("../Media.xcassets"),
+        .copy("Credits.rtf")
+    ],
+    cSettings: [
+        .headerSearchPath("../"),
+        .headerSearchPath("../xdelta"),
+        .headerSearchPath("../flips"),
+        .headerSearchPath("../Shared/adapters"),
+        .define("HAVE_CONFIG_H"),
+        .define("SECONDARY_FGK", to: "1"),
+        .define("SECONDARY_DJW", to: "1")
+    ],
+    cxxSettings: [
+        .headerSearchPath("./"),
+        .headerSearchPath("../xdelta"),
+        .headerSearchPath("../flips"),
+        .headerSearchPath("../Shared/adapters"),
+        .define("HAVE_CONFIG_H"),
+        .define("SECONDARY_FGK", to: "1"),
+        .define("SECONDARY_DJW", to: "1")
+    ],
+    linkerSettings: linkerSettingsApp
+    )
+)
 #endif
 
 let package = Package(
@@ -199,7 +212,7 @@ let package = Package(
 	],
     products: products,
     dependencies: [
-        // .package(url: "https://github.com/sparkle-project/Sparkle.git", from: "2.0.0")
+        .package(url: "https://github.com/sparkle-project/Sparkle.git", from: "2.0.0")
     ],
     targets: targets,
     cLanguageStandard: .gnu11,

@@ -4,7 +4,9 @@
 //
 
 #import "MPCreationWindow.h"
+#if defined(HAVE_XDELTA)
 #import "XDeltaAdapter.h"
+#endif
 #import "IPSAdapter.h"
 #import "PPFAdapter.h"
 #import "BSdiffAdapter.h"
@@ -76,7 +78,9 @@
     //FLIPS does not create UPS. It's deprecated anyway, so use BPS instead
     [ddFormats addItemWithTitle:@"IPS Patch (*.ips)"];
     [ddFormats addItemWithTitle:@"PPF Patch (*.ppf)"];
+    #if defined(HAVE_XDELTA)
     [ddFormats addItemWithTitle:@"XDelta Patch (*.delta)"];
+    #endif
     [ddFormats addItemWithTitle:@"BSDiff Patch (*.bdf)"];
     [fbox setAccessoryView:vwFormatPicker];
     [fbox beginSheetModalForWindow:self completionHandler:^(NSInteger result) {
@@ -104,9 +108,11 @@
         else if([[ddFormats titleOfSelectedItem] hasPrefix:@"PPF"] && ![selfile hasSuffix:@".ppf"]){
             selfile = [selfile stringByAppendingString:@".ppf"];
         }
+        #if defined(HAVE_XDELTA)
         else if([[ddFormats titleOfSelectedItem] hasPrefix:@"XDelta"] && ![selfile hasSuffix:@".delta"]){
             selfile = [selfile stringByAppendingString:@".delta"];
         }
+        #endif
         else if([[ddFormats titleOfSelectedItem] hasPrefix:@"BSDiff"] && ![selfile hasSuffix:@".bdf"]){
             selfile = [selfile stringByAppendingString:@".bdf"];
         }
@@ -118,9 +124,11 @@
         /*else if(currentFormat == UPSPAT){
             [lblPatchFormat setStringValue:@"UPS Patch"];
         }*/
+        #if defined(HAVE_XDELTA)
         else if(currentFormat == XDELTAPAT){
             [lblPatchFormat setStringValue:@"XDelta Patch"];
         }
+        #endif
         else if(currentFormat == PPFPAT){
             [lblPatchFormat setStringValue:@"PPF Patch"];
         }
@@ -149,7 +157,7 @@
 	NSString *modPath = [txtModFile stringValue];
 	NSString *patchPath = [txtPatchFile stringValue];
 	//NSRange lastSlash = [patchPath rangeOfString:@"/" options:NSBackwardsSearch];
-	
+
 	if([fileManager fileExistsAtPath:origPath] && [fileManager fileExistsAtPath:modPath]){
 		if([origPath length] > 0 && [modPath length] > 0 && [patchPath length] > 0){
 			[lblStatus setStringValue:@"Now creating patch..."];
@@ -161,7 +169,7 @@
 			[barProgress stopAnimation:self];
 			[NSApp endSheet:pnlPatching]; //Tell the sheet we're done.
 			[pnlPatching orderOut:self]; //Lets hide the sheet.
-			
+
 			if(errMsg == nil){
 				NSRunAlertPanel(@"Finished!",@"The patch was created sucessfully!",@"Okay",nil,nil);
 			}
@@ -203,9 +211,11 @@
 	else if(currentFormat == IPSPAT){
 		retval = [IPSAdapter CreatePatch:origFile withMod:modFile andCreate:createFile];
 	}
+    #if defined(HAVE_XDELTA)
 	else if(currentFormat == XDELTAPAT){
         retval = [XDeltaAdapter CreatePatch:origFile withMod:modFile andCreate:createFile];
 	}
+    #endif
 	else if(currentFormat == PPFPAT){
 		retval = [PPFAdapter CreatePatch:origFile withMod:modFile andCreate:createFile];
 	}

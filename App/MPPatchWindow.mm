@@ -1,5 +1,7 @@
 #import "MPPatchWindow.h"
+#if defined(HAVE_XDELTA)
 #import "XDeltaAdapter.h"
+#endif
 #import "IPSAdapter.h"
 #import "PPFAdapter.h"
 #import "BSdiffAdapter.h"
@@ -53,7 +55,7 @@ static mbFlipWindow* _flipper;
 	NSString *romPath = [txtRomPath stringValue];
 	NSString *outputPath = [txtOutputPath stringValue];
 	NSString *patchPath = [txtPatchPath stringValue];
-	
+
 	if([fileManager fileExistsAtPath:patchPath]){
 		if([romPath length] > 0 && [outputPath length] > 0 && [patchPath length] > 0){
 			[lblStatus setStringValue:@"Now patching..."];
@@ -101,9 +103,11 @@ static mbFlipWindow* _flipper;
         case UPSPAT:
             [lblPatchFormat setStringValue:@"UPS"];
             break;
+        #if defined(HAVE_XDELTA)
         case XDELTAPAT:
             [lblPatchFormat setStringValue:@"XDelta"];
             break;
+        #endif
         case IPSPAT:
             [lblPatchFormat setStringValue:@"IPS"];
             break;
@@ -183,9 +187,11 @@ static mbFlipWindow* _flipper;
 	else if([lowerPath hasSuffix:@".ppf"]){
 		return PPFPAT;
 	}
+    #if defined(HAVE_XDELTA)
 	else if([lowerPath hasSuffix:@".dat"] || [lowerPath hasSuffix:@"delta"]){
 		return XDELTAPAT;
 	}
+    #endif
     else if([lowerPath hasSuffix:@".bdf"] || [lowerPath hasSuffix:@".bsdiff"]){
         return BSDIFFPAT;
     }
@@ -206,9 +212,11 @@ static mbFlipWindow* _flipper;
 	else if(currentFormat == IPSPAT){
 		retval = [IPSAdapter ApplyPatch:patchPath toFile:sourceFile andCreate:destFile];
 	}
+    #if defined(HAVE_XDELTA)
 	else if(currentFormat == XDELTAPAT){
 		retval = [XDeltaAdapter ApplyPatch:patchPath toFile:sourceFile andCreate:destFile];
 	}
+    #endif
 	else if(currentFormat == PPFPAT){
 		retval = [PPFAdapter ApplyPatch:patchPath toFile:sourceFile andCreate:destFile];
 	}

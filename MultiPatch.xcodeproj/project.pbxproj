@@ -204,7 +204,7 @@
 		9E72A23225E4A1E400D48E37 /* ppf3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ppf3.h; sourceTree = "<group>"; };
 		9E72A23525E4A23600D48E37 /* PPFAdapter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPFAdapter.h; sourceTree = "<group>"; };
 		9E72A23625E4A23600D48E37 /* PPFAdapter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PPFAdapter.m; sourceTree = "<group>"; };
-		9EA7918926D5E52A00AB4337 /* Credits.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
+		9EA7918926D5E52A00AB4337 /* Credits.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = Credits.rtf; path = App/Credits.rtf; sourceTree = "<group>"; };
 		9EA7BD0526D483AC00D2ADDF /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		9EAFBD4126C5FBC50005354C /* liblzma.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = liblzma.tbd; path = usr/lib/liblzma.tbd; sourceTree = SDKROOT; };
 		9EBBF6C81EA06D2C00EF26A3 /* MPFileTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPFileTextField.h; sourceTree = "<group>"; };
@@ -841,7 +841,7 @@
 					"$(PROJECT_DIR)/xdelta/",
 					/usr/local/include,
 				);
-				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_FILE = App/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -887,7 +887,7 @@
 					"$(PROJECT_DIR)/xdelta/",
 					/usr/local/include,
 				);
-				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_FILE = App/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
