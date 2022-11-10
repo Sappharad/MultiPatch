@@ -7,7 +7,9 @@
 
 #import "MultiPatchController.h"
 #import "MPSettings.h"
+#if TARGET_OS_OSX
 #import <Sparkle/Sparkle.h>
+#endif
 
 @implementation MultiPatchController
 
@@ -21,14 +23,18 @@
 }
 
 - (IBAction)showPreferences:(id)sender {
+#if TARGET_OS_OSX
     SUUpdater* sparkle = [SUUpdater sharedUpdater];
     _chkCheckForUpdates.state = sparkle.automaticallyChecksForUpdates ? NSOnState : NSOffState;
+#endif
     [_wndPreferences makeKeyAndOrderFront:self];
 }
 
 - (IBAction)chkCheckForUpdates_Changed:(id)sender {
+#if TARGET_OS_OSX
     SUUpdater* sparkle = [SUUpdater sharedUpdater];
     sparkle.automaticallyChecksForUpdates = (_chkCheckForUpdates.state == NSOnState);
+#endif
 }
 
 - (IBAction)chkIgnoreXdelta_Changed:(id)sender {

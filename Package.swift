@@ -24,7 +24,7 @@ let cSettings: [CSetting] = [
     .define("HAVE_CONFIG_H"),
     .define("SECONDARY_FGK", to: "1"),
     .define("SECONDARY_DJW", to: "1"),
-    .define("SECONDARY_LZMA", to: "0", .when(platforms: [.iOS, .tvOS]))
+    .define("SECONDARY_LZMA", to: "0", .when(platforms: [.iOS]))
 ]
 
 let linkerSettings: [LinkerSetting] = [
@@ -168,7 +168,7 @@ targets.append(.executableTarget(
     name: "MultiPatcher",
     dependencies: [
         "MultiPatcherShared",
-        "Sparkle"
+        .product(name: "Sparkle", package: "Sparkle", condition: .when(platforms: [.macOS]))
     ],
     path: "App",
     // exclude: ["en.lproj"],
