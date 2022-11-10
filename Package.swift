@@ -110,8 +110,9 @@ var targets: [Target] = [
             publicHeadersPath: "include"),
 
     .target(name: "xdelta",
-            dependencies: [.product(name: "liblzma", package: "liblzma.swift", condition: .when(platforms: [.iOS]))],
+            dependencies: [.product(name: "liblzma", package: "liblzma.swift", condition: .when(platforms: [.iOS, .tvOS]))],
             path: "xdelta",
+            exclude: ["examples"],
             sources: [
                 "xdelta3.h",
                 "xdelta3.m"
